@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.leveltrack.controller.LibraryViewController">
+    
+    <!-- Top Panel -->
+    <top>
+        <VBox spacing="10" padding="10">
+            <!-- Search Section -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Search by Name:"/>
+                <TextField fx:id="searchField" prefWidth="150"/>
+                <Button text="Search" fx:id="searchButton"/>
+            </HBox>
+
+            <!-- Filter Section -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Filter by Genre:"/>
+                <ComboBox fx:id="genreComboBox" prefWidth="150"/>
+                <Button text="Filter" fx:id="filterButton"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- Center Table -->
+    <center>
+        <TableView fx:id="gamesTable">
+            <columns>
+                <TableColumn text="ID" fx:id="idColumn"/>
+                <TableColumn text="Name" fx:id="nameColumn"/>
+                <TableColumn text="Genre" fx:id="genreColumn"/>
+                <TableColumn text="Price" fx:id="priceColumn"/>
+                <TableColumn text="State" fx:id="stateColumn"/>
+                <TableColumn text="Score" fx:id="scoreColumn"/>
+            </columns>
+        </TableView>
+    </center>
+
+    <!-- Bottom Panel -->
+    <bottom>
+        <HBox spacing="10" padding="10" alignment="CENTER">
+            <Button text="Add Game" fx:id="addGameButton"/>
+            <Button text="Remove Game" fx:id="removeGameButton"/>
+            <Button text="Back to Main Menu" fx:id="backButton"/>
+        </HBox>
+    </bottom>
+</BorderPane>

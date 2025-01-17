@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.Pos?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.leveltrack.view.FriendLibraryController">
+    <children>
+        <VBox alignment="TOP_CENTER" spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Search by Name: " />
+                <TextField fx:id="searchField" />
+                <Button text="Search" onAction="#handleSearchButtonClick"/>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Filter by Genre: " />
+                <ComboBox fx:id="genreComboBox">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="All" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+                <Button text="Filter" onAction="#handleFilterButtonClick"/>
+            </HBox>
+        </VBox>
+
+        <TableView fx:id="gamesTable" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="80" AnchorPane.bottomAnchor="60">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" />
+                <TableColumn fx:id="nameColumn" text="Name" />
+                <TableColumn fx:id="genreColumn" text="Genre" />
+                <TableColumn fx:id="priceColumn" text="Price" />
+                <TableColumn fx:id="stateColumn" text="State" />
+                <TableColumn fx:id="scoreColumn" text="Score" />
+            </columns>
+        </TableView>
+
+        <Button text="Back" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" onAction="#handleBackButtonClick"/>
+    </children>
+</AnchorPane>

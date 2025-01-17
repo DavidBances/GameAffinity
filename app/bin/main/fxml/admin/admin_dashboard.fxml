@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.leveltrack.controller.AdminDashboardController">
+    <!-- Parte superior con los botones principales -->
+    <top>
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="manageUsersButton" text="Manage Users" onAction="#handleManageUsers" />
+            <Button fx:id="manageGamesButton" text="Manage Games" onAction="#handleManageGames" />
+        </HBox>
+    </top>
+
+    <!-- Parte inferior con el botón de logout -->
+    <bottom>
+        <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" />
+        </HBox>
+    </bottom>
+
+    <!-- Área central (puede usarse dinámicamente para tablas u otros componentes) -->
+    <center>
+        <StackPane fx:id="mainContent" />
+    </center>
+</BorderPane>

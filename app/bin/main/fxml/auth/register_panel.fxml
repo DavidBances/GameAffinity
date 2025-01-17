@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/20"
+          fx:controller="com.leveltrack.controller.RegisterPanelController"
+          hgap="10" vgap="10" alignment="CENTER" padding="20">
+    
+    <!-- Fila 1: Etiqueta y campo de texto para el nombre -->
+    <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+    <TextField fx:id="nameField" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+    
+    <!-- Fila 2: Etiqueta y campo de texto para el correo -->
+    <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+    <TextField fx:id="emailField" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+    
+    <!-- Fila 3: Etiqueta y campo de texto para la contraseña -->
+    <Label text="Password:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+    <PasswordField fx:id="passwordField" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+    
+    <!-- Fila 4: Botones para crear cuenta y volver -->
+    <Button text="Create Account" fx:id="createButton" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+    <Button text="Back" fx:id="backButton" GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+</GridPane>

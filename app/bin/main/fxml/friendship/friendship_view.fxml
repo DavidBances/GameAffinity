@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.leveltrack.view.FriendshipViewController">
+    <!-- Panel de amigos -->
+    <left>
+        <VBox>
+            <Label text="Friends:"/>
+            <TableView fx:id="friendsTable">
+                <columns>
+                    <TableColumn text="Name" fx:id="nameColumn"/>
+                    <TableColumn text="Email" fx:id="emailColumn"/>
+                </columns>
+            </TableView>
+        </VBox>
+    </left>
+    
+    <!-- Panel de solicitudes -->
+    <center>
+        <VBox>
+            <Label text="Pending Friend Requests:"/>
+            <TableView fx:id="requestsTable">
+                <columns>
+                    <TableColumn text="Request ID" fx:id="requestIdColumn"/>
+                    <TableColumn text="Requester Email" fx:id="requesterEmailColumn"/>
+                    <TableColumn text="Status" fx:id="statusColumn"/>
+                </columns>
+            </TableView>
+            <HBox spacing="10">
+                <Button text="Accept" fx:id="acceptButton"/>
+                <Button text="Reject" fx:id="rejectButton"/>
+            </HBox>
+        </VBox>
+    </center>
+
+    <!-- Botones inferiores -->
+    <bottom>
+        <FlowPane hgap="10">
+            <Button text="Send Friend Request" fx:id="sendRequestButton"/>
+            <Button text="View Friend Library" fx:id="viewFriendLibraryButton"/>
+            <Button text="Delete Friend" fx:id="deleteFriendButton"/>
+            <Button text="Back" fx:id="backButton"/>
+        </FlowPane>
+    </bottom>
+</BorderPane>
