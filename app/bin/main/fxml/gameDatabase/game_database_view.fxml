@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.collections.*?>
 <?import javafx.geometry.Pos?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.leveltrack.view.GameDatabaseController">
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.GameDatabaseView">
     <children>
         <!-- Database Panel -->
         <VBox alignment="TOP_CENTER" spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">

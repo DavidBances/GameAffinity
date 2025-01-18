@@ -5,11 +5,11 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox xmlns:fx="http://javafx.com/fxml" 
-      fx:controller="com.leveltrack.controller.UserDashboardView"
+      fx:controller="com.gameaffinity.view.UserDashboardView"
       spacing="10" alignment="CENTER">
-    <VBox.padding>
+    <padding>
         <Insets top="20" right="20" bottom="20" left="20"/>
-    </VBox.padding>
+    </padding>
 
     <Button text="View Library" fx:id="viewLibraryButton" />
     <Button text="Manage Friends" fx:id="manageFriendsButton" />

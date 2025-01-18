@@ -41,7 +41,8 @@ public class UserDAOImpl implements UserDAO {
                         role,
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getString("email"));
+                        rs.getString("email"),
+                        rs.getString("password"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -64,33 +65,13 @@ public class UserDAOImpl implements UserDAO {
                         role,
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getString("email"));
+                        rs.getString("email"),
+                        rs.getString("password"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return user;
-    }
-
-    /**
-     * Creates a user instance based on the provided role.
-     *
-     * @param role  The role of the user (e.g., "ADMINISTRATOR", "MODERATOR",
-     *              "REGULAR_USER").
-     * @param id    The user's ID.
-     * @param name  The user's name.
-     * @param email The user's email.
-     * @return A {@link UserBase} object corresponding to the specified role.
-     */
-    private UserBase createUserInstance(String role, int id, String name, String email) {
-        switch (role) {
-            case "ADMINISTRATOR":
-                return new Administrator(id, name, email);
-            case "MODERATOR":
-                return new Moderator(id, name, email);
-            default:
-                return new Regular_User(id, name, email);
-        }
     }
 
     /**
@@ -134,7 +115,7 @@ public class UserDAOImpl implements UserDAO {
      */
     private UserBase createUserInstance(String role, int id, String name, String email, String password) {
         UserBase user;
-        switch (role) {
+        switch (role.toUpperCase()) {
             case "ADMINISTRATOR":
                 user = new Administrator(id, name, email);
                 break;
@@ -167,7 +148,8 @@ public class UserDAOImpl implements UserDAO {
                         role,
                         rs.getInt("id"),
                         rs.getString("name"),
-                        rs.getString("email")));
+                        rs.getString("email"),
+                        rs.getString("password")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

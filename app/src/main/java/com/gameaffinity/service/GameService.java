@@ -17,10 +17,6 @@ public class GameService {
         return gameDAO.addGame(game);
     }
 
-    public boolean updateGame(Game game) {
-        return gameDAO.updateGame(game);
-    }
-
     public boolean deleteGame(int gameId) {
         return gameDAO.deleteGame(gameId);
     }
@@ -37,9 +33,4 @@ public class GameService {
             return null;
         }
     }
-
-    public Game getGameByName(String gameName) {
-        return gameDAO.searchGameByName(gameName);
-    }
-
 }

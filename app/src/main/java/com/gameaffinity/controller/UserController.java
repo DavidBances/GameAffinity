@@ -4,13 +4,16 @@ import java.io.IOException;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.DialogPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -39,7 +42,7 @@ public class UserController {
 
     public void openLibraryView(Stage currentStage) {
         try {
-            Pane libraryView = FXMLLoader.load(getClass().getResource("/fxml/library/library_view.fxml"));
+            Parent libraryView = FXMLLoader.load(getClass().getResource("/fxml/library/library_view.fxml"));
             Scene libraryViewScene = new Scene(libraryView);
             currentStage.setScene(libraryViewScene);
         } catch (Exception e) {
@@ -50,7 +53,7 @@ public class UserController {
 
     public void openFriendshipView(Stage currentStage) {
         try {
-            Pane friendshipView = FXMLLoader.load(getClass().getResource("/fxml/friendship/friendship_view.fxml"));
+            Parent friendshipView = FXMLLoader.load(getClass().getResource("/fxml/friendship/friendship_view.fxml"));
             Scene friendshipViewScene = new Scene(friendshipView);
             currentStage.setScene(friendshipViewScene);
         } catch (Exception e) {
@@ -61,7 +64,7 @@ public class UserController {
 
     public void openGameDatabaseView(Stage currentStage) {
         try {
-            Pane gameDatabaseView = FXMLLoader
+            Parent gameDatabaseView = FXMLLoader
                     .load(getClass().getResource("/fxml/gameDatabase/game_database_view.fxml"));
             Scene gameDatabaseViewScene = new Scene(gameDatabaseView);
             currentStage.setScene(gameDatabaseViewScene);
@@ -73,12 +76,15 @@ public class UserController {
 
     public void openModifyProfileDialog() {
         try {
+            // Cargar el FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dialogs/modify_profile_dialog.fxml"));
-            DialogPane dialogPane = loader.load();
+            Parent root = loader.load();
 
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setDialogPane(dialogPane);
-            dialog.setTitle("Modificar Perfil");
+            Stage stage = new Stage();
+            stage.setTitle("Modificar Perfil");
+            stage.setScene(new Scene(root));
+
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,7 +119,10 @@ public class UserController {
             }
             if (newPassword.isEmpty()) {
                 newPassword = authenticated.getPassword();
+            } else {
+                newPassword = userService.hashPassword(newPassword);
             }
+            System.out.println(newName + " " + newEmail + " " + newPassword + "" + authenticated.getPassword());
 
             boolean success = userService.updateUserProfile(authenticated.getId(), newName, newEmail,
                     newPassword);
@@ -134,7 +143,7 @@ public class UserController {
 
     public void logout(Stage currentStage) {
         try {
-            Pane loginPane = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
+            Parent loginPane = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
             Scene loginPaneScene = new Scene(loginPane);
             currentStage.setScene(loginPaneScene);
         } catch (Exception e) {

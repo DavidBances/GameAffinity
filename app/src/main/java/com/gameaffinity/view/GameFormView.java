@@ -27,9 +27,16 @@ public class GameFormView {
 
     @FXML
     private void initialize() {
+
+        if (game != null) {
+            System.out.println(game.getName() + " " + game.getGenre() + " " + game.getPrice());
+            nameField.setText(game.getName());
+            genreField.setText(game.getGenre());
+            priceField.setText(String.valueOf(game.getPrice()));
+        }
+
         saveButton.setOnAction(event -> {
             gameManagementController.saveGame(
-                    game != null ? game.getId() : -1,
                     nameField.getText(),
                     genreField.getText(),
                     priceField.getText());
@@ -40,10 +47,5 @@ public class GameFormView {
 
     public void setGame(Game game) {
         this.game = game;
-        if (game != null) {
-            nameField.setText(game.getName());
-            genreField.setText(game.getGenre());
-            priceField.setText(String.valueOf(game.getPrice()));
-        }
     }
 }

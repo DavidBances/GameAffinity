@@ -1,10 +1,10 @@
 package com.gameaffinity.controller;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
@@ -23,8 +23,8 @@ public class AdminController {
 
     public void openGamesManagementView(StackPane mainContent) {
         try {
-            Pane gameManagementPane = FXMLLoader.load(getClass().getResource("/fxml/admin/game_management.fxml"));
-            mainContent.getChildren().setAll(gameManagementPane);
+            Parent gameManagement = FXMLLoader.load(getClass().getResource("/fxml/admin/game_management.fxml"));
+            mainContent.getChildren().setAll(gameManagement);
         } catch (Exception e) {
             showAlert("Error.", "Error", AlertType.ERROR);
             e.printStackTrace();
@@ -33,8 +33,8 @@ public class AdminController {
 
     public void openUserManagementView(StackPane mainContent) {
         try {
-            Pane userManagementPane = FXMLLoader.load(getClass().getResource("/fxml/admin/user_management.fxml"));
-            mainContent.getChildren().setAll(userManagementPane);
+            Parent userManagement = FXMLLoader.load(getClass().getResource("/fxml/admin/user_management.fxml"));
+            mainContent.getChildren().setAll(userManagement);
         } catch (Exception e) {
             showAlert("Error.", "Error", AlertType.ERROR);
             e.printStackTrace();
@@ -43,8 +43,8 @@ public class AdminController {
 
     public void logout(Stage currentStage) {
         try {
-            Pane loginPane = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
-            Scene loginScene = new Scene(loginPane);
+            Parent login = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
+            Scene loginScene = new Scene(login);
             currentStage.setScene(loginScene);
         } catch (Exception e) {
             showAlert("Error.", "Error", AlertType.ERROR);

@@ -20,8 +20,6 @@ public class GameManagementView {
     @FXML
     private Button addGameButton;
     @FXML
-    private Button updateGameButton;
-    @FXML
     private Button deleteGameButton;
 
     private GameManagementController gameManagementController = new GameManagementController();
@@ -34,12 +32,7 @@ public class GameManagementView {
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
 
         addGameButton.setOnAction(event -> {
-            gameManagementController.openGameFormDialog(null);
-            gameManagementController.refreshGameTable(gameTable);
-        });
-
-        updateGameButton.setOnAction(event -> {
-            gameManagementController.openGameFormDialog(gameTable.getSelectionModel().getSelectedItem());
+            gameManagementController.openGameFormDialog();
             gameManagementController.refreshGameTable(gameTable);
         });
 

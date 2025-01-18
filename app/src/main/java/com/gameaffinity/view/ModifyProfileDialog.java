@@ -21,6 +21,8 @@ public class ModifyProfileDialog {
     private PasswordField newPasswordField;
     @FXML
     private Button updateButton;
+    @FXML
+    private Button cancelButton;
 
     private final UserController userController = new UserController();
 
@@ -30,6 +32,7 @@ public class ModifyProfileDialog {
 
     @FXML
     private void initialize() {
+
         updateButton.setDisable(isUpdateDisabled());
         emailField.textProperty()
                 .addListener((observable, oldValue, newValue) -> updateButton.setDisable(isUpdateDisabled()));
@@ -37,11 +40,18 @@ public class ModifyProfileDialog {
                 .addListener((observable, oldValue, newValue) -> updateButton.setDisable(isUpdateDisabled()));
 
         updateButton.setOnAction(
-                event -> userController.updateProfile(emailField.getText().trim(), passwordField.getText().trim(),
-                        newNameField.getText().trim(),
-                        newEmailField.getText().trim(),
-                        newPasswordField.getText().trim()));
-        Stage stage = (Stage) updateButton.getScene().getWindow();
-        stage.close();
+                event -> {
+                    userController.updateProfile(emailField.getText().trim(), passwordField.getText().trim(),
+                            newNameField.getText().trim(),
+                            newEmailField.getText().trim(),
+                            newPasswordField.getText().trim());
+                    Stage stage = (Stage) updateButton.getScene().getWindow();
+                    stage.close();
+                });
+
+        cancelButton.setOnAction(event -> {
+            Stage stage = (Stage) cancelButton.getScene().getWindow();
+            stage.close();
+        });
     }
 }

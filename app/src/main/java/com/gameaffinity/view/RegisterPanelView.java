@@ -27,8 +27,11 @@ public class RegisterPanelView {
     @FXML
     public void initialize() {
         createButton.setOnAction(
-                event -> registerController.register(nameField.getText(), emailField.getText(),
-                        passwordField.getText()));
+                event -> {
+                    registerController.register(nameField.getText(), emailField.getText(),
+                            passwordField.getText());
+                    registerController.back((Stage) createButton.getScene().getWindow());
+                });
         backButton.setOnAction(event -> registerController.back((Stage) backButton.getScene().getWindow()));
     }
 }

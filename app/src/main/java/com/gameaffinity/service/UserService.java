@@ -36,7 +36,7 @@ public class UserService {
             return null;
         }
 
-        return createUserInstance(user.getRole(), user);
+        return createUserInstance(user.getRole(), user.getId(), user.getName(), user.getEmail(), user.getPassword());
     }
 
     /**
@@ -108,17 +108,6 @@ public class UserService {
         return email.matches(emailRegex);
     }
 
-    /**
-     * Helper method to validate the role input.
-     * 
-     * @param userId The role to validate.
-     * @return True if the role is valid, false otherwise.
-     */
-    public boolean isAdmin(int userId) {
-        UserBase user = userDAO.findById(userId);
-        return user != null && "ADMINISTRATOR".equalsIgnoreCase(user.getRole());
-    }
-
     public boolean updateUserRole(int userId, String newRole) {
         if (!isValidRole(newRole)) {
             throw new IllegalArgumentException("Invalid role: " + newRole);
@@ -126,22 +115,7 @@ public class UserService {
         return userDAO.updateUserRole(userId, newRole);
     }
 
-    public boolean partialUpdateUserProfile(int id, String name, String email, String password) {
-        UserBase existingUser = userDAO.findById(id);
-
-        if (existingUser == null) {
-            throw new IllegalArgumentException("User not found.");
-        }
-
-        String updatedName = (name == null || name.isEmpty()) ? existingUser.getName() : name;
-        String updatedEmail = (email == null || email.isEmpty()) ? existingUser.getEmail() : email;
-        String updatedPassword = (password == null || password.isEmpty()) ? existingUser.getPassword()
-                : hashPassword(password);
-
-        return userDAO.updateProfile(id, updatedName, updatedEmail, updatedPassword);
-    }
-
-    private String hashPassword(String password) {
+    public String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedhash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -166,21 +140,6 @@ public class UserService {
     }
 
     /**
-     * Helper method to create an instance of a UserBase subclass based on role.
-     * 
-     * @param role The user's role.
-     * @param user A UserBase object with basic data (for database retrieval).
-     * @return A subclass instance of UserBase.
-     */
-    private UserBase createUserInstance(String role, UserBase user) {
-        return switch (role.toUpperCase()) {
-            case "ADMINISTRATOR" -> new Administrator(user.getId(), user.getName(), user.getEmail());
-            case "MODERATOR" -> new Moderator(user.getId(), user.getName(), user.getEmail());
-            default -> new Regular_User(user.getId(), user.getName(), user.getEmail());
-        };
-    }
-
-    /**
      * Overloaded helper method to create a new user instance from scratch.
      * 
      * @param role     The user's role.
@@ -193,7 +152,7 @@ public class UserService {
     private UserBase createUserInstance(String role, int id, String name, String email, String password) {
         UserBase user;
 
-        switch (role) {
+        switch (role.toUpperCase()) {
             case "ADMINISTRATOR":
                 user = new Administrator(id, name, email);
                 break;

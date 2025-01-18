@@ -3,10 +3,10 @@ package com.gameaffinity.controller;
 import com.gameaffinity.service.UserService;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -57,8 +57,8 @@ public class RegisterController {
 
     public void back(Stage currentStage) {
         try {
-            Pane loginPane = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
-            Scene loginScene = new Scene(loginPane);
+            Parent login = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
+            Scene loginScene = new Scene(login);
             currentStage.setScene(loginScene);
         } catch (Exception e) {
             showAlert("ERROR.", "Error", AlertType.ERROR);

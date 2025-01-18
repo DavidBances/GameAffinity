@@ -9,14 +9,9 @@ public interface GameDAO {
 
     boolean addGame(Game game);
 
-    boolean updateGame(Game game);
-
     boolean deleteGame(int gameId);
 
     List<Game> getAllGames();
 
     List<Game> searchGamesByName(String keyword);
-
-    Game searchGameByName(String gameName);
-
 }

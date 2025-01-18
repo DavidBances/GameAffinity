@@ -4,9 +4,9 @@ import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -46,12 +46,14 @@ public class LoginController {
         try {
             UserBase user = userService.authenticate(email, password);
             if (user != null) {
+                System.out.println("ADMINISTRATOR".equalsIgnoreCase(user.getRole()));
+                System.out.println(user.getRole());
                 if ("ADMINISTRATOR".equalsIgnoreCase(user.getRole())) {
-                    Pane adminDashboard = FXMLLoader.load(getClass().getResource("/fxml/admin/admin_dashboard.fxml"));
+                    Parent adminDashboard = FXMLLoader.load(getClass().getResource("/fxml/admin/admin_dashboard.fxml"));
                     Scene adminScene = new Scene(adminDashboard);
                     currentStage.setScene(adminScene);
                 } else {
-                    Pane userDashboard = FXMLLoader.load(getClass().getResource("/fxml/user/user_dashboard.fxml"));
+                    Parent userDashboard = FXMLLoader.load(getClass().getResource("/fxml/user/user_dashboard.fxml"));
                     Scene userScene = new Scene(userDashboard);
                     currentStage.setScene(userScene);
                 }
@@ -67,7 +69,7 @@ public class LoginController {
 
     public void register(Stage currentStage) {
         try {
-            Pane registerPane = FXMLLoader.load(getClass().getResource("/fxml/auth/register_panel.fxml"));
+            Parent registerPane = FXMLLoader.load(getClass().getResource("/fxml/auth/register_panel.fxml"));
             Scene registerScene = new Scene(registerPane);
             currentStage.setScene(registerScene);
         } catch (Exception e) {

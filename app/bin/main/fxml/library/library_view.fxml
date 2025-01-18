@@ -12,11 +12,14 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.leveltrack.controller.LibraryViewController">
+            fx:controller="com.gameaffinity.view.LibraryView">
     
     <!-- Top Panel -->
     <top>
-        <VBox spacing="10" padding="10">
+        <VBox spacing="10">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             <!-- Search Section -->
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="Search by Name:"/>
@@ -49,7 +52,11 @@
 
     <!-- Bottom Panel -->
     <bottom>
-        <HBox spacing="10" padding="10" alignment="CENTER">
+        <HBox spacing="10">
+            <!-- Aquí se aplican los Insets directamente dentro del HBox -->
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
             <Button text="Add Game" fx:id="addGameButton"/>
             <Button text="Remove Game" fx:id="removeGameButton"/>
             <Button text="Back to Main Menu" fx:id="backButton"/>

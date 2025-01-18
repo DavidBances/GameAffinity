@@ -7,8 +7,9 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.leveltrack.view.FriendshipView">
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.FriendshipView">
     <!-- Panel de amigos -->
     <left>
         <VBox>

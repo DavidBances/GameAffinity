@@ -21,7 +21,7 @@ public class AdminDashboardView {
     @FXML
     private Button logoutButton;
 
-    private AdminController adminController;
+    private AdminController adminController = new AdminController();
 
     @FXML
     public void initialize() {
