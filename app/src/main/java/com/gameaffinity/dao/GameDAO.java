@@ -16,4 +16,7 @@ public interface GameDAO {
     List<Game> getAllGames();
 
     List<Game> searchGamesByName(String keyword);
+
+    Game searchGameByName(String gameName);
+
 }

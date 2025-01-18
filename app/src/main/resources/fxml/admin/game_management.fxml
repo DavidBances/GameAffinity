@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.gameaffinity.view.GameManagementView">
+    <center>
+        <TableView fx:id="gameTable" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn text="Name" fx:id="nameColumn">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="name" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Genre" fx:id="genreColumn">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="genre" />
+                    </cellValueFactory>
+                </TableColumn>
+                <TableColumn text="Price" fx:id="priceColumn">
+                    <cellValueFactory>
+                        <PropertyValueFactory property="price" />
+                    </cellValueFactory>
+                </TableColumn>
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10" alignment="CENTER">
+            <Button fx:id="addGameButton" text="Add Game" />
+            <Button fx:id="updateGameButton" text="Update Game" />
+            <Button fx:id="deleteGameButton" text="Delete Game" />
+        </HBox>
+    </bottom>
+</BorderPane>

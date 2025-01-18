@@ -3,6 +3,12 @@ package com.gameaffinity.controller;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
 /**
  * The LoginController class handles the login process for the "Level Track"
  * application.
@@ -13,15 +19,19 @@ import com.gameaffinity.service.UserService;
  */
 public class LoginController {
 
-    private final UserService userService;
+    private UserService userService;
 
     /**
      * Constructs a new LoginController and initializes the UserService.
      *
      * @throws Exception if there is an issue initializing the UserService.
      */
-    public LoginController() throws Exception {
-        this.userService = new UserService();
+    public LoginController() {
+        try {
+            this.userService = new UserService();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -32,15 +42,44 @@ public class LoginController {
      * @return A {@code UserBase} object representing the authenticated user,
      *         or {@code null} if authentication fails.
      */
-    public UserBase login(String email, String password) {
+    public UserBase login(Stage currentStage, String email, String password) {
         try {
             UserBase user = userService.authenticate(email, password);
             if (user != null) {
-                return user;
+                if ("ADMINISTRATOR".equalsIgnoreCase(user.getRole())) {
+                    Pane adminDashboard = FXMLLoader.load(getClass().getResource("/fxml/admin/admin_dashboard.fxml"));
+                    Scene adminScene = new Scene(adminDashboard);
+                    currentStage.setScene(adminScene);
+                } else {
+                    Pane userDashboard = FXMLLoader.load(getClass().getResource("/fxml/user/user_dashboard.fxml"));
+                    Scene userScene = new Scene(userDashboard);
+                    currentStage.setScene(userScene);
+                }
+            } else {
+                showAlert("Invalid credentials.", "Error", Alert.AlertType.ERROR);
             }
         } catch (Exception e) {
+            showAlert("An error occurred.", "Error", Alert.AlertType.ERROR);
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void register(Stage currentStage) {
+        try {
+            Pane registerPane = FXMLLoader.load(getClass().getResource("/fxml/auth/register_panel.fxml"));
+            Scene registerScene = new Scene(registerPane);
+            currentStage.setScene(registerScene);
+        } catch (Exception e) {
+            e.printStackTrace();
+            showAlert("An error occurred.", "Error", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void showAlert(String message, String title, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

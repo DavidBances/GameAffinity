@@ -13,7 +13,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.util.List;
 
-public class GameDatabaseController {
+public class GameDatabaseView {
 
     @FXML
     private TextField searchField;

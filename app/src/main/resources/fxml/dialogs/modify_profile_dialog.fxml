@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<DialogPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.gameaffinity.view.ModifyProfileDialog">
+    <header>
+        <Label text="Modificar Perfil" />
+    </header>
+    <content>
+        <GridPane hgap="10" vgap="10">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20" />
+            </padding>
+
+            <!-- Campos originales -->
+            <Label text="Correo:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <TextField fx:id="emailField" promptText="Correo original" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+
+            <Label text="Contraseña:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <PasswordField fx:id="passwordField" promptText="Contraseña original" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+
+            <!-- Campos opcionales -->
+            <Label text="Nuevo Nombre:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            <TextField fx:id="newNameField" promptText="Nuevo nombre (opcional)" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+
+            <Label text="Nuevo Correo:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+            <TextField fx:id="newEmailField" promptText="Nuevo correo (opcional)" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+
+            <Label text="Nueva Contraseña:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+            <PasswordField fx:id="newPasswordField" promptText="Nueva contraseña (opcional)" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+        </GridPane>
+    </content>
+    <buttonTypes>
+        <ButtonBar.ButtonData.OK_DONE fx:id="updateButton" />
+        <ButtonBar.ButtonData.CANCEL_CLOSE />
+    </buttonTypes>
+</DialogPane>

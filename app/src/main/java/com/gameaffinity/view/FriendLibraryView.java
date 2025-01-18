@@ -9,11 +9,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-
 import java.util.List;
 
-public class FriendLibraryController {
+public class FriendLibraryView {
 
     @FXML
     private TextField searchField;

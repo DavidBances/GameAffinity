@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.leveltrack.controller.LibraryViewController">
+            fx:controller="com.leveltrack.controller.LibraryView">
     
     <!-- Top Panel -->
     <top>

@@ -12,6 +12,8 @@ public interface UserDAO {
 
     UserBase findByEmailAndPassword(String email, String password);
 
+    UserBase findByIdAndPassword(int userId, String password);
+
     boolean createUser(UserBase user);
 
     boolean updateProfiled(UserBase user);

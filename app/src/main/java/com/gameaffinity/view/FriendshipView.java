@@ -15,7 +15,7 @@ import javafx.scene.layout.VBox;
 import javax.swing.*;
 import java.util.List;
 
-public class FriendshipViewController {
+public class FriendshipView {
 
     @FXML
     private TableView<UserBase> friendsTable;

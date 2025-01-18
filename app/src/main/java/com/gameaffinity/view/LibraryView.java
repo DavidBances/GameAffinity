@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class LibraryViewController {
+public class LibraryView {
 
     @FXML
     private TextField searchField;

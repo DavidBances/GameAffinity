@@ -49,6 +49,29 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
+    @Override
+    public UserBase findByIdAndPassword(int userId, String password) {
+        UserBase user = null;
+        String query = QueryLoader.getQuery("user.findByIdAndPassword");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, password);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String role = rs.getString("role");
+                System.out.println("Role from database: " + role);
+                user = createUserInstance(
+                        role,
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
     /**
      * Creates a user instance based on the provided role.
      *

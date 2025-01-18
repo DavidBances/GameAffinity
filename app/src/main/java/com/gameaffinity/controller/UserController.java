@@ -1,7 +1,17 @@
 package com.gameaffinity.controller;
 
+import java.io.IOException;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.DialogPane;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * The UserController class manages user-related operations such as updating
@@ -12,15 +22,66 @@ import com.gameaffinity.service.UserService;
  */
 public class UserController {
 
-    private final UserService userService;
+    private UserService userService;
 
     /**
      * Constructs a new UserController and initializes the UserService.
      *
      * @throws Exception if there is an issue initializing the UserService.
      */
-    public UserController() throws Exception {
-        this.userService = new UserService();
+    public UserController() {
+        try {
+            this.userService = new UserService();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void openLibraryView(Stage currentStage) {
+        try {
+            Pane libraryView = FXMLLoader.load(getClass().getResource("/fxml/library/library_view.fxml"));
+            Scene libraryViewScene = new Scene(libraryView);
+            currentStage.setScene(libraryViewScene);
+        } catch (Exception e) {
+            showAlert("ERROR.", "Error", AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    public void openFriendshipView(Stage currentStage) {
+        try {
+            Pane friendshipView = FXMLLoader.load(getClass().getResource("/fxml/friendship/friendship_view.fxml"));
+            Scene friendshipViewScene = new Scene(friendshipView);
+            currentStage.setScene(friendshipViewScene);
+        } catch (Exception e) {
+            showAlert("ERROR.", "Error", AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    public void openGameDatabaseView(Stage currentStage) {
+        try {
+            Pane gameDatabaseView = FXMLLoader
+                    .load(getClass().getResource("/fxml/gameDatabase/game_database_view.fxml"));
+            Scene gameDatabaseViewScene = new Scene(gameDatabaseView);
+            currentStage.setScene(gameDatabaseViewScene);
+        } catch (Exception e) {
+            showAlert("ERROR.", "Error", AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    public void openModifyProfileDialog() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dialogs/modify_profile_dialog.fxml"));
+            DialogPane dialogPane = loader.load();
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setDialogPane(dialogPane);
+            dialog.setTitle("Modificar Perfil");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -35,44 +96,58 @@ public class UserController {
      * @param newPassword The new password for the user (optional, can be null).
      * @return A message indicating the success or failure of the operation.
      */
-    public String updateProfile(String identifier, String password, String newName, String newEmail,
+    public void updateProfile(String email, String password, String newName, String newEmail,
             String newPassword) {
         try {
-            UserBase authenticated = userService.authenticate(identifier, password);
-            if (authenticated.equals(false)) {
-                return "Error: Contraseña incorrecta o usuario no encontrado.";
+            UserBase authenticated = userService.authenticate(email, password);
+            if (authenticated == null) {
+                showAlert("Error: Contraseña incorrecta o usuario no encontrado.", "Error", AlertType.WARNING);
+                return;
             }
 
-            boolean success = userService.updateUserProfile(Integer.parseInt(identifier), newName, newEmail,
+            if (newName.isEmpty()) {
+                newName = authenticated.getName();
+            }
+            if (newEmail.isEmpty()) {
+                newEmail = authenticated.getEmail();
+            }
+            if (newPassword.isEmpty()) {
+                newPassword = authenticated.getPassword();
+            }
+
+            boolean success = userService.updateUserProfile(authenticated.getId(), newName, newEmail,
                     newPassword);
             if (success) {
-                return "Perfil actualizado con éxito.";
+                showAlert("Perfil actualizado con éxito.", "Exito", AlertType.INFORMATION);
             } else {
-                return "Error al actualizar el perfil.";
+                showAlert("Error al actualizar el perfil.", "Error", AlertType.ERROR);
+                return;
             }
         } catch (IllegalArgumentException e) {
-            return "Error: " + e.getMessage();
+            showAlert(e.getMessage(), "Alerta", AlertType.WARNING);
+            return;
         } catch (Exception e) {
             e.printStackTrace();
-            return "Ocurrió un error inesperado.";
+            return;
         }
     }
 
-    /**
-     * Partially updates the user's profile with specific fields.
-     *
-     * @param userId   The unique ID of the user.
-     * @param name     The new name for the user (optional, can be null).
-     * @param email    The new email address for the user (optional, can be null).
-     * @param password The new password for the user (optional, can be null).
-     * @return {@code true} if the update is successful, {@code false} otherwise.
-     */
-    public boolean partialUpdateProfile(int userId, String name, String email, String password) {
+    public void logout(Stage currentStage) {
         try {
-            return userService.partialUpdateUserProfile(userId, name, email, password);
+            Pane loginPane = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
+            Scene loginPaneScene = new Scene(loginPane);
+            currentStage.setScene(loginPaneScene);
         } catch (Exception e) {
+            showAlert("ERROR.", "Error", AlertType.ERROR);
             e.printStackTrace();
-            return false;
         }
     }
+
+    private void showAlert(String message, String title, AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
 }

@@ -7,19 +7,18 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.leveltrack.controller.UserManagementController">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.leveltrack.controller.UserManagementView">
     <center>
         <TableView fx:id="userTable">
             <columns>
                 <TableColumn fx:id="nameColumn" text="Name" />
                 <TableColumn fx:id="emailColumn" text="Email" />
-                <TableColumn fx:id="roleColumn" text="Role" />
+                <TableColumn fx:id="roleColumn" text="Role" editable="true"/>
             </columns>
         </TableView>
     </center>
     <bottom>
         <HBox spacing="10" alignment="center">
-            <Button fx:id="updateRoleButton" text="Update Role" />
             <Button fx:id="deleteUserButton" text="Delete User" />
         </HBox>
     </bottom>

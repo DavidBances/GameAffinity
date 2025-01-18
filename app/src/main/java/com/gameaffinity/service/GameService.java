@@ -38,4 +38,8 @@ public class GameService {
         }
     }
 
+    public Game getGameByName(String gameName) {
+        return gameDAO.searchGameByName(gameName);
+    }
+
 }

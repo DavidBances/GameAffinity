@@ -2,7 +2,12 @@ package com.gameaffinity.controller;
 
 import com.gameaffinity.service.UserService;
 
-import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 
 /**
  * The RegisterController class handles user registration in the application.
@@ -21,15 +26,10 @@ public class RegisterController {
      * @throws Exception if there is an issue initializing the UserService.
      */
     public RegisterController() {
-    }
-
-    @FXML
-    public void initialize() {
         try {
             this.userService = new UserService();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error al inicializar el servicio de usuario: " + e.getMessage());
         }
     }
 
@@ -42,14 +42,34 @@ public class RegisterController {
      * @return {@code true} if the registration is successful, {@code false}
      *         otherwise.
      */
-    public boolean register(String name, String email, String password) {
+    public void register(String name, String email, String password) {
         try {
             if (userService.emailExists(email)) {
-                return false;
+                showAlert("El email ya está en uso.", "Error", AlertType.ERROR);
             }
-            return userService.registerUser(name, email, password, "REGULAR_USER");
+            if (userService.registerUser(name, email, password, "REGULAR_USER")) {
+                showAlert("Cuenta creada con éxito.", "Cuenta creada", AlertType.INFORMATION);
+            }
         } catch (IllegalArgumentException e) {
-            return false;
+            showAlert("ERROR.", "Error", AlertType.ERROR);
         }
+    }
+
+    public void back(Stage currentStage) {
+        try {
+            Pane loginPane = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
+            Scene loginScene = new Scene(loginPane);
+            currentStage.setScene(loginScene);
+        } catch (Exception e) {
+            showAlert("ERROR.", "Error", AlertType.ERROR);
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(String message, String title, AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.leveltrack.controller.AdminDashboardController">
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="com.leveltrack.controller.AdminDashboardView">
     <!-- Parte superior con los botones principales -->
     <top>
         <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="manageUsersButton" text="Manage Users" onAction="#handleManageUsers" />
-            <Button fx:id="manageGamesButton" text="Manage Games" onAction="#handleManageGames" />
+            <Button fx:id="manageUsersButton" text="Manage Users" />
+            <Button fx:id="manageGamesButton" text="Manage Games" />
         </HBox>
     </top>
 
     <!-- Parte inferior con el botón de logout -->
     <bottom>
         <HBox alignment="CENTER" spacing="10">
-            <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout" />
+            <Button fx:id="logoutButton" text="Logout" />
         </HBox>
     </bottom>
 
