@@ -64,12 +64,12 @@ public class FriendLibraryView {
     }
 
     private void refreshFriendGamesListByName(String name) {
-        List<Game> games = libraryController.searchGamesByName(name);
+        List<Game> games = libraryController.getGamesByNameUser(this.friendId, name);
         gamesTable.setItems(FXCollections.observableArrayList(games));
     }
 
     private void refreshFriendGamesListByGenre(String genre) {
-        List<Game> games = libraryController.getGamesByGenreUser(friendId, genre);
+        List<Game> games = libraryController.getGamesByGenreUser(this.friendId, genre);
         gamesTable.setItems(FXCollections.observableArrayList(games));
     }
 

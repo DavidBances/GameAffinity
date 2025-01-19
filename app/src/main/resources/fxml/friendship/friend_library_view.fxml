@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.geometry.Pos?>
-<?import javafx.scene.text.*?>
 
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.FriendLibraryView">
     <children>
         <VBox alignment="TOP_CENTER" spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">

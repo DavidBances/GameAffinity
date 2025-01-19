@@ -59,12 +59,12 @@ public class GameDatabaseView {
     }
 
     private void refreshGameDatabase(String keyword) {
-        List<Game> games = libraryController.searchGamesByName(keyword);
+        List<Game> games = libraryController.getGamesByNameUser(this.userId, keyword);
         databaseTable.setItems(FXCollections.observableArrayList(games));
     }
 
     private void refreshGameDatabaseByGenre(String genre) {
-        List<Game> games = libraryController.getGamesByGenre(genre);
+        List<Game> games = libraryController.getGamesByGenreUser(this.userId, genre);
         databaseTable.setItems(FXCollections.observableArrayList(games));
     }
 

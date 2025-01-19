@@ -42,34 +42,19 @@ public class RegisterController {
      * @return {@code true} if the registration is successful, {@code false}
      *         otherwise.
      */
-    public void register(String name, String email, String password) {
+    public String register(String name, String email, String password) {
         try {
             if (userService.emailExists(email)) {
-                showAlert("El email ya está en uso.", "Error", AlertType.ERROR);
+                return "El email ya está en uso.";
             }
             if (userService.registerUser(name, email, password, "REGULAR_USER")) {
-                showAlert("Cuenta creada con éxito.", "Cuenta creada", AlertType.INFORMATION);
+                return "Cuenta creada con éxito.";
             }
         } catch (IllegalArgumentException e) {
-            showAlert("ERROR.", "Error", AlertType.ERROR);
+            return e.getMessage();
         }
+        return "";
     }
 
-    public void back(Stage currentStage) {
-        try {
-            Parent login = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
-            Scene loginScene = new Scene(login);
-            currentStage.setScene(loginScene);
-        } catch (Exception e) {
-            showAlert("ERROR.", "Error", AlertType.ERROR);
-            e.printStackTrace();
-        }
-    }
 
-    private void showAlert(String message, String title, AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
 }

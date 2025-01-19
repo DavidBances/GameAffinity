@@ -29,17 +29,13 @@ public class LibraryController {
      * @throws Exception if there is an issue initializing the LibraryService.
      */
     public LibraryController() {
-    }
-
-    @FXML
-    public void initialize() {
         try {
             this.libraryService = new LibraryService();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error al inicializar el servicio de usuario: " + e.getMessage());
         }
     }
+
 
     /**
      * Retrieves a list of games owned by a specific user.
@@ -60,6 +56,10 @@ public class LibraryController {
      */
     public List<Game> getGamesByGenreUser(int userId, String genre) {
         return libraryService.getGamesByGenreUser(userId, genre);
+    }
+
+    public List<Game> getGamesByNameUser(int userId, String name) {
+        return libraryService.getGamesByNameUser(userId, name);
     }
 
     /**
@@ -103,16 +103,6 @@ public class LibraryController {
      */
     public List<Game> getAllGames() {
         return libraryService.getAllGames();
-    }
-
-    /**
-     * Searches for games by their name.
-     *
-     * @param keyword The keyword to search for.
-     * @return A list of {@code Game} objects matching the keyword.
-     */
-    public List<Game> searchGamesByName(String keyword) {
-        return libraryService.searchGamesByName(keyword);
     }
 
     /**

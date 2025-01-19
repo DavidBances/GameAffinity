@@ -144,6 +144,30 @@ public class LibraryDAOImpl implements LibraryDAO {
     }
 
     @Override
+    public List<Game> getGamesByNameUser(int userId, String name){
+            List<Game> games = new ArrayList<>();
+            String query = QueryLoader.getQuery("library.getGamesByNameUser");
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setInt(1, userId);
+                stmt.setString(2, "%" + name + "%");
+                ResultSet rs = stmt.executeQuery();
+                while (rs.next()) {
+                    games.add(new Game(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("genre"),
+                            rs.getDouble("price"),
+                            rs.getString("state"),
+                            rs.getInt("game_score")));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return games;
+    }
+
+
+    @Override
     public List<Game> getGamesByGenre(String genre) {
         List<Game> games = new ArrayList<>();
         String query = QueryLoader.getQuery("library.getGamesByGenre");

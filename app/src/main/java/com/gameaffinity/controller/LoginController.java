@@ -42,46 +42,7 @@ public class LoginController {
      * @return A {@code UserBase} object representing the authenticated user,
      *         or {@code null} if authentication fails.
      */
-    public UserBase login(Stage currentStage, String email, String password) {
-        try {
-            UserBase user = userService.authenticate(email, password);
-            if (user != null) {
-                System.out.println("ADMINISTRATOR".equalsIgnoreCase(user.getRole()));
-                System.out.println(user.getRole());
-                if ("ADMINISTRATOR".equalsIgnoreCase(user.getRole())) {
-                    Parent adminDashboard = FXMLLoader.load(getClass().getResource("/fxml/admin/admin_dashboard.fxml"));
-                    Scene adminScene = new Scene(adminDashboard);
-                    currentStage.setScene(adminScene);
-                } else {
-                    Parent userDashboard = FXMLLoader.load(getClass().getResource("/fxml/user/user_dashboard.fxml"));
-                    Scene userScene = new Scene(userDashboard);
-                    currentStage.setScene(userScene);
-                }
-            } else {
-                showAlert("Invalid credentials.", "Error", Alert.AlertType.ERROR);
-            }
-        } catch (Exception e) {
-            showAlert("An error occurred.", "Error", Alert.AlertType.ERROR);
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void register(Stage currentStage) {
-        try {
-            Parent registerPane = FXMLLoader.load(getClass().getResource("/fxml/auth/register_panel.fxml"));
-            Scene registerScene = new Scene(registerPane);
-            currentStage.setScene(registerScene);
-        } catch (Exception e) {
-            e.printStackTrace();
-            showAlert("An error occurred.", "Error", Alert.AlertType.ERROR);
-        }
-    }
-
-    private void showAlert(String message, String title, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
+    public UserBase login(String email, String password) {
+        return userService.authenticate(email, password);
     }
 }

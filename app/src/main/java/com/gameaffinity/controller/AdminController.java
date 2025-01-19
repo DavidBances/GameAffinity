@@ -21,41 +21,8 @@ import javafx.stage.Stage;
  */
 public class AdminController {
 
-    public void openGamesManagementView(StackPane mainContent) {
-        try {
-            Parent gameManagement = FXMLLoader.load(getClass().getResource("/fxml/admin/game_management.fxml"));
-            mainContent.getChildren().setAll(gameManagement);
-        } catch (Exception e) {
-            showAlert("Error.", "Error", AlertType.ERROR);
-            e.printStackTrace();
-        }
-    }
 
-    public void openUserManagementView(StackPane mainContent) {
-        try {
-            Parent userManagement = FXMLLoader.load(getClass().getResource("/fxml/admin/user_management.fxml"));
-            mainContent.getChildren().setAll(userManagement);
-        } catch (Exception e) {
-            showAlert("Error.", "Error", AlertType.ERROR);
-            e.printStackTrace();
-        }
-    }
 
-    public void logout(Stage currentStage) {
-        try {
-            Parent login = FXMLLoader.load(getClass().getResource("/fxml/auth/login_panel.fxml"));
-            Scene loginScene = new Scene(login);
-            currentStage.setScene(loginScene);
-        } catch (Exception e) {
-            showAlert("Error.", "Error", AlertType.ERROR);
-            e.printStackTrace();
-        }
-    }
 
-    private void showAlert(String message, String title, AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 }

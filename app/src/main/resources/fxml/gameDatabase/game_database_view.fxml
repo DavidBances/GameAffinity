@@ -2,8 +2,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.collections.*?>
-<?import javafx.geometry.Pos?>
-<?import javafx.scene.text.*?>
+<?import java.lang.String?>
+
 
 <AnchorPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.GameDatabaseView">
     <children>

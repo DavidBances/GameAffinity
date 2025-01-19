@@ -27,10 +27,6 @@ public class GameManagementController {
         }
     }
 
-    public void refreshGameTable(TableView<Game> gameTable) {
-        gameTable.getItems().clear();
-        gameTable.getItems().addAll(this.getAllGames());
-    }
 
     /**
      * Retrieves a list of all games from the database.
@@ -43,38 +39,6 @@ public class GameManagementController {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }
-    }
-
-    public void openGameFormDialog() {
-        try {
-            // Cargar el FXML
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dialogs/game_form_dialog.fxml"));
-            Parent root = loader.load();
-
-            Stage stage = new Stage();
-            stage.setTitle("Añadir Juego");
-            stage.setScene(new Scene(root));
-
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void saveGame(String name, String genre, String priceText) {
-
-        try {
-            double price = Double.parseDouble(priceText);
-            // Crear un nuevo juego
-            Game newGame = new Game(1, name, genre, price, "Available", 0);
-            if (gameService.addGame(newGame)) {
-                showAlert("Game added successfully!", "Success", Alert.AlertType.INFORMATION);
-            } else {
-                showAlert("Failed to add the game.", "Error", Alert.AlertType.ERROR);
-            }
-        } catch (NumberFormatException e) {
-            showAlert("Price must be a valid number.", "Validation Error", Alert.AlertType.ERROR);
         }
     }
 
@@ -93,34 +57,8 @@ public class GameManagementController {
         }
     }
 
-    public void deleteGame(Game game) {
-        if (game != null) {
-            boolean confirmed = showConfirmationDialog("Are you sure you want to delete this game?");
-            if (confirmed) {
-                boolean deleted = gameService.deleteGame(game.getId());
-                if (deleted) {
-                    showAlert("Game deleted successfully!", "Exito", AlertType.INFORMATION);
-                } else {
-                    showAlert("Failed to delete game.", "Error", AlertType.ERROR);
-                }
-            }
-        } else {
-            showAlert("Please select a game to delete.", "Alerta", AlertType.WARNING);
-        }
-    }
-
-    private void showAlert(String message, String title, AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private boolean showConfirmationDialog(String message) {
-        // Mostrar un cuadro de confirmación
-        Alert alert = new Alert(AlertType.CONFIRMATION);
-        alert.setContentText(message);
-        return alert.showAndWait().get() == ButtonType.OK;
+    public boolean deleteGame(Game game) {
+        return gameService.deleteGame(game.getId());
     }
 
 }

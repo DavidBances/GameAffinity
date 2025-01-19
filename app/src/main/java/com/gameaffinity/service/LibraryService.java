@@ -29,6 +29,10 @@ public class LibraryService {
         return libraryDAO.getGamesByGenreUser(userId, genre);
     }
 
+    public List<Game> getGamesByNameUser(int userId, String name) {
+        return libraryDAO.getGamesByNameUser(userId, name);
+    }
+
     public boolean addGameToLibrary(int userId, int gameId, String state) {
         return libraryDAO.addGameToLibrary(userId, gameId, state);
     }
@@ -51,10 +55,6 @@ public class LibraryService {
 
     public List<Game> getAllGames() {
         return gameDAO.getAllGames();
-    }
-
-    public List<Game> searchGamesByName(String keyword) {
-        return gameDAO.searchGamesByName(keyword);
     }
 
     public List<Game> getGamesByGenre(String genre) {

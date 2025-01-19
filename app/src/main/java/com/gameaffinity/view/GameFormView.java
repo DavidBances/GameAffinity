@@ -4,9 +4,14 @@ import com.gameaffinity.model.Game;
 import com.gameaffinity.controller.GameManagementController;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.util.List;
 
 public class GameFormView {
 
@@ -23,20 +28,13 @@ public class GameFormView {
     private Button saveButton;
 
     private Game game;
-    private GameManagementController gameManagementController = new GameManagementController();
+    private final GameManagementController gameManagementController = new GameManagementController();
 
     @FXML
     private void initialize() {
 
-        if (game != null) {
-            System.out.println(game.getName() + " " + game.getGenre() + " " + game.getPrice());
-            nameField.setText(game.getName());
-            genreField.setText(game.getGenre());
-            priceField.setText(String.valueOf(game.getPrice()));
-        }
-
         saveButton.setOnAction(event -> {
-            gameManagementController.saveGame(
+            saveGame(
                     nameField.getText(),
                     genreField.getText(),
                     priceField.getText());
@@ -45,7 +43,26 @@ public class GameFormView {
         });
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void saveGame(String name, String genre, String priceText) {
+
+        try {
+            double price = Double.parseDouble(priceText);
+            // Crear un nuevo juego
+            Game newGame = new Game(1, name, genre, price, "Available", 0);
+            if (gameManagementController.addGame(newGame)) {
+                showAlert("Game added successfully!", "Success", Alert.AlertType.INFORMATION);
+            } else {
+                showAlert("Failed to add the game.", "Error", Alert.AlertType.ERROR);
+            }
+        } catch (NumberFormatException e) {
+            showAlert("Price must be a valid number.", "Validation Error", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void showAlert(String message, String title, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

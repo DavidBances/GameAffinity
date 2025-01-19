@@ -19,6 +19,8 @@ public interface LibraryDAO {
 
     List<Game> getGamesByGenreUser(int userId, String genre);
 
+    List<Game> getGamesByNameUser(int userId, String name);
+
     List<Game> getGamesByGenre(String genre);
 
     boolean isGameInLibrary(int libraryId, int gameId);

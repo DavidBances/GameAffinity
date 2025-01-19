@@ -6,9 +6,7 @@ import com.gameaffinity.controller.UserManagementController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 
 public class UserManagementView {
@@ -28,11 +26,14 @@ public class UserManagementView {
     @FXML
     private Button deleteUserButton;
 
-    private UserManagementController userManagementController = new UserManagementController();
+    private final UserManagementController userManagementController = new UserManagementController();
 
     @FXML
     private void initialize() {
         // Configurar las columnas de la tabla
+        userTable.setEditable(true);
+        roleColumn.setEditable(true);
+
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         emailColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
         roleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole()));
@@ -45,16 +46,55 @@ public class UserManagementView {
         roleColumn.setOnEditCommit(event -> {
             UserBase user = event.getRowValue();
             String newRole = event.getNewValue();
-            userManagementController.updateUserRole(user, newRole);
-            userManagementController.refreshUserTable(userTable);
+            if (userManagementController.updateUserRole(user, newRole)){
+                showAlert("Rol modificado con éxito.", "Exito", Alert.AlertType.INFORMATION);
+            }else{
+                showAlert("Failed to modify role.", "Error", Alert.AlertType.ERROR);
+            }
+            refreshUserTable();
         });
 
         deleteUserButton.setOnAction(
                 event -> {
-                    userManagementController.deleteUser(userTable.getSelectionModel().getSelectedItem());
-                    userManagementController.refreshUserTable(userTable);
+                    deleteUser(userTable.getSelectionModel().getSelectedItem());
+                    refreshUserTable();
                 });
 
-        userManagementController.refreshUserTable(userTable);
+        refreshUserTable();
+    }
+
+    public void refreshUserTable() {
+        userTable.getItems().clear();
+        userTable.getItems().addAll(userManagementController.getAllUsers());
+    }
+
+    public void deleteUser(UserBase user){
+        if (user != null) {
+            boolean confirmed = showConfirmationDialog("Are you sure you want to delete this user?");
+            if (confirmed) {
+                boolean deleted = userManagementController.deleteUser(user);
+                if (deleted) {
+                    showAlert("User deleted successfully!", "Exito", Alert.AlertType.INFORMATION);
+                } else {
+                    showAlert("Failed to delete user.", "Error", Alert.AlertType.ERROR);
+                }
+            }
+        } else {
+            showAlert("Please select a user to delete.", "Alerta", Alert.AlertType.WARNING);
+        }
+    }
+
+    private void showAlert(String message, String title, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    private boolean showConfirmationDialog(String message) {
+        // Mostrar un cuadro de confirmación
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setContentText(message);
+        return alert.showAndWait().get() == ButtonType.OK;
     }
 }
