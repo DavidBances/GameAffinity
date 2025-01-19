@@ -49,12 +49,11 @@ public class RegisterController {
             }
             if (userService.registerUser(name, email, password, "REGULAR_USER")) {
                 return "Cuenta creada con éxito.";
+            }else{
+                return "Error al crear la cuenta.";
             }
         } catch (IllegalArgumentException e) {
             return e.getMessage();
         }
-        return "";
     }
-
-
 }

@@ -10,7 +10,7 @@
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="Search by Name: " />
                 <TextField fx:id="searchField" />
-                <Button text="Search" onAction="#handleSearchButtonClick"/>
+                <Button fx:id="searchButton" text="Search" />
             </HBox>
             <HBox spacing="10" alignment="CENTER_LEFT">
                 <Label text="Filter by Genre: " />
@@ -21,7 +21,7 @@
                         </FXCollections>
                     </items>
                 </ComboBox>
-                <Button text="Filter" onAction="#handleFilterButtonClick"/>
+                <Button fx:id="filterButton" text="Filter" />
             </HBox>
         </VBox>
 
@@ -35,7 +35,5 @@
                 <TableColumn fx:id="scoreColumn" text="Score" />
             </columns>
         </TableView>
-
-        <Button text="Back" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" onAction="#handleBackButtonClick"/>
     </children>
 </AnchorPane>

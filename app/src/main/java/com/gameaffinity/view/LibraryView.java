@@ -16,7 +16,7 @@ import javafx.stage.Stage;
 
 import java.util.List;
 
-public class LibraryView {
+public class  LibraryView {
 
     @FXML
     private TextField searchField;
@@ -62,9 +62,12 @@ public class LibraryView {
         searchButton.setOnAction(e -> refreshGamesListByName(searchField.getText().trim()));
         filterButton.setOnAction(e -> {
             String selectedGenre = genreComboBox.getValue();
+            String search = searchField.getText().trim();
             if ("All".equalsIgnoreCase(selectedGenre)) {
                 refreshGamesList();
-            } else {
+            } else if (!searchField.getText().trim().isEmpty()){
+                refreshGamesListByGenreAndName(selectedGenre, search);
+            }else{
                 refreshGamesListByGenre(selectedGenre);
             }
         });
@@ -117,6 +120,12 @@ public class LibraryView {
         List<Game> games = libraryController.getGamesByGenreUser(this.user.getId(), genre);
         gamesTable.setItems(FXCollections.observableArrayList(games));
     }
+
+    private void refreshGamesListByGenreAndName(String genre, String name) {
+        List<Game> games = libraryController.getGamesByGenreAndNameUser(this.user.getId(), genre, name);
+        gamesTable.setItems(FXCollections.observableArrayList(games));
+    }
+
 
     private void addGame() {
         String gameName = showInputDialog("Enter Game Name to Add:");

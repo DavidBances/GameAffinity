@@ -4,13 +4,15 @@ import com.gameaffinity.controller.FriendshipController;
 import com.gameaffinity.model.Friendship;
 import com.gameaffinity.model.UserBase;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 import javax.swing.*;
 import java.util.List;
@@ -43,12 +45,9 @@ public class FriendshipView {
     private Button deleteFriendButton;
     @FXML
     private Button backButton;
-    @FXML
-    private FlowPane bottomPanel;
 
     private final FriendshipController friendshipController = new FriendshipController();
-    private int userId;
-    private String userRole;
+    private UserBase user;
 
     public void initialize() {
         // Configure table columns for friendsTable
@@ -69,20 +68,19 @@ public class FriendshipView {
         backButton.setOnAction(e -> goBack());
     }
 
-    public void setUserData(int userId, String userRole) {
-        this.userId = userId;
-        this.userRole = userRole;
+    public void setUser(UserBase user) {
+        this.user = user;
         refreshFriendsList();
         refreshPendingRequests();
     }
 
     private void refreshFriendsList() {
-        List<UserBase> friends = friendshipController.getFriends(userId);
+        List<UserBase> friends = friendshipController.getFriends(this.user.getId());
         friendsTable.getItems().setAll(friends);
     }
 
     private void refreshPendingRequests() {
-        List<Friendship> requests = friendshipController.getFriendRequests(userId);
+        List<Friendship> requests = friendshipController.getFriendRequests(this.user.getId());
         requestsTable.getItems().setAll(requests);
     }
 
@@ -90,12 +88,12 @@ public class FriendshipView {
         Friendship selectedRequest = requestsTable.getSelectionModel().getSelectedItem();
         if (selectedRequest != null) {
             boolean success = friendshipController.respondToFriendRequest(selectedRequest.getId(), "Accepted");
-            JOptionPane.showMessageDialog(null, success ? "Request accepted!" : "Failed to accept request.");
+            showAlert(success ? "Request accepted!" : "Failed to accept request.", "", success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
             refreshPendingRequests();
             refreshFriendsList();
         } else {
-            JOptionPane.showMessageDialog(null, "Please select a request to accept.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            showAlert("Please select a request to accept.", "Error",
+                    Alert.AlertType.ERROR);
         }
     }
 
@@ -103,26 +101,26 @@ public class FriendshipView {
         Friendship selectedRequest = requestsTable.getSelectionModel().getSelectedItem();
         if (selectedRequest != null) {
             boolean success = friendshipController.respondToFriendRequest(selectedRequest.getId(), "Rejected");
-            JOptionPane.showMessageDialog(null, success ? "Request rejected!" : "Failed to reject request.");
+            showAlert(success ? "Request rejected!" : "Failed to reject request.", "", success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
             refreshPendingRequests();
         } else {
-            JOptionPane.showMessageDialog(null, "Please select a request to reject.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            showAlert("Please select a request to reject.", "Error",
+                    Alert.AlertType.ERROR);
         }
     }
 
     private void sendFriendRequest() {
-        String receiverEmail = JOptionPane.showInputDialog("Enter the User email of the person you want to add:");
+        String receiverEmail = showInputDialog("Enter the User email of the person you want to add:");
         int receiverId = friendshipController.getUserIdByEmail(receiverEmail);
         boolean success = false;
 
         if (receiverId != -1) {
-            if (friendshipController.checkValidRequest(userId, receiverId)) {
-                success = friendshipController.sendFriendRequest(userId, receiverId);
+            if (friendshipController.checkValidRequest(this.user.getId(), receiverId)) {
+                success = friendshipController.sendFriendRequest(this.user.getId(), receiverId);
             }
-            JOptionPane.showMessageDialog(null, success ? "Friend request sent!" : "Failed to send friend request.");
+            showAlert(success ? "Friend request sent!" : "Failed to send friend request.", "", success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
         } else {
-            JOptionPane.showMessageDialog(null, "Invalid User Email.", "Error", JOptionPane.ERROR_MESSAGE);
+            showAlert("Invalid User Email.", "Error", Alert.AlertType.ERROR);
         }
     }
 
@@ -130,20 +128,25 @@ public class FriendshipView {
         UserBase selectedFriend = friendsTable.getSelectionModel().getSelectedItem();
         if (selectedFriend != null) {
             try {
-                int friendId = selectedFriend.getId();
-                // Assuming you have a method to navigate to the friend's library view
-                // (You can create another FXML for FriendLibraryView similar to the one for
-                // Friendship)
-                // If using JavaFX, you would typically use FXMLLoader to load a new view
-                System.out.println("Viewing friend's library for ID: " + friendId);
-                // Load friend library view and pass friendId (for example using FXMLLoader)
+                Stage newStage = new Stage();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/friendship/friend_library_view.fxml"));
+                Parent friendLibraryView = loader.load();
+
+                FriendLibraryView controller = loader.getController();
+                controller.setUser(selectedFriend);
+
+                Scene friendshipViewScene = new Scene(friendLibraryView);
+                newStage.setScene(friendshipViewScene);
+
+                newStage.setTitle("Friend's Library - " + selectedFriend.getName());
+                newStage.show();
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(null, "Error loading friend's library: " + ex.getMessage(), "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                showAlert("Error loading friend's library: " + ex.getMessage(), "Error",
+                        Alert.AlertType.ERROR);
             }
         } else {
-            JOptionPane.showMessageDialog(null, "Please select a friend to view their library.", "Error",
-                    JOptionPane.ERROR_MESSAGE);
+            showAlert("Please select a friend to view their library.", "Error",
+                    Alert.AlertType.ERROR);
         }
     }
 
@@ -151,19 +154,43 @@ public class FriendshipView {
         UserBase selectedFriend = friendsTable.getSelectionModel().getSelectedItem();
         if (selectedFriend != null) {
             int friendId = selectedFriend.getId();
-            boolean success = friendshipController.deleteFriend(userId, friendId);
+            boolean success = friendshipController.deleteFriend(this.user.getId(), friendId);
             if (success) {
-                JOptionPane.showMessageDialog(null, "Friend deleted successfully.", "Success",
-                        JOptionPane.INFORMATION_MESSAGE);
+                showAlert("Friend deleted successfully.", "Success", Alert.AlertType.INFORMATION);
                 refreshFriendsList();
             } else {
-                JOptionPane.showMessageDialog(null, "Friend can't be deleted.", "Error", JOptionPane.ERROR_MESSAGE);
+                showAlert("Friend can't be deleted.", "Error", Alert.AlertType.ERROR);
             }
         }
     }
 
     private void goBack() {
-        // Go back to the previous screen (e.g., User Dashboard)
-        // You would need to handle this with appropriate view navigation logic
+            try {
+                Stage currentStage = (Stage) friendsTable.getScene().getWindow();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user/user_dashboard.fxml"));
+                Parent userDashboard = loader.load();
+
+                UserDashboardView controller = loader.getController();
+                controller.setUser(this.user);
+
+                Scene userScene = new Scene(userDashboard);
+                currentStage.setScene(userScene);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+    }
+
+    private void showAlert(String message, String title, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.setTitle(title);
+        alert.showAndWait();
+    }
+
+    private String showInputDialog(String message) {
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setHeaderText(message);
+        dialog.setTitle("Input");
+        return dialog.showAndWait().orElse(null);
     }
 }

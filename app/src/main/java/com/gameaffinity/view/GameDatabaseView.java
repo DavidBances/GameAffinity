@@ -3,13 +3,17 @@ package com.gameaffinity.view;
 import com.gameaffinity.controller.LibraryController;
 import com.gameaffinity.model.Game;
 
+import com.gameaffinity.model.UserBase;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 import java.util.List;
 
@@ -18,7 +22,11 @@ public class GameDatabaseView {
     @FXML
     private TextField searchField;
     @FXML
+    private Button searchButton;
+    @FXML
     private ComboBox<String> genreComboBox;
+    @FXML
+    private Button filterButton;
     @FXML
     private TableView<Game> databaseTable;
     @FXML
@@ -29,17 +37,54 @@ public class GameDatabaseView {
     private TableColumn<Game, String> genreColumn;
     @FXML
     private TableColumn<Game, Double> priceColumn;
+    @FXML
+    private Button addGameButton;
+    @FXML
+    private Button backButton;
 
     private final LibraryController libraryController = new LibraryController();
-    private int userId;
+    private UserBase user;
 
     public void initialize() {
-        // Set up genre combo box
-        genreComboBox.getItems().add("All");
-        List<String> genres = libraryController.getAllGenres();
-        genreComboBox.getItems().addAll(genres);
+        configureTableColumns();
+        loadGenres();
 
-        // Set up the table columns
+        searchButton.setOnAction(e -> refreshGameDatabaseByName(searchField.getText().trim()));
+        filterButton.setOnAction(e -> {
+            String selectedGenre = genreComboBox.getValue();
+            String search = searchField.getText().trim();
+            if ("All".equalsIgnoreCase(selectedGenre)) {
+                refreshGameDatabase();
+            } else if (!searchField.getText().trim().isEmpty()){
+                refreshGameDatabaseByGenreAndName(selectedGenre, search);
+            }else{
+                refreshGameDatabaseByGenre(selectedGenre);
+            }
+        });
+
+        addGameButton.setOnAction(e -> {
+            addGame();
+            refreshGameDatabase();
+        });
+        backButton.setOnAction(e -> {
+            back();
+            refreshGameDatabase();
+        });
+    }
+
+    public void setUser(UserBase user) {
+        this.user = user;
+    }
+
+    private void loadGenres(){
+        genreComboBox.getItems().clear();
+        genreComboBox.getItems().add("All");
+        genreComboBox.getItems().addAll(libraryController.getAllGenres());
+        genreComboBox.getSelectionModel().selectFirst();
+    }
+
+
+    private void configureTableColumns() {
         idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         genreColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGenre()));
@@ -49,74 +94,59 @@ public class GameDatabaseView {
         refreshGameDatabase();
     }
 
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     private void refreshGameDatabase() {
         List<Game> games = libraryController.getAllGames();
         databaseTable.setItems(FXCollections.observableArrayList(games));
     }
 
-    private void refreshGameDatabase(String keyword) {
-        List<Game> games = libraryController.getGamesByNameUser(this.userId, keyword);
+    private void refreshGameDatabaseByName(String keyword) {
+        List<Game> games = libraryController.getGamesByNameUser(this.user.getId(), keyword);
         databaseTable.setItems(FXCollections.observableArrayList(games));
     }
 
     private void refreshGameDatabaseByGenre(String genre) {
-        List<Game> games = libraryController.getGamesByGenreUser(this.userId, genre);
+        List<Game> games = libraryController.getGamesByGenreUser(this.user.getId(), genre);
         databaseTable.setItems(FXCollections.observableArrayList(games));
     }
 
-    @FXML
-    private void handleSearchButtonClick() {
-        String keyword = searchField.getText().trim();
-        if (!keyword.isEmpty()) {
-            refreshGameDatabase(keyword);
-        } else {
-            refreshGameDatabase();
-        }
+    private void refreshGameDatabaseByGenreAndName(String genre, String name) {
+        List<Game> games = libraryController.getGamesByGenreAndNameUser(this.user.getId(), genre, name);
+        databaseTable.setItems(FXCollections.observableArrayList(games));
     }
 
-    @FXML
-    private void handleFilterButtonClick() {
-        String selectedGenre = genreComboBox.getSelectionModel().getSelectedItem();
-        if (!"All".equalsIgnoreCase(selectedGenre)) {
-            refreshGameDatabaseByGenre(selectedGenre);
-        } else {
-            refreshGameDatabase();
-        }
-    }
-
-    @FXML
-    private void handleAddGameButtonClick() {
+    private void addGame() {
         Game selectedGame = databaseTable.getSelectionModel().getSelectedItem();
         if (selectedGame != null) {
             try {
-                boolean success = libraryController.addGameToLibrary(userId, selectedGame.getName());
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Info");
-                alert.setHeaderText(null);
-                alert.setContentText(success ? "Game added to library!" : "Game already in library or not found.");
-                alert.showAndWait();
+                boolean success = libraryController.addGameToLibrary(this.user.getId(), selectedGame.getName());
+                showAlert(success ? "Game added to library!" : "Game already in library or not found.", success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
             } catch (Exception ex) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("Error adding game");
-                alert.setContentText(ex.getMessage());
-                alert.showAndWait();
+                showAlert(ex.getMessage(), Alert.AlertType.ERROR);
             }
         } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setHeaderText("No game selected");
-            alert.setContentText("Please select a game to add.");
-            alert.showAndWait();
+            showAlert("Please select a game to add.", Alert.AlertType.WARNING);
         }
     }
 
-    @FXML
-    private void handleBackButtonClick() {
-        // Implement back button logic to navigate back to the previous view
+    private void back() {
+        try {
+            Stage currentStage = (Stage) databaseTable.getScene().getWindow();
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user/user_dashboard.fxml"));
+            Parent userDashboard = loader.load();
+
+            UserDashboardView controller = loader.getController();
+            controller.setUser(this.user);
+
+            Scene userScene = new Scene(userDashboard);
+            currentStage.setScene(userScene);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void showAlert(String message, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

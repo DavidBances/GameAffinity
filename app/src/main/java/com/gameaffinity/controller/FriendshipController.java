@@ -29,15 +29,10 @@ public class FriendshipController {
      * @throws Exception if there is an error initializing the service.
      */
     public FriendshipController() {
-    }
-
-    @FXML
-    public void initialize() {
         try {
             this.friendshipService = new FriendshipService();
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("Error al inicializar el servicio de usuario: " + e.getMessage());
         }
     }
 

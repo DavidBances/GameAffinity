@@ -45,15 +45,18 @@ public class GameManagementController {
     /**
      * Adds a new game to the database.
      *
-     * @param game The game to be added.
+     * @param name The name of the game to be added.
      * @return {@code true} if the game was added successfully, {@code false} if the
      *         game already exists.
      */
-    public boolean addGame(Game game) {
-        if (gameService.isGameInDatabase(game.getName())) {
+    public boolean addGame(String name, String genre, String priceText) throws NumberFormatException{
+
+        double price = Double.parseDouble(priceText);
+        Game newGame = new Game(1, name, genre, price, "Available", 0);
+        if (gameService.isGameInDatabase(newGame.getName())) {
             return false;
         } else {
-            return gameService.addGame(game);
+            return gameService.addGame(newGame);
         }
     }
 

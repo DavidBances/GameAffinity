@@ -46,10 +46,7 @@ public class GameFormView {
     public void saveGame(String name, String genre, String priceText) {
 
         try {
-            double price = Double.parseDouble(priceText);
-            // Crear un nuevo juego
-            Game newGame = new Game(1, name, genre, price, "Available", 0);
-            if (gameManagementController.addGame(newGame)) {
+            if (gameManagementController.addGame(name, genre, priceText)) {
                 showAlert("Game added successfully!", "Success", Alert.AlertType.INFORMATION);
             } else {
                 showAlert("Failed to add the game.", "Error", Alert.AlertType.ERROR);

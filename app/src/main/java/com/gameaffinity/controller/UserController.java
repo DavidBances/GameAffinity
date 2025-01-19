@@ -2,6 +2,7 @@ package com.gameaffinity.controller;
 
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 
 /**
@@ -47,6 +48,9 @@ public class UserController {
     public boolean updateProfile(String email, String password, String newName, String newEmail,
                                   String newPassword) {
         UserBase authenticated = userService.authenticate(email, password);
+        if (authenticated == null) {
+            return false;
+        }
 
         if (newName.isEmpty()) {
             newName = authenticated.getName();

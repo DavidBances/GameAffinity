@@ -40,7 +40,6 @@ public class GameManagementView {
 
         addGameButton.setOnAction(event -> {
             openGameFormDialog();
-            System.out.println("HOLA");
             refreshGameTable();
         });
 

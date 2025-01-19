@@ -62,6 +62,10 @@ public class LibraryController {
         return libraryService.getGamesByNameUser(userId, name);
     }
 
+    public List<Game> getGamesByGenreAndNameUser(int userId, String genre, String name) {
+        return libraryService.getGamesByGenreAndNameUser(userId, genre, name);
+    }
+
     /**
      * Adds a game to a user's library.
      *

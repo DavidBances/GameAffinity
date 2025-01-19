@@ -3,6 +3,7 @@ package com.gameaffinity.model;
 public class Friendship {
     private int id;
     private int requesterId;
+    private String requesterEmail;
     private int receiverId;
     private String status;
 
@@ -14,9 +15,10 @@ public class Friendship {
      * @param receiverId  The ID of the user who received the friendship request.
      * @param status      The current status of the friendship.
      */
-    public Friendship(int id, int requesterId, int receiverId, String status) {
+    public Friendship(int id, int requesterId, String requesterEmail, int receiverId, String status) {
         this.id = id;
         this.requesterId = requesterId;
+        this.requesterEmail = requesterEmail;
         this.receiverId = receiverId;
         this.status = status;
     }
@@ -55,6 +57,14 @@ public class Friendship {
      */
     public String getStatus() {
         return status;
+    }
+
+    public String getRequesterEmail() {
+        return requesterEmail;
+    }
+
+    public void setRequesterEmail(String requesterEmail) {
+        this.requesterEmail = requesterEmail;
     }
 
     /**

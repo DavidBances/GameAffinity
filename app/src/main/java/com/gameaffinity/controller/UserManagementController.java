@@ -52,6 +52,5 @@ public class UserManagementController {
      */
     public boolean deleteUser(UserBase user) {
         return userService.deleteUser(user.getId());
-
     }
 }

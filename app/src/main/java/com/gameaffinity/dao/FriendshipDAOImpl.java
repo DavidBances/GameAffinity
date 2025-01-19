@@ -196,6 +196,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
                 requests.add(new Friendship(
                         rs.getInt("id"),
                         rs.getInt("requester_id"),
+                        getUserEmailById(rs.getInt("requester_id")),
                         rs.getInt("receiver_id"),
                         rs.getString("status")));
             }
@@ -247,6 +248,23 @@ public class FriendshipDAOImpl implements FriendshipDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return -1;
+        }
+    }
+
+    private String getUserEmailById(int userId) {
+        String query = QueryLoader.getQuery("friendship.getUserEmailByUserId");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getString("email");
+            } else {
+                return "";
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "";
         }
     }
 
