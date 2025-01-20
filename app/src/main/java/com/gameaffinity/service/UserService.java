@@ -76,16 +76,24 @@ public class UserService {
      * @return True if the profile was successfully updated, false otherwise.
      */
     public boolean updateUserProfile(int id, String name, String email, String password) {
-        if (id <= 0 || name == null || name.isEmpty() || email == null || email.isEmpty() || password == null
-                || password.isEmpty()) {
-            throw new IllegalArgumentException("All fields are required, and ID must be positive.");
+        UserBase user = userDAO.findById(id);
+
+        if (name.isEmpty()) {
+            name = user.getName();
+        }
+        if (email.isEmpty()) {
+            email = user.getEmail();
+        }
+        if (password.isEmpty()) {
+            password = user.getPassword();
+        } else {
+            password = hashPassword(password);
         }
 
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email format.");
         }
 
-        UserBase user = userDAO.findById(id);
         if (user == null) {
             throw new IllegalArgumentException("User not found.");
         }
@@ -94,7 +102,7 @@ public class UserService {
         user.setEmail(email);
         user.setPassword(password);
 
-        return userDAO.updateProfiled(user);
+        return userDAO.updateProfile(user);
     }
 
     /**

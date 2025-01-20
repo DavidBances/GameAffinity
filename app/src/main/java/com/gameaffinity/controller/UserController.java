@@ -2,14 +2,12 @@ package com.gameaffinity.controller;
 
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 /**
  * The UserController class manages user-related operations such as updating
  * user profiles in the application.
  *
- * @author Level Track
+ * @author DavdiBances
  * @since 1.0
  */
 public class UserController {
@@ -19,7 +17,6 @@ public class UserController {
     /**
      * Constructs a new UserController and initializes the UserService.
      *
-     * @throws Exception if there is an issue initializing the UserService.
      */
     public UserController() {
         try {
@@ -52,17 +49,6 @@ public class UserController {
             return false;
         }
 
-        if (newName.isEmpty()) {
-            newName = authenticated.getName();
-        }
-        if (newEmail.isEmpty()) {
-            newEmail = authenticated.getEmail();
-        }
-        if (newPassword.isEmpty()) {
-            newPassword = authenticated.getPassword();
-        } else {
-            newPassword = userService.hashPassword(newPassword);
-        }
         return userService.updateUserProfile(authenticated.getId(), newName, newEmail, newPassword);
     }
 

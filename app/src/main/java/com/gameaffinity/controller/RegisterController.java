@@ -2,18 +2,11 @@ package com.gameaffinity.controller;
 
 import com.gameaffinity.service.UserService;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.stage.Stage;
-
 /**
- * The RegisterController class handles user registration in the application.
+ * The RegisterController class handles user registration.
  * It ensures users can create an account while checking for duplicate emails.
  *
- * @author Level Track
+ * @author DavidBances
  * @since 1.0
  */
 public class RegisterController {
@@ -22,8 +15,6 @@ public class RegisterController {
 
     /**
      * Constructs a new RegisterController and initializes the UserService.
-     *
-     * @throws Exception if there is an issue initializing the UserService.
      */
     public RegisterController() {
         try {

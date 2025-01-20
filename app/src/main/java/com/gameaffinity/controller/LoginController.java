@@ -3,18 +3,11 @@ package com.gameaffinity.controller;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.stage.Stage;
-
 /**
- * The LoginController class handles the login process for the "Level Track"
- * application.
+ * The LoginController class handles the login process.
  * It manages user authentication by interacting with the UserService.
  *
- * @author Level Track
+ * @author DavidBances
  * @since 1.0
  */
 public class LoginController {
@@ -23,8 +16,6 @@ public class LoginController {
 
     /**
      * Constructs a new LoginController and initializes the UserService.
-     *
-     * @throws Exception if there is an issue initializing the UserService.
      */
     public LoginController() {
         try {

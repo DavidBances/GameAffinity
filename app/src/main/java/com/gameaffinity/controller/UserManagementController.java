@@ -5,11 +5,6 @@ import java.util.List;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
 
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableView;
-
 public class UserManagementController {
 
     private UserService userService;

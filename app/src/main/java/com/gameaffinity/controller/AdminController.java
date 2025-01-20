@@ -1,13 +1,5 @@
 package com.gameaffinity.controller;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
-
 /**
  * The AdminController class handles administrative operations such as managing
  * users and games.
@@ -16,13 +8,8 @@ import javafx.stage.Stage;
  * games, as well as
  * retrieve information about games and users.
  *
- * @author Level Track
+ * @author DavidBances
  * @since 1.0
  */
 public class AdminController {
-
-
-
-
-
 }

@@ -2,9 +2,6 @@ package com.gameaffinity.controller;
 
 import com.gameaffinity.model.Game;
 import com.gameaffinity.service.LibraryService;
-import com.gameaffinity.service.UserService;
-
-import javafx.fxml.FXML;
 
 import java.util.List;
 
@@ -14,9 +11,7 @@ import java.util.List;
  * and the presentation layer, handling operations related to a user's game
  * library.
  *
- * This class is part of the "Level Track" project.
- *
- * @author Level Track
+ * @author DavidBances
  * @since 1.0
  */
 public class LibraryController {
@@ -25,8 +20,6 @@ public class LibraryController {
 
     /**
      * Constructs a new LibraryController, initializing the LibraryService.
-     *
-     * @throws Exception if there is an issue initializing the LibraryService.
      */
     public LibraryController() {
         try {
@@ -110,16 +103,6 @@ public class LibraryController {
     }
 
     /**
-     * Retrieves a list of games by genre.
-     *
-     * @param genre The genre to filter by.
-     * @return A list of {@code Game} objects matching the genre.
-     */
-    public List<Game> getGamesByGenre(String genre) {
-        return libraryService.getGamesByGenre(genre);
-    }
-
-    /**
      * Retrieves a list of all genres available in the library.
      *
      * @return A list of genres as {@code String} values.
@@ -152,31 +135,5 @@ public class LibraryController {
      */
     public boolean updateGameScore(int gameId, int userId, int score) {
         return libraryService.updateGameScore(gameId, userId, score);
-    }
-
-    /**
-     * Retrieves the score of a game for a specific user.
-     *
-     * @param gameId The ID of the game.
-     * @param userId The ID of the user.
-     * @return The score of the game for the user, or -1 if not found.
-     */
-    public int getGameScore(int gameId, int userId) {
-        return libraryService.getGameScore(gameId, userId);
-    }
-
-    public Game findGameByName(String selectedName) {
-        try {
-            List<Game> games = libraryService.getAllGames();
-            for (Game game : games) {
-                if (game.getName().equalsIgnoreCase(selectedName)) {
-                    return game;
-                }
-            }
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

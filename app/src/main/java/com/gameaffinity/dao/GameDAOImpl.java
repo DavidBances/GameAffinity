@@ -103,32 +103,4 @@ public class GameDAOImpl implements GameDAO {
         }
         return games;
     }
-
-    /**
-     * Searches for games by name using a keyword.
-     *
-     * @param keyword The keyword to search for in the game names.
-     * @return A list of {@code Game} objects that match the keyword.
-     */
-    @Override
-    public List<Game> searchGamesByName(String keyword) {
-        String query = QueryLoader.getQuery("game.findGamesByName");
-        List<Game> games = new ArrayList<>();
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, "%" + keyword + "%");
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                games.add(new Game(
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("genre"),
-                        rs.getDouble("price"),
-                        null,
-                        0));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return games;
-    }
 }

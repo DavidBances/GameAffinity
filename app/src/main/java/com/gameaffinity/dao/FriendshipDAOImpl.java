@@ -36,32 +36,6 @@ public class FriendshipDAOImpl implements FriendshipDAO {
     }
 
     /**
-     * Searches for users in the system whose details match the provided keyword.
-     *
-     * @param keyword The search term to match user names or emails.
-     * @return A list of UserBase objects that match the search criteria.
-     */
-    @Override
-    public List<UserBase> searchUsers(String keyword) {
-        List<UserBase> users = new ArrayList<>();
-        String query = QueryLoader.getQuery("friendship.searchUsers");
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, keyword);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                users.add(createUserInstance(
-                        rs.getString("role"),
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("email")));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return users;
-    }
-
-    /**
      * Creates an instance of the appropriate UserBase subclass based on the user's
      * role.
      *

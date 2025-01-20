@@ -6,7 +6,6 @@ import com.gameaffinity.model.UserBase;
 import java.util.List;
 
 public interface FriendshipDAO {
-    List<UserBase> searchUsers(String keyword);
 
     boolean sendFriendRequest(int requesterId, int receiverId);
 

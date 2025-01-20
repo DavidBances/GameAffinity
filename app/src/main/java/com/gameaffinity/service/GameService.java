@@ -26,11 +26,6 @@ public class GameService {
     }
 
     public List<Game> getAllGames() {
-        try {
             return gameDAO.getAllGames();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }

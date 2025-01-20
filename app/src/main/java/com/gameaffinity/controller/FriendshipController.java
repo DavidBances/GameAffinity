@@ -3,9 +3,6 @@ package com.gameaffinity.controller;
 import com.gameaffinity.model.Friendship;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.FriendshipService;
-import com.gameaffinity.service.LibraryService;
-
-import javafx.fxml.FXML;
 
 import java.util.List;
 
@@ -15,7 +12,7 @@ import java.util.List;
  * including sending and responding to friend requests, searching users, and
  * managing friends.
  *
- * @author Level Track
+ * @author DavidBances
  * @since 1.0
  */
 public class FriendshipController {
@@ -25,8 +22,6 @@ public class FriendshipController {
     /**
      * Creates an instance of FriendshipController, initializing the
      * FriendshipService.
-     *
-     * @throws Exception if there is an error initializing the service.
      */
     public FriendshipController() {
         try {
@@ -34,16 +29,6 @@ public class FriendshipController {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Searches for users based on a keyword.
-     *
-     * @param keyword The keyword to search for (e.g., name or email).
-     * @return A list of {@code UserBase} objects matching the search criteria.
-     */
-    public List<UserBase> searchUsers(String keyword) {
-        return friendshipService.searchUsers(keyword);
     }
 
     /**

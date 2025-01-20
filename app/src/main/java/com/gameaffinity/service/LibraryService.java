@@ -57,12 +57,9 @@ public class LibraryService {
         return libraryDAO.getLibraryIdByUserId(userId);
     }
 
+    //Sirve para mostrar todos los juegos en la pantalla en la que se muestran todos los juegos
     public List<Game> getAllGames() {
         return gameDAO.getAllGames();
-    }
-
-    public List<Game> getGamesByGenre(String genre) {
-        return libraryDAO.getGamesByGenre(genre);
     }
 
     public List<String> getAllGenres() {

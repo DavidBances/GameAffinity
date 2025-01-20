@@ -12,6 +12,4 @@ public interface GameDAO {
     boolean deleteGame(int gameId);
 
     List<Game> getAllGames();
-
-    List<Game> searchGamesByName(String keyword);
 }

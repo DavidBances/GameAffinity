@@ -50,30 +50,6 @@ public class UserDAOImpl implements UserDAO {
         return user;
     }
 
-    @Override
-    public UserBase findByIdAndPassword(int userId, String password) {
-        UserBase user = null;
-        String query = QueryLoader.getQuery("user.findByIdAndPassword");
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, userId);
-            stmt.setString(2, password);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String role = rs.getString("role");
-                System.out.println("Role from database: " + role);
-                user = createUserInstance(
-                        role,
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return user;
-    }
-
     /**
      * Finds a user by their ID.
      *
@@ -232,7 +208,7 @@ public class UserDAOImpl implements UserDAO {
      *         otherwise.
      */
     @Override
-    public boolean updateProfiled(UserBase user) {
+    public boolean updateProfile(UserBase user) {
         String query = QueryLoader.getQuery("user.updateProfile");
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, user.getName());
@@ -244,31 +220,6 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return false;
-    }
-
-    /**
-     * Updates the profile information of a user by their ID.
-     *
-     * @param id       The ID of the user whose profile is to be updated.
-     * @param name     The new name of the user.
-     * @param email    The new email of the user.
-     * @param password The new password of the user.
-     * @return {@code true} if the profile was successfully updated, {@code false}
-     *         otherwise.
-     */
-    @Override
-    public boolean updateProfile(int id, String name, String email, String password) {
-        String query = QueryLoader.getQuery("user.updateProfile");
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, name);
-            stmt.setString(2, email);
-            stmt.setString(3, password);
-            stmt.setInt(4, id);
-            return stmt.executeUpdate() > 0;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     /**

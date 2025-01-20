@@ -14,10 +14,6 @@ public class FriendshipService {
         this.friendshipDAO = new FriendshipDAOImpl();
     }
 
-    public List<UserBase> searchUsers(String keyword) {
-        return friendshipDAO.searchUsers(keyword);
-    }
-
     public boolean sendFriendRequest(int requesterId, int receiverId) {
         return friendshipDAO.sendFriendRequest(requesterId, receiverId);
     }
