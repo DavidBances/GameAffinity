@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.gameaffinity.view.UserManagementView">
+<BorderPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.UserManagementView">
     <center>
         <TableView fx:id="userTable">
             <columns>
-                <TableColumn fx:id="nameColumn" text="Name" />
-                <TableColumn fx:id="emailColumn" text="Email" />
-                <TableColumn fx:id="roleColumn" text="Role" editable="true"/>
+                <TableColumn fx:id="nameColumn" prefWidth="250.0" text="Name" />
+                <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
+                <TableColumn fx:id="roleColumn" prefWidth="85.0" text="Role" />
             </columns>
         </TableView>
     </center>
     <bottom>
-        <HBox spacing="10" alignment="center">
-            <Button fx:id="deleteUserButton" text="Delete User" />
+        <HBox alignment="center" spacing="10">
+            <Button fx:id="deleteUserButton" text="Delete User">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+         <Button fx:id="backButton" layoutX="221.0" layoutY="10.0" text="Back">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
         </HBox>
     </bottom>
+   <right>
+      <ScrollBar orientation="VERTICAL" prefWidth="15.0" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>

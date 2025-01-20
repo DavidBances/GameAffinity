@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.cell.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.control.cell.PropertyValueFactory?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.gameaffinity.view.GameManagementView">
+<BorderPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.GameManagementView">
     <center>
         <TableView fx:id="gameTable" VBox.vgrow="ALWAYS">
             <columns>
-                <TableColumn text="Name" fx:id="nameColumn">
+                <TableColumn fx:id="nameColumn" prefWidth="250.0" text="Name">
                     <cellValueFactory>
                         <PropertyValueFactory property="name" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn text="Genre" fx:id="genreColumn">
+                <TableColumn fx:id="genreColumn" prefWidth="150.0" text="Genre">
                     <cellValueFactory>
                         <PropertyValueFactory property="genre" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn text="Price" fx:id="priceColumn">
+                <TableColumn fx:id="priceColumn" prefWidth="85.0" text="Price">
                     <cellValueFactory>
                         <PropertyValueFactory property="price" />
                     </cellValueFactory>
@@ -27,9 +28,22 @@
         </TableView>
     </center>
     <bottom>
-        <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="addGameButton" text="Add Game" />
-            <Button fx:id="deleteGameButton" text="Delete Game" />
+        <HBox alignment="CENTER" spacing="10">
+            <Button fx:id="addGameButton" text="Add Game">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+            <Button fx:id="deleteGameButton" text="Delete Game">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
+         <Button fx:id="backButton" layoutX="133.0" layoutY="10.0" text="Back">
+            <cursor>
+               <Cursor fx:constant="HAND" />
+            </cursor></Button>
         </HBox>
     </bottom>
+   <right>
+      <ScrollBar orientation="VERTICAL" prefHeight="475.0" prefWidth="15.0" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>

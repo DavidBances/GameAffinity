@@ -1,19 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<VBox xmlns:fx="http://javafx.com/fxml" 
-      fx:controller="com.gameaffinity.view.UserDashboardView"
-      spacing="10" alignment="CENTER">
+<VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0" spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/17.0.12" fx:controller="com.gameaffinity.view.UserDashboardView">
     <padding>
-        <Insets top="20" right="20" bottom="20" left="20"/>
+        <Insets bottom="20" left="20" right="20" top="20" />
     </padding>
 
-    <Button text="View Library" fx:id="viewLibraryButton" />
-    <Button text="Manage Friends" fx:id="manageFriendsButton" />
-    <Button text="View Game Database" fx:id="viewGameDatabaseButton" />
-    <Button text="Modify Profile" fx:id="modifyProfileButton" />
-    <Button text="Logout" fx:id="logoutButton" />
+    <Button fx:id="viewLibraryButton" prefHeight="100.0" prefWidth="500.0" text="View Library">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor></Button>
+    <Button fx:id="manageFriendsButton" prefHeight="100.0" prefWidth="500.0" text="Manage Friends">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor></Button>
+    <Button fx:id="viewGameDatabaseButton" prefHeight="100.0" prefWidth="500.0" text="View Game Database">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor></Button>
+    <Button fx:id="modifyProfileButton" prefHeight="100.0" prefWidth="500.0" text="Modify Profile">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor></Button>
+    <Button fx:id="logoutButton" prefHeight="100.0" prefWidth="500.0" text="Logout">
+      <cursor>
+         <Cursor fx:constant="HAND" />
+      </cursor></Button>
 </VBox>

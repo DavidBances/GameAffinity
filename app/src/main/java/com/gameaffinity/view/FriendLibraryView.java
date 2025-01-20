@@ -30,8 +30,6 @@ public class FriendLibraryView {
     @FXML
     private TableView<Game> gamesTable;
     @FXML
-    private TableColumn<Game, Integer> idColumn;
-    @FXML
     private TableColumn<Game, String> nameColumn;
     @FXML
     private TableColumn<Game, String> genreColumn;
@@ -52,6 +50,7 @@ public class FriendLibraryView {
     }
 
     public void initialize() {
+        gamesTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         configureTableColumns();
         loadGenres();
 
@@ -67,12 +66,10 @@ public class FriendLibraryView {
                 refreshGamesListByGenre(selectedGenre);
             }
         });
-
     }
 
     private void configureTableColumns() {
         // Set up the table columns
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         genreColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGenre()));
         priceColumn

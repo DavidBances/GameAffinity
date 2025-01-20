@@ -30,8 +30,6 @@ public class GameDatabaseView {
     @FXML
     private TableView<Game> databaseTable;
     @FXML
-    private TableColumn<Game, Integer> idColumn;
-    @FXML
     private TableColumn<Game, String> nameColumn;
     @FXML
     private TableColumn<Game, String> genreColumn;
@@ -46,6 +44,7 @@ public class GameDatabaseView {
     private UserBase user;
 
     public void initialize() {
+        databaseTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         configureTableColumns();
         loadGenres();
 
@@ -85,7 +84,6 @@ public class GameDatabaseView {
 
 
     private void configureTableColumns() {
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         genreColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGenre()));
         priceColumn

@@ -6,10 +6,17 @@ import com.gameaffinity.controller.UserManagementController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.stage.Stage;
 
 public class UserManagementView {
+
+    @FXML
+    public Button backButton;
 
     @FXML
     private TableView<UserBase> userTable;
@@ -60,6 +67,8 @@ public class UserManagementView {
                     refreshUserTable();
                 });
 
+        backButton.setOnAction(event -> back());
+
         refreshUserTable();
     }
 
@@ -81,6 +90,17 @@ public class UserManagementView {
             }
         } else {
             showAlert("Please select a user to delete.", "Alerta", Alert.AlertType.WARNING);
+        }
+    }
+
+    public void back(){
+        try{
+            Stage currentStage = (Stage) backButton.getScene().getWindow();
+            Parent adminDashboard = FXMLLoader.load(getClass().getResource("/fxml/admin/admin_dashboard.fxml"));
+            Scene adminScene = new Scene(adminDashboard);
+            currentStage.setScene(adminScene);
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

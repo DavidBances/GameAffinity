@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="171.0" prefWidth="271.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.LoginPanelView">
+<AnchorPane prefHeight="210.0" prefWidth="310.0" stylesheets="@../../css/auth/auth_panes.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.LoginPanelView">
     <children>
           <!-- Email Field -->
-          <Label layoutX="41.0" layoutY="34.0" text="Email:" />
-          <TextField fx:id="emailField" layoutX="91.0" layoutY="71.0" />
+          <Label layoutX="60.0" layoutY="53.0" text="Email:" />
+          <TextField fx:id="emailField" layoutX="110.0" layoutY="50.0" />
 
           <!-- Password Field -->
-          <Label layoutX="31.0" layoutY="75.0" text="Password:" />
-          <PasswordField fx:id="passwordField" layoutX="91.0" layoutY="30.0" />
+          <Label layoutX="50.0" layoutY="94.0" text="Password:" />
+          <PasswordField fx:id="passwordField" layoutX="110.0" layoutY="90.0" />
 
           <!-- Login Button -->
-          <Button fx:id="loginButton" layoutX="44.0" layoutY="116.0" prefHeight="25.0" prefWidth="80.0" text="Login" />
+          <Button fx:id="loginButton" layoutX="63.0" layoutY="135.0" prefHeight="25.0" prefWidth="80.0" text="Login">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
 
           <!-- Register Button -->
-          <Button fx:id="registerButton" alignment="CENTER" contentDisplay="CENTER" layoutX="146.0" layoutY="116.0" prefHeight="25.0" prefWidth="80.0" text="Register" />
+          <Button fx:id="registerButton" alignment="CENTER" contentDisplay="CENTER" layoutX="165.0" layoutY="135.0" prefHeight="25.0" prefWidth="80.0" text="Register">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Button>
     </children>
 </AnchorPane>

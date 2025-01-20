@@ -17,6 +17,8 @@ import java.util.List;
 public class GameManagementView {
 
     @FXML
+    public Button backButton;
+    @FXML
     private TableView<Game> gameTable;
     @FXML
     private TableColumn<Game, String> nameColumn;
@@ -47,6 +49,8 @@ public class GameManagementView {
             deleteGame(gameTable.getSelectionModel().getSelectedItem());
             refreshGameTable();
         });
+
+        backButton.setOnAction(event -> back());
 
         refreshGameTable();
     }
@@ -85,6 +89,17 @@ public class GameManagementView {
             }
         } else {
             showAlert("Please select a game to delete.", "Alerta", Alert.AlertType.WARNING);
+        }
+    }
+
+    public void back(){
+        try{
+            Stage currentStage = (Stage) backButton.getScene().getWindow();
+            Parent adminDashboard = FXMLLoader.load(getClass().getResource("/fxml/admin/admin_dashboard.fxml"));
+            Scene adminScene = new Scene(adminDashboard);
+            currentStage.setScene(adminScene);
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 

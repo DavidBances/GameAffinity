@@ -18,7 +18,7 @@ public class MainApp extends Application {
             AnchorPane root = loader.load();
 
             // Configurar la escena
-            Scene scene = new Scene(root, 600, 400);
+            Scene scene = new Scene(root, 310, 210);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Game Affinity");
             // primaryStage.getIcons().add(new

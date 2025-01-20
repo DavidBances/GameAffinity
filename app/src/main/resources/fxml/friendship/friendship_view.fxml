@@ -1,53 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.FriendshipView">
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="500.0" prefWidth="500.0" stylesheets="@../../css/friendship/friendship_view.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.FriendshipView">
     <!-- Panel de amigos -->
     <left>
-        <VBox>
-            <Label text="Friends:"/>
-            <TableView fx:id="friendsTable">
+        <VBox prefHeight="475.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="250.0" text="Friends List:" />
+            <TableView fx:id="friendsTable" focusTraversable="false" prefHeight="450.0" prefWidth="250.0">
                 <columns>
-                    <TableColumn text="Name" fx:id="nameColumn"/>
-                    <TableColumn text="Email" fx:id="emailColumn"/>
+                    <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Name" />
+                    <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
                 </columns>
             </TableView>
         </VBox>
     </left>
-    
-    <!-- Panel de solicitudes -->
-    <center>
-        <VBox>
-            <Label text="Pending Friend Requests:"/>
-            <TableView fx:id="requestsTable">
-                <columns>
-                    <TableColumn text="Request ID" fx:id="requestIdColumn"/>
-                    <TableColumn text="Requester Email" fx:id="requesterEmailColumn"/>
-                    <TableColumn text="Status" fx:id="statusColumn"/>
-                </columns>
-            </TableView>
-            <HBox spacing="10">
-                <Button text="Accept" fx:id="acceptButton"/>
-                <Button text="Reject" fx:id="rejectButton"/>
-            </HBox>
-        </VBox>
-    </center>
 
     <!-- Botones inferiores -->
     <bottom>
-        <FlowPane hgap="10">
-            <Button text="Send Friend Request" fx:id="sendRequestButton"/>
-            <Button text="View Friend Library" fx:id="viewFriendLibraryButton"/>
-            <Button text="Delete Friend" fx:id="deleteFriendButton"/>
-            <Button text="Back" fx:id="backButton"/>
+        <FlowPane alignment="CENTER" columnHalignment="CENTER" hgap="10" prefHeight="35.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+            <Button fx:id="sendRequestButton" text="Send Friend Request" />
+            <Button fx:id="viewFriendLibraryButton" text="View Friend Library" />
+            <Button fx:id="deleteFriendButton" text="Delete Friend" />
+            <Button fx:id="backButton" text="Back" />
         </FlowPane>
     </bottom>
+   <right>
+        <VBox alignment="TOP_CENTER" prefHeight="470.0" prefWidth="250.0" BorderPane.alignment="CENTER">
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="250.0" text="Pending Friend Requests:" />
+            <TableView fx:id="requestsTable" focusTraversable="false" prefHeight="450.0" prefWidth="250.0">
+                <columns>
+                    <TableColumn fx:id="requesterEmailColumn" prefWidth="150.0" text="Requester Email" />
+                    <!-- Columna de acciones (sin botones en FXML) -->
+                    <TableColumn fx:id="actionsColumn" prefWidth="98.0" />
+                </columns>
+            </TableView>
+        </VBox>
+   </right>
 </BorderPane>

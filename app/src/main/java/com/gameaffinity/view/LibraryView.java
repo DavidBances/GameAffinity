@@ -12,7 +12,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.stage.Stage;
+import javafx.util.converter.IntegerStringConverter;
 
 import java.util.List;
 
@@ -28,8 +31,6 @@ public class  LibraryView {
     private Button filterButton;
     @FXML
     private TableView<Game> gamesTable;
-    @FXML
-    private TableColumn<Game, Integer> idColumn;
     @FXML
     private TableColumn<Game, String> nameColumn;
     @FXML
@@ -56,6 +57,7 @@ public class  LibraryView {
     }
 
     public void initialize() {
+        gamesTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         configureTableColumns();
         loadGenres();
 
@@ -70,6 +72,19 @@ public class  LibraryView {
             }else{
                 refreshGamesListByGenre(selectedGenre);
             }
+        });
+
+        stateColumn.setOnEditCommit(event -> {
+            Game game = event.getRowValue();
+            String newState = event.getNewValue();
+            updateGameState(game, newState);
+        });
+
+        scoreColumn.setOnEditCommit(event -> {
+            Game game = event.getRowValue();
+            Integer newScore = event.getNewValue();
+            System.out.println("Nuevo puntaje: " + newScore);
+            updateGameScore(game, newScore);
         });
 
         addGameButton.setOnAction(e -> {
@@ -88,15 +103,22 @@ public class  LibraryView {
 
     private void configureTableColumns() {
         // Set up the table columns
-        idColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         genreColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGenre()));
         priceColumn
                 .setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getPrice()).asObject());
-        stateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getState()));
-        scoreColumn
-                .setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getScore()).asObject());
 
+        // Configuración para la columna de estado con ComboBoxTableCell
+        stateColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getState()));
+        stateColumn.setCellFactory(column -> {
+            ComboBoxTableCell<Game, String> cell = new ComboBoxTableCell<>();
+            cell.getItems().addAll("Available", "Playing", "Paused", "Completed", "Dropped", "Wishlist", "Replaying");
+            return cell;
+        });
+
+        // Configuración para la columna de puntuación editable
+        scoreColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getScore()).asObject());
+        scoreColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
     }
 
     private void loadGenres() {
@@ -124,6 +146,22 @@ public class  LibraryView {
     private void refreshGamesListByGenreAndName(String genre, String name) {
         List<Game> games = libraryController.getGamesByGenreAndNameUser(this.user.getId(), genre, name);
         gamesTable.setItems(FXCollections.observableArrayList(games));
+    }
+
+    public void updateGameScore(Game game, Integer newScore){
+        if (newScore != null && newScore >= 0 && newScore <= 10) {
+            boolean success = libraryController.updateGameScore(game.getId(), this.user.getId(), newScore);
+            showAlert(success ? "Score updated successfully!" : "Failed to update score.", Alert.AlertType.INFORMATION);
+            refreshGamesList();
+        } else {
+            showAlert("Invalid score. Please enter a value between 0 and 10.", Alert.AlertType.WARNING);
+        }
+    }
+
+    public void updateGameState(Game game, String newState){
+            boolean success = libraryController.updateGameState(game.getId(), this.user.getId(), newState);
+            showAlert(success ? "State updated successfully!" : "Failed to update state.", Alert.AlertType.INFORMATION);
+            refreshGamesList();
     }
 
 

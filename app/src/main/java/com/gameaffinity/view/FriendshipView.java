@@ -5,6 +5,7 @@ import com.gameaffinity.model.Friendship;
 import com.gameaffinity.model.UserBase;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -28,15 +29,9 @@ public class FriendshipView {
     @FXML
     private TableColumn<UserBase, String> emailColumn;
     @FXML
-    private TableColumn<Friendship, Integer> requestIdColumn;
-    @FXML
     private TableColumn<Friendship, String> requesterEmailColumn;
     @FXML
-    private TableColumn<Friendship, String> statusColumn;
-    @FXML
-    private Button acceptButton;
-    @FXML
-    private Button rejectButton;
+    private TableColumn<Friendship, Void> actionsColumn;
     @FXML
     private Button sendRequestButton;
     @FXML
@@ -50,18 +45,47 @@ public class FriendshipView {
     private UserBase user;
 
     public void initialize() {
+        friendsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        requestsTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         // Configure table columns for friendsTable
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
         // Configure table columns for requestsTable
-        requestIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         requesterEmailColumn.setCellValueFactory(new PropertyValueFactory<>("requesterEmail"));
-        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        actionsColumn.setCellFactory(param -> new TableCell<Friendship, Void>() {
+            private final Button acceptButton = new Button("✔");
+            private final Button rejectButton = new Button("❌");
+
+            {
+                acceptButton.setOnAction(event -> {
+                    Friendship request = getTableRow().getItem();
+                    acceptRequest(request);
+                });
+
+                rejectButton.setOnAction(event -> {
+                    Friendship request = getTableRow().getItem();
+                    rejectRequest(request);
+                });
+
+                acceptButton.getStyleClass().add("accept-button");
+                rejectButton.getStyleClass().add("reject-button");
+            }
+
+            @Override
+            protected void updateItem(Void item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setGraphic(null);
+                } else {
+                    HBox hbox = new HBox(10, acceptButton, rejectButton);
+                    hbox.setAlignment(Pos.CENTER);
+                    setGraphic(hbox);  // Aquí se añaden los botones a la celda
+                }
+            }
+        });
 
         // Event handlers for buttons
-        acceptButton.setOnAction(e -> acceptRequest());
-        rejectButton.setOnAction(e -> rejectRequest());
         sendRequestButton.setOnAction(e -> sendFriendRequest());
         viewFriendLibraryButton.setOnAction(e -> viewFriendLibrary());
         deleteFriendButton.setOnAction(e -> deleteFriend());
@@ -84,8 +108,7 @@ public class FriendshipView {
         requestsTable.getItems().setAll(requests);
     }
 
-    private void acceptRequest() {
-        Friendship selectedRequest = requestsTable.getSelectionModel().getSelectedItem();
+    private void acceptRequest(Friendship selectedRequest) {
         if (selectedRequest != null) {
             boolean success = friendshipController.respondToFriendRequest(selectedRequest.getId(), "Accepted");
             showAlert(success ? "Request accepted!" : "Failed to accept request.", "", success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
@@ -97,8 +120,7 @@ public class FriendshipView {
         }
     }
 
-    private void rejectRequest() {
-        Friendship selectedRequest = requestsTable.getSelectionModel().getSelectedItem();
+    private void rejectRequest(Friendship selectedRequest) {
         if (selectedRequest != null) {
             boolean success = friendshipController.respondToFriendRequest(selectedRequest.getId(), "Rejected");
             showAlert(success ? "Request rejected!" : "Failed to reject request.", "", success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
@@ -143,6 +165,7 @@ public class FriendshipView {
             } catch (Exception ex) {
                 showAlert("Error loading friend's library: " + ex.getMessage(), "Error",
                         Alert.AlertType.ERROR);
+                ex.printStackTrace();
             }
         } else {
             showAlert("Please select a friend to view their library.", "Error",
