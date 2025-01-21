@@ -50,7 +50,7 @@ public class FriendshipView {
 
         // Configure table columns for requestsTable
         requesterEmailColumn.setCellValueFactory(new PropertyValueFactory<>("requesterEmail"));
-        actionsColumn.setCellFactory(param -> new TableCell<Friendship, Void>() {
+        actionsColumn.setCellFactory(param -> new TableCell<>() {
             private final Button acceptButton = new Button("✔");
             private final Button rejectButton = new Button("❌");
 

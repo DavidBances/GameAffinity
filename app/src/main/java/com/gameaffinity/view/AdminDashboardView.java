@@ -28,9 +28,9 @@ public class AdminDashboardView {
     public void initialize() {
         initializeImages();
         userManagementImage.setOnMouseClicked(
-                event -> openUserManagementView(mainContent));
+                event -> openUserManagementView());
         gameManagementImage.setOnMouseClicked(
-                event -> openGamesManagementView(mainContent));
+                event -> openGamesManagementView());
         logoutButton.setOnAction(event -> logout());
 
     }
@@ -43,7 +43,7 @@ public class AdminDashboardView {
         gameManagementImage.setImage(gameManagementImg);
     }
 
-    public void openUserManagementView(StackPane mainContent) {
+    public void openUserManagementView() {
         try {
             Stage currentStage = (Stage) userManagementImage.getScene().getWindow();
             Parent userManagement = FXMLLoader.load(getClass().getResource("/fxml/admin/user_management.fxml"));
@@ -55,7 +55,7 @@ public class AdminDashboardView {
         }
     }
 
-    public void openGamesManagementView(StackPane mainContent) {
+    public void openGamesManagementView() {
         try {
             Stage currentStage = (Stage) gameManagementImage.getScene().getWindow();
             Parent gameManagement = FXMLLoader.load(getClass().getResource("/fxml/admin/game_management.fxml"));
