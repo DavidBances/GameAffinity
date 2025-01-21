@@ -76,26 +76,8 @@ public class LibraryController {
      * @return {@code true} if the game was removed successfully, {@code false}
      *         otherwise.
      */
-    public boolean removeGame(int userId, int gameId) {
+    public boolean removeGameFromLibrary(int userId, int gameId) {
         return libraryService.removeGameFromLibrary(userId, gameId);
-    }
-
-    /**
-     * Retrieves a list of all games in the library.
-     *
-     * @return A list of all {@code Game} objects in the library.
-     */
-    public List<Game> getAllGames() {
-        return libraryService.getAllGames();
-    }
-
-    /**
-     * Retrieves a list of all genres available in the library.
-     *
-     * @return A list of genres as {@code String} values.
-     */
-    public List<String> getAllGenres() {
-        return libraryService.getAllGenres();
     }
 
     /**
@@ -122,5 +104,23 @@ public class LibraryController {
      */
     public boolean updateGameScore(int gameId, int userId, int score) {
         return libraryService.updateGameScore(gameId, userId, score);
+    }
+
+    /**
+     * Retrieves a list of all games in the library.
+     *
+     * @return A list of all {@code Game} objects in the library.
+     */
+    public List<Game> getAllGames() {
+        return libraryService.getAllGames();
+    }
+
+    /**
+     * Retrieves a list of all genres available in the library.
+     *
+     * @return A list of genres as {@code String} values.
+     */
+    public List<String> getAllGenres() {
+        return libraryService.getAllGenres();
     }
 }

@@ -182,7 +182,7 @@ public class  LibraryView {
         Game selectedGame = gamesTable.getSelectionModel().getSelectedItem();
         if (selectedGame != null) {
             try {
-                boolean success = libraryController.removeGame(this.user.getId(), selectedGame.getId());
+                boolean success = libraryController.removeGameFromLibrary(this.user.getId(), selectedGame.getId());
                 showAlert(success ? "Game removed successfully!" : "Failed to remove game.", Alert.AlertType.INFORMATION);
                 refreshGamesList();
             } catch (Exception ex) {

@@ -61,6 +61,12 @@ public class LibraryService {
         return libraryDAO.updateGameState(gameId, userId, newState);
     }
 
+    public boolean updateGameScore(int gameId, int userId, int score) {
+        Game game = libraryDAO.getGameByGameId(gameId);
+        game.setScore(score);
+        return libraryDAO.updateGameScore(gameId, userId, score);
+    }
+
     //Sirve para mostrar todos los juegos en la pantalla en la que se muestran todos los juegos
     public List<Game> getAllGames() {
         return gameDAO.getAllGames();
@@ -68,12 +74,6 @@ public class LibraryService {
 
     public List<String> getAllGenres() {
         return libraryDAO.getAllGenres();
-    }
-
-    public boolean updateGameScore(int gameId, int userId, int score) {
-        Game game = libraryDAO.getGameByGameId(gameId);
-        game.setScore(score);
-        return libraryDAO.updateGameScore(gameId, userId, score);
     }
 
     public int getGameScore(int gameId, int userId) {

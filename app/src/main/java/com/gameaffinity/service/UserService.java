@@ -130,7 +130,7 @@ public class UserService {
         return email.matches(emailRegex);
     }
 
-    public String hashPassword(String password) {
+    private String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] encodedhash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -148,7 +148,7 @@ public class UserService {
         }
     }
 
-    public boolean isValidRole(String role) {
+    private boolean isValidRole(String role) {
         return role.equalsIgnoreCase("ADMINISTRATOR") ||
                 role.equalsIgnoreCase("MODERATOR") ||
                 role.equalsIgnoreCase("REGULAR_USER");
@@ -175,11 +175,15 @@ public class UserService {
         return user;
     }
 
-    public boolean emailExists(String email) {
+    private boolean emailExists(String email) {
         if (email == null || email.isEmpty()) {
             throw new IllegalArgumentException("Email is required.");
         }
         return userDAO.emailExists(email);
+    }
+
+    public List<UserBase> getAllUsers() {
+        return userDAO.findAll();
     }
 
     public boolean updateUserRole(UserBase user, String newRole) {
@@ -188,10 +192,6 @@ public class UserService {
         }
         user.setRole(newRole);
         return userDAO.updateUserRole(user.getId(), newRole);
-    }
-
-    public List<UserBase> getAllUsers() {
-        return userDAO.findAll();
     }
 
     public boolean deleteUser(int userId) {
