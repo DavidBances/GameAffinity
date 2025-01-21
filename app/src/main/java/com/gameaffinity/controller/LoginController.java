@@ -12,17 +12,13 @@ import com.gameaffinity.service.UserService;
  */
 public class LoginController {
 
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Constructs a new LoginController and initializes the UserService.
      */
     public LoginController() {
-        try {
-            this.userService = new UserService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.userService = new UserService();
     }
 
     /**

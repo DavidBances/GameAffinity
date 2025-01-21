@@ -11,23 +11,28 @@
     </padding>
 
     <Button fx:id="viewLibraryButton" prefHeight="100.0" prefWidth="500.0" text="View Library">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
     <Button fx:id="manageFriendsButton" prefHeight="100.0" prefWidth="500.0" text="Manage Friends">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
     <Button fx:id="viewGameDatabaseButton" prefHeight="100.0" prefWidth="500.0" text="View Game Database">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
     <Button fx:id="modifyProfileButton" prefHeight="100.0" prefWidth="500.0" text="Modify Profile">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
     <Button fx:id="logoutButton" prefHeight="100.0" prefWidth="500.0" text="Logout">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
 </VBox>

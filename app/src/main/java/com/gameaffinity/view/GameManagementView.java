@@ -12,7 +12,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.List;
 
 public class GameManagementView {
 
@@ -62,7 +61,6 @@ public class GameManagementView {
 
     public void openGameFormDialog() {
         try {
-            // Cargar el FXML
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dialogs/game_form_dialog.fxml"));
             Parent root = loader.load();
 
@@ -82,7 +80,7 @@ public class GameManagementView {
             if (confirmed) {
                 boolean deleted = gameManagementController.deleteGame(game);
                 if (deleted) {
-                    showAlert("Game deleted successfully!", "Exito", Alert.AlertType.INFORMATION);
+                    showAlert("Game deleted successfully!", "Éxito", Alert.AlertType.INFORMATION);
                 } else {
                     showAlert("Failed to delete game.", "Error", Alert.AlertType.ERROR);
                 }

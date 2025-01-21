@@ -51,34 +51,6 @@ public class UserDAOImpl implements UserDAO {
     }
 
     /**
-     * Finds a user by their ID.
-     *
-     * @param id The ID of the user.
-     * @return A {@link UserBase} object representing the user if found, or
-     *         {@code null} if not found.
-     */
-    @Override
-    public UserBase findById(int id) {
-        String query = QueryLoader.getQuery("user.findById");
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                String role = rs.getString("role");
-                return createUserInstance(
-                        role,
-                        rs.getInt("id"),
-                        rs.getString("name"),
-                        rs.getString("email"),
-                        rs.getString("password"));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
      * Creates a user instance based on the provided role and user details.
      *
      * @param role     The role of the user (e.g., "ADMINISTRATOR", "MODERATOR",
@@ -90,19 +62,11 @@ public class UserDAOImpl implements UserDAO {
      * @return A {@link UserBase} object representing the user.
      */
     private UserBase createUserInstance(String role, int id, String name, String email, String password) {
-        UserBase user;
-        switch (role.toUpperCase()) {
-            case "ADMINISTRATOR":
-                user = new Administrator(id, name, email);
-                break;
-            case "MODERATOR":
-                user = new Moderator(id, name, email);
-                break;
-            case "REGULAR_USER":
-            default:
-                user = new Regular_User(id, name, email);
-                break;
-        }
+        UserBase user = switch (role.toUpperCase()) {
+            case "ADMINISTRATOR" -> new Administrator(id, name, email);
+            case "MODERATOR" -> new Moderator(id, name, email);
+            default -> new Regular_User(id, name, email);
+        };
         user.setPassword(password);
         return user;
     }
@@ -262,5 +226,4 @@ public class UserDAOImpl implements UserDAO {
             return false;
         }
     }
-
 }

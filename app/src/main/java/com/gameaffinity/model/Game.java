@@ -1,10 +1,10 @@
 package com.gameaffinity.model;
 
 public class Game {
-    private int id;
-    private String name;
-    private String genre;
-    private double price;
+    private final int id;
+    private final String name;
+    private final String genre;
+    private final double price;
     private String state;
     private int score;
 
@@ -81,6 +81,14 @@ public class Game {
         return score;
     }
 
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
     /**
      * Provides a string representation of the game.
      *
@@ -91,32 +99,5 @@ public class Game {
     public String toString() {
         return "ID: " + id + ", Name: " + name + ", Genre: " + genre + ", Price: $" + price + ", State: " + state
                 + ", Score: " + score;
-    }
-
-    /**
-     * Sets a new name for the game.
-     *
-     * @param name The new name to set.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Sets a new genre for the game.
-     *
-     * @param genre The new genre to set.
-     */
-    public void setGenre(String genre) {
-        this.genre = genre;
-    }
-
-    /**
-     * Sets a new price for the game.
-     *
-     * @param price The new price to set.
-     */
-    public void setPrice(double price) {
-        this.price = price;
     }
 }

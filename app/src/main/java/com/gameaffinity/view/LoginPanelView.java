@@ -31,9 +31,7 @@ public class LoginPanelView {
     @FXML
     public void initialize() {
         loginButton.setOnAction(
-                event -> {
-                    login(emailField.getText().trim(), passwordField.getText().trim());
-                });
+                event -> login(emailField.getText().trim(), passwordField.getText().trim()));
         registerButton.setOnAction(event -> register());
     }
 
@@ -42,8 +40,6 @@ public class LoginPanelView {
      *
      * @param email    The email address of the user.
      * @param password The password of the user.
-     * @return A {@code UserBase} object representing the authenticated user,
-     *         or {@code null} if authentication fails.
      */
     public void login(String email, String password) {
         try {

@@ -17,6 +17,8 @@ public interface FriendshipDAO {
 
     List<UserBase> getFriends(int userId);
 
+    Friendship getFriendshipById(int friendshipId);
+
     int getUserIdByEmail(String email);
 
     boolean deleteFriend(int userId, int friendId);

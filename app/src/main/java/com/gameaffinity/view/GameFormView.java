@@ -1,17 +1,10 @@
 package com.gameaffinity.view;
 
-import com.gameaffinity.model.Game;
 import com.gameaffinity.controller.GameManagementController;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.List;
 
 public class GameFormView {
 
@@ -27,7 +20,6 @@ public class GameFormView {
     @FXML
     private Button saveButton;
 
-    private Game game;
     private final GameManagementController gameManagementController = new GameManagementController();
 
     @FXML

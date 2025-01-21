@@ -7,23 +7,19 @@ import com.gameaffinity.service.UserService;
  * The UserController class manages user-related operations such as updating
  * user profiles in the application.
  *
- * @author DavdiBances
+ * @author DavidBances
  * @since 1.0
  */
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Constructs a new UserController and initializes the UserService.
      *
      */
     public UserController() {
-        try {
-            this.userService = new UserService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.userService = new UserService();
     }
 
     public UserBase authenticate(String email, String password){
@@ -44,12 +40,7 @@ public class UserController {
      */
     public boolean updateProfile(String email, String password, String newName, String newEmail,
                                   String newPassword) {
-        UserBase authenticated = userService.authenticate(email, password);
-        if (authenticated == null) {
-            return false;
-        }
-
-        return userService.updateUserProfile(authenticated.getId(), newName, newEmail, newPassword);
+        return userService.updateUserProfile(email, password, newName, newEmail, newPassword);
     }
 
 }

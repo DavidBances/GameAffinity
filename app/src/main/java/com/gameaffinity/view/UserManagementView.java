@@ -44,11 +44,8 @@ public class UserManagementView {
         nameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getName()));
         emailColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEmail()));
         roleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRole()));
-        roleColumn.setCellFactory(column -> {
-            ComboBoxTableCell<UserBase, String> cell = new ComboBoxTableCell<>(
-                    FXCollections.observableArrayList("ADMINISTRATOR", "MODERATOR", "REGULAR_USER"));
-            return cell;
-        });
+        roleColumn.setCellFactory(scolumn -> new ComboBoxTableCell<>(
+                FXCollections.observableArrayList("ADMINISTRATOR", "MODERATOR", "REGULAR_USER")));
 
         roleColumn.setOnEditCommit(event -> {
             UserBase user = event.getRowValue();

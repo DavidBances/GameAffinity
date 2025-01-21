@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DatabaseConnection {
     private static DatabaseConnection instance;
-    private Connection connection;
+    private final Connection connection;
 
     private DatabaseConnection() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/gameaffinity_db";

@@ -60,14 +60,11 @@ public class ModifyProfileDialog {
     /**
      * Updates the user's profile with new information.
      *
-     * @param identifier  The unique identifier (e.g., user ID or email) for the
-     *                    user.
+     * @param email  The unique identifier (email) for the user.
      * @param password    The current password of the user.
      * @param newName     The new name for the user (optional, can be null).
-     * @param newEmail    The new email address for the user (optional, can be
-     *                    null).
+     * @param newEmail    The new email address for the user (optional, can be null).
      * @param newPassword The new password for the user (optional, can be null).
-     * @return A message indicating the success or failure of the operation.
      */
     public void updateProfile(String email, String password, String newName, String newEmail,
                               String newPassword) {

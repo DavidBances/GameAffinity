@@ -11,17 +11,13 @@ import com.gameaffinity.service.UserService;
  */
 public class RegisterController {
 
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * Constructs a new RegisterController and initializes the UserService.
      */
     public RegisterController() {
-        try {
-            this.userService = new UserService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.userService = new UserService();
     }
 
     /**
@@ -34,17 +30,6 @@ public class RegisterController {
      *         otherwise.
      */
     public String register(String name, String email, String password) {
-        try {
-            if (userService.emailExists(email)) {
-                return "El email ya está en uso.";
-            }
-            if (userService.registerUser(name, email, password, "REGULAR_USER")) {
-                return "Cuenta creada con éxito.";
-            }else{
-                return "Error al crear la cuenta.";
-            }
-        } catch (IllegalArgumentException e) {
-            return e.getMessage();
-        }
+        return userService.registerUser(name, email, password, "REGULAR_USER");
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 public class LibraryDAOImpl implements LibraryDAO {
     private final Connection connection;
 
-    public LibraryDAOImpl() throws Exception {
+    public LibraryDAOImpl() throws SQLException {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
@@ -104,6 +104,27 @@ public class LibraryDAOImpl implements LibraryDAO {
         }
         return null;
     }
+
+    public Game getGameByGameId(int gameId){
+        String query = QueryLoader.getQuery("game.getGameByGameId");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, gameId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Game(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("genre"),
+                        rs.getDouble("price"),
+                        "Available",
+                        0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     @Override
     public int getLibraryIdByUserId(int userId) {

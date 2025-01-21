@@ -1,7 +1,5 @@
 package com.gameaffinity.view;
 
-import com.gameaffinity.controller.AdminController;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -25,8 +23,6 @@ public class AdminDashboardView {
 
     @FXML
     private Button logoutButton;
-
-    private AdminController adminController = new AdminController();
 
     @FXML
     public void initialize() {
@@ -82,7 +78,6 @@ public class AdminDashboardView {
             e.printStackTrace();
         }
     }
-
 
     private void showAlert(String message, String title, Alert.AlertType alertType) {
         Alert alert = new Alert(alertType);

@@ -25,11 +25,13 @@
 
     <!-- Fila 4: Botones para crear cuenta y volver -->
     <Button fx:id="createButton" layoutX="53.0" layoutY="158.0" text="Create Account" GridPane.columnIndex="0" GridPane.rowIndex="3">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
     <Button fx:id="backButton" layoutX="182.0" layoutY="158.0" text="Back" GridPane.columnIndex="1" GridPane.rowIndex="3">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
 </AnchorPane>

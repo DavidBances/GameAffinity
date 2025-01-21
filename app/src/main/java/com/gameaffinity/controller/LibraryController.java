@@ -16,17 +16,13 @@ import java.util.List;
  */
 public class LibraryController {
 
-    private LibraryService libraryService;
+    private final LibraryService libraryService;
 
     /**
      * Constructs a new LibraryController, initializing the LibraryService.
      */
     public LibraryController() {
-        try {
-            this.libraryService = new LibraryService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.libraryService = new LibraryService();
     }
 
 
@@ -69,15 +65,7 @@ public class LibraryController {
      * @throws Exception if the game is not found in the database.
      */
     public boolean addGameToLibrary(int userId, String gameName) throws Exception {
-        Game game = libraryService.getGameByName(gameName);
-        if (game == null) {
-            throw new Exception("Game not found in the database.");
-        }
-        boolean alreadyInLibrary = libraryService.isGameInLibrary(userId, game.getId());
-        if (alreadyInLibrary) {
-            return false;
-        }
-        return libraryService.addGameToLibrary(userId, game.getId(), "Available");
+        return libraryService.addGameToLibrary(userId, gameName);
     }
 
     /**
@@ -89,8 +77,7 @@ public class LibraryController {
      *         otherwise.
      */
     public boolean removeGame(int userId, int gameId) {
-        int libraryId = libraryService.getLibraryIdByUserId(userId);
-        return libraryService.removeGameFromLibrary(libraryId, gameId);
+        return libraryService.removeGameFromLibrary(userId, gameId);
     }
 
     /**

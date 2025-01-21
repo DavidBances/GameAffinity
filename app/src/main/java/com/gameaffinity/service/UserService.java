@@ -10,13 +10,18 @@ import com.gameaffinity.model.UserBase;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.SQLException;
 import java.util.List;
 
 public class UserService {
     private final UserDAO userDAO;
 
-    public UserService() throws Exception {
-        this.userDAO = new UserDAOImpl();
+    public UserService()  {
+        try {
+            this.userDAO = new UserDAOImpl();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -46,63 +51,72 @@ public class UserService {
      * @param email    The user's email.
      * @param password The user's password.
      * @param role     The user's role (Administrator, Moderator, Regular_User).
-     * @return True if the user was successfully registered, false otherwise.
+     * @return A String with the register result.
      */
-    public boolean registerUser(String name, String email, String password, String role) {
+    public String registerUser(String name, String email, String password, String role) {
         if (name == null || name.isEmpty() || email == null || email.isEmpty() || password == null || password.isEmpty()
                 || role == null || role.isEmpty()) {
-            throw new IllegalArgumentException("All fields are required.");
+            return "All fields are required.";
         }
 
         if (!isValidEmail(email)) {
-            throw new IllegalArgumentException("Invalid email format.");
+            return "Invalid email format.";
+        }
+
+        if (emailExists(email)) {
+            return "El email ya está en uso.";
         }
 
         if (!isValidRole(role)) {
-            throw new IllegalArgumentException("Invalid role. Accepted roles: Administrator, Moderator, Regular_User.");
+            return "Invalid role. Accepted roles: Administrator, Moderator, Regular_User.";
         }
 
         UserBase user = createUserInstance(role, 0, name, email, password);
-        return userDAO.createUser(user);
+        if (userDAO.createUser(user)){
+            return "Cuenta creada con éxito.";
+        }else{
+            return "Error al crear la cuenta.";
+        }
     }
 
     /**
      * Updates a user's profile.
      * 
-     * @param id       The user's ID.
-     * @param name     The updated name.
-     * @param email    The updated email.
-     * @param password The updated password.
+     * @param email       The user's email.
+     * @param password     The user's password.
+     * @param newName    The updated name.
+     * @param newEmail   The updated email.
+     * @param newPassword The updated password.
      * @return True if the profile was successfully updated, false otherwise.
      */
-    public boolean updateUserProfile(int id, String name, String email, String password) {
-        UserBase user = userDAO.findById(id);
+    public boolean updateUserProfile(String email, String password, String newName, String newEmail, String newPassword) {
 
-        if (name.isEmpty()) {
-            name = user.getName();
+        UserBase authenticated = authenticate(email, password);
+        if (authenticated == null) {
+            return false;
         }
-        if (email.isEmpty()) {
-            email = user.getEmail();
+
+        if (newName.isEmpty()) {
+            newName = authenticated.getName();
         }
-        if (password.isEmpty()) {
-            password = user.getPassword();
+        if (newEmail.isEmpty()) {
+            newEmail = authenticated.getEmail();
+        }
+        if (newPassword.isEmpty()) {
+            newPassword = authenticated.getPassword();
         } else {
-            password = hashPassword(password);
+            newPassword = hashPassword(newPassword);
         }
 
         if (!isValidEmail(email)) {
             throw new IllegalArgumentException("Invalid email format.");
         }
 
-        if (user == null) {
-            throw new IllegalArgumentException("User not found.");
-        }
+        authenticated.setName(newName);
+        authenticated.setEmail(newEmail);
+        authenticated.setPassword(newPassword);
 
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
-
-        return userDAO.updateProfile(user);
+        return userDAO.updateProfile(authenticated);
     }
 
     /**
@@ -114,13 +128,6 @@ public class UserService {
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return email.matches(emailRegex);
-    }
-
-    public boolean updateUserRole(int userId, String newRole) {
-        if (!isValidRole(newRole)) {
-            throw new IllegalArgumentException("Invalid role: " + newRole);
-        }
-        return userDAO.updateUserRole(userId, newRole);
     }
 
     public String hashPassword(String password) {
@@ -158,19 +165,11 @@ public class UserService {
      * @return A subclass instance of UserBase.
      */
     private UserBase createUserInstance(String role, int id, String name, String email, String password) {
-        UserBase user;
-
-        switch (role.toUpperCase()) {
-            case "ADMINISTRATOR":
-                user = new Administrator(id, name, email);
-                break;
-            case "MODERATOR":
-                user = new Moderator(id, name, email);
-                break;
-            default:
-                user = new Regular_User(id, name, email);
-                break;
-        }
+        UserBase user = switch (role.toUpperCase()) {
+            case "ADMINISTRATOR" -> new Administrator(id, name, email);
+            case "MODERATOR" -> new Moderator(id, name, email);
+            default -> new Regular_User(id, name, email);
+        };
 
         user.setPassword(password);
         return user;
@@ -181,6 +180,14 @@ public class UserService {
             throw new IllegalArgumentException("Email is required.");
         }
         return userDAO.emailExists(email);
+    }
+
+    public boolean updateUserRole(UserBase user, String newRole) {
+        if (!isValidRole(newRole)) {
+            return false;
+        }
+        user.setRole(newRole);
+        return userDAO.updateUserRole(user.getId(), newRole);
     }
 
     public List<UserBase> getAllUsers() {

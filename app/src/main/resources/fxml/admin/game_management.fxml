@@ -19,7 +19,7 @@
                         <PropertyValueFactory property="genre" />
                     </cellValueFactory>
                 </TableColumn>
-                <TableColumn fx:id="priceColumn" prefWidth="85.0" text="Price">
+                <TableColumn fx:id="priceColumn" prefWidth="83.0" text="Price">
                     <cellValueFactory>
                         <PropertyValueFactory property="price" />
                     </cellValueFactory>
@@ -30,20 +30,23 @@
     <bottom>
         <HBox alignment="CENTER" spacing="10">
             <Button fx:id="addGameButton" text="Add Game">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor></Button>
+                <cursor>
+                   <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
             <Button fx:id="deleteGameButton" text="Delete Game">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor></Button>
-         <Button fx:id="backButton" layoutX="133.0" layoutY="10.0" text="Back">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor></Button>
+                <cursor>
+                   <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+            <Button fx:id="backButton" layoutX="133.0" layoutY="10.0" text="Back">
+                <cursor>
+                   <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
         </HBox>
     </bottom>
    <right>
-      <ScrollBar orientation="VERTICAL" prefHeight="475.0" prefWidth="15.0" BorderPane.alignment="CENTER" />
+       <ScrollBar orientation="VERTICAL" prefHeight="475.0" prefWidth="15.0" BorderPane.alignment="CENTER" />
    </right>
 </BorderPane>

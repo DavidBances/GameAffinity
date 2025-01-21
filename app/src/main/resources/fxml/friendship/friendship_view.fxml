@@ -10,7 +10,7 @@
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="250.0" text="Friends List:" />
             <TableView fx:id="friendsTable" focusTraversable="false" prefHeight="450.0" prefWidth="250.0">
                 <columns>
-                    <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Name" />
+                    <TableColumn fx:id="nameColumn" prefWidth="98.0" text="Name" />
                     <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
                 </columns>
             </TableView>
@@ -26,7 +26,7 @@
             <Button fx:id="backButton" text="Back" />
         </FlowPane>
     </bottom>
-   <right>
+    <right>
         <VBox alignment="TOP_CENTER" prefHeight="470.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <Label alignment="CENTER" prefHeight="17.0" prefWidth="250.0" text="Pending Friend Requests:" />
             <TableView fx:id="requestsTable" focusTraversable="false" prefHeight="450.0" prefWidth="250.0">
@@ -37,5 +37,5 @@
                 </columns>
             </TableView>
         </VBox>
-   </right>
+    </right>
 </BorderPane>

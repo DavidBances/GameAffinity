@@ -4,7 +4,6 @@ import com.gameaffinity.model.UserBase;
 import java.util.List;
 
 public interface UserDAO {
-    UserBase findById(int id);
 
     List<UserBase> findAll();
 

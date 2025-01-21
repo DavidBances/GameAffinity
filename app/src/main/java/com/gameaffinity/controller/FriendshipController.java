@@ -17,18 +17,14 @@ import java.util.List;
  */
 public class FriendshipController {
 
-    private FriendshipService friendshipService;
+    private final FriendshipService friendshipService;
 
     /**
      * Creates an instance of FriendshipController, initializing the
      * FriendshipService.
      */
     public FriendshipController() {
-        try {
-            this.friendshipService = new FriendshipService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.friendshipService = new FriendshipService();
     }
 
     /**
@@ -41,17 +37,6 @@ public class FriendshipController {
      */
     public boolean sendFriendRequest(int requesterId, int receiverId) {
         return friendshipService.sendFriendRequest(requesterId, receiverId);
-    }
-
-    /**
-     * Checks if a friend request between two users is valid.
-     *
-     * @param requesterId The ID of the user sending the request.
-     * @param receiverId  The ID of the user receiving the request.
-     * @return {@code true} if the request is valid, {@code false} otherwise.
-     */
-    public boolean checkValidRequest(int requesterId, int receiverId) {
-        return friendshipService.checkValidRequest(requesterId, receiverId);
     }
 
     /**

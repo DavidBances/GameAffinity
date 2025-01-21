@@ -10,12 +10,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import javax.swing.*;
 import java.util.List;
 
 public class FriendshipView {
@@ -80,7 +77,7 @@ public class FriendshipView {
                 } else {
                     HBox hbox = new HBox(10, acceptButton, rejectButton);
                     hbox.setAlignment(Pos.CENTER);
-                    setGraphic(hbox);  // Aquí se añaden los botones a la celda
+                    setGraphic(hbox);
                 }
             }
         });
@@ -134,12 +131,9 @@ public class FriendshipView {
     private void sendFriendRequest() {
         String receiverEmail = showInputDialog("Enter the User email of the person you want to add:");
         int receiverId = friendshipController.getUserIdByEmail(receiverEmail);
-        boolean success = false;
 
         if (receiverId != -1) {
-            if (friendshipController.checkValidRequest(this.user.getId(), receiverId)) {
-                success = friendshipController.sendFriendRequest(this.user.getId(), receiverId);
-            }
+            boolean success = friendshipController.sendFriendRequest(this.user.getId(), receiverId);
             showAlert(success ? "Friend request sent!" : "Failed to send friend request.", "", success ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
         } else {
             showAlert("Invalid User Email.", "Error", Alert.AlertType.ERROR);

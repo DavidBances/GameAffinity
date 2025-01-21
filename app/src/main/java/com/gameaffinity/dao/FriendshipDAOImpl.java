@@ -13,12 +13,11 @@ import java.util.List;
 
 /**
  * Implementation of the FriendshipDAO interface for managing friendship-related
- * data
- * in the "Level Track" application.
+ * data.
  * This class interacts with the database to perform CRUD operations for
  * friendship management.
  *
- * @author Level Track
+ * @author DavidBances
  * @since 1.0
  */
 
@@ -28,10 +27,10 @@ public class FriendshipDAOImpl implements FriendshipDAO {
     /**
      * Constructs a new FriendshipDAOImpl and initializes the database connection.
      *
-     * @throws Exception if there is an issue initializing the database connection.
+     * @throws SQLException if there is an issue initializing the database connection.
      */
 
-    public FriendshipDAOImpl() throws Exception {
+    public FriendshipDAOImpl() throws SQLException {
         this.connection = DatabaseConnection.getInstance().getConnection();
     }
 
@@ -46,15 +45,11 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * @return An instance of Administrator, Moderator, or Regular_User.
      */
     private UserBase createUserInstance(String role, int id, String name, String email) {
-        switch (role) {
-            case "ADMINISTRATOR":
-                return new Administrator(id, name, email);
-            case "MODERATOR":
-                return new Moderator(id, name, email);
-            case "REGULAR_USER":
-            default:
-                return new Regular_User(id, name, email);
-        }
+        return switch (role) {
+            case "ADMINISTRATOR" -> new Administrator(id, name, email);
+            case "MODERATOR" -> new Moderator(id, name, email);
+            default -> new Regular_User(id, name, email);
+        };
     }
 
     /**
@@ -86,6 +81,27 @@ public class FriendshipDAOImpl implements FriendshipDAO {
         }
         return friends;
     }
+
+    public Friendship getFriendshipById(int friendshipId){
+        String query = QueryLoader.getQuery("friendship.getFriendshipById");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, friendshipId);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new Friendship(
+                        rs.getInt("id"),
+                        rs.getInt("requester_id"),
+                        getUserEmailById(rs.getInt("requester_id")),
+                        rs.getInt("receiver_id"),
+                        rs.getString("status")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 
     /**
      * Sends a friend request from one user to another.
@@ -156,8 +172,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * Receives a friend request from one user to another.
      *
      * @param userId The ID of the user sending the request.
-     * @return A list of the friendship requests received by the user with the Id
-     *         userId
+     * @return A list of the friendship requests received by the user with the id userId
      */
     @Override
     public List<Friendship> getFriendRequests(int userId) {
@@ -183,7 +198,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
     /**
      * Updates the friendship status.
      *
-     * @param friendshipId The ID of the friendhsip between the users.
+     * @param friendshipId The ID of the friendship between the users.
      * @param status       The status of the request, pending, accepted...
      * @return {@code true} if the request was successfully updated; {@code false}
      *         otherwise.
@@ -202,7 +217,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
     }
 
     /**
-     * Searchs an user ID based on the email.
+     * Searches a user ID based on the email.
      *
      * @param email The email of the user.
      * @return The ID of the user if it can be found; -1 otherwise.

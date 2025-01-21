@@ -1,22 +1,17 @@
 package com.gameaffinity.controller;
 
 import com.gameaffinity.model.Game;
-import com.gameaffinity.service.GameService;
+import com.gameaffinity.service.GameManagementService;
 
 import java.util.List;
 
 public class GameManagementController {
 
-    private GameService gameService;
+    private final GameManagementService gameManagementService;
 
     public GameManagementController() {
-        try {
-            this.gameService = new GameService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.gameManagementService = new GameManagementService();
     }
-
 
     /**
      * Retrieves a list of all games from the database.
@@ -24,12 +19,7 @@ public class GameManagementController {
      * @return A list of all games. Returns {@code null} if an error occurs.
      */
     public List<Game> getAllGames() {
-        try {
-            return gameService.getAllGames();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return gameManagementService.getAllGames();
     }
 
     /**
@@ -40,18 +30,11 @@ public class GameManagementController {
      *         game already exists.
      */
     public boolean addGame(String name, String genre, String priceText) throws NumberFormatException{
-
-        double price = Double.parseDouble(priceText);
-        Game newGame = new Game(1, name, genre, price, "Available", 0);
-        if (gameService.isGameInDatabase(newGame.getName())) {
-            return false;
-        } else {
-            return gameService.addGame(newGame);
-        }
+        return gameManagementService.addGame(name, genre, priceText);
     }
 
     public boolean deleteGame(Game game) {
-        return gameService.deleteGame(game.getId());
+        return gameManagementService.deleteGame(game.getId());
     }
 
 }

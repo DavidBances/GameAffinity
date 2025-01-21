@@ -22,20 +22,16 @@
     <center>
         <StackPane fx:id="mainContent" />
     </center>
-   <left>
-      <AnchorPane prefHeight="450.0" prefWidth="250.0" BorderPane.alignment="CENTER">
-         <children>
+    <left>
+        <AnchorPane prefHeight="450.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <ImageView fx:id="userManagementImage" fitHeight="150.0" fitWidth="150.0" layoutX="50.0" layoutY="163.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="87.0" layoutY="313.0" text="Manage Users" />
-         </children>
-      </AnchorPane>
-   </left>
-   <right>
-      <AnchorPane prefHeight="450.0" prefWidth="250.0" BorderPane.alignment="CENTER">
-         <children>
+        </AnchorPane>
+    </left>
+    <right>
+        <AnchorPane prefHeight="450.0" prefWidth="250.0" BorderPane.alignment="CENTER">
             <ImageView fx:id="gameManagementImage" fitHeight="150.0" fitWidth="150.0" layoutX="50.0" layoutY="163.0" pickOnBounds="true" preserveRatio="true" />
             <Label layoutX="84.0" layoutY="313.0" text="Manage Games" />
-         </children>
-      </AnchorPane>
-   </right>
+        </AnchorPane>
+    </right>
 </BorderPane>

@@ -7,14 +7,10 @@ import com.gameaffinity.service.UserService;
 
 public class UserManagementController {
 
-    private UserService userService;
+    private final UserService userService;
 
     public UserManagementController() {
-        try {
-            this.userService = new UserService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.userService = new UserService();
     }
 
     /**
@@ -33,9 +29,7 @@ public class UserManagementController {
      * @param newRole The new role to be assigned to the user.
      */
     public boolean updateUserRole(UserBase user, String newRole) {
-            boolean changed = userService.updateUserRole(user.getId(), newRole);
-            user.setRole(newRole);
-            return changed;
+        return userService.updateUserRole(user, newRole);
     }
 
     /**

@@ -10,20 +10,22 @@
             <columns>
                 <TableColumn fx:id="nameColumn" prefWidth="250.0" text="Name" />
                 <TableColumn fx:id="emailColumn" prefWidth="150.0" text="Email" />
-                <TableColumn fx:id="roleColumn" prefWidth="85.0" text="Role" />
+                <TableColumn fx:id="roleColumn" prefWidth="83.0" text="Role" />
             </columns>
         </TableView>
     </center>
     <bottom>
         <HBox alignment="center" spacing="10">
             <Button fx:id="deleteUserButton" text="Delete User">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor></Button>
-         <Button fx:id="backButton" layoutX="221.0" layoutY="10.0" text="Back">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor></Button>
+                <cursor>
+                   <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
+            <Button fx:id="backButton" layoutX="221.0" layoutY="10.0" text="Back">
+                <cursor>
+                   <Cursor fx:constant="HAND" />
+                </cursor>
+            </Button>
         </HBox>
     </bottom>
    <right>

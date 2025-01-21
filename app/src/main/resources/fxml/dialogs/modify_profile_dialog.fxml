@@ -26,27 +26,29 @@
 
         <Label text="Nueva Contraseña:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
         <PasswordField fx:id="newPasswordField" promptText="Nueva contraseña (opcional)" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <columnConstraints>
-         <ColumnConstraints />
-         <ColumnConstraints />
-      </columnConstraints>
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-         <RowConstraints />
-      </rowConstraints>
+        <columnConstraints>
+             <ColumnConstraints />
+             <ColumnConstraints />
+        </columnConstraints>
+        <rowConstraints>
+             <RowConstraints />
+             <RowConstraints />
+             <RowConstraints />
+             <RowConstraints />
+             <RowConstraints />
+        </rowConstraints>
     </GridPane>
 
     <HBox alignment="center" spacing="10">
         <Button fx:id="updateButton" text="Actualizar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Button>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
         <Button fx:id="cancelButton" text="Cancelar">
-         <cursor>
-            <Cursor fx:constant="HAND" />
-         </cursor></Button>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </Button>
     </HBox>
 </VBox>

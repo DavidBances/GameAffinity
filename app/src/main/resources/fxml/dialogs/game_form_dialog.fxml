@@ -19,9 +19,10 @@
     <TextField fx:id="priceField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
     <Button fx:id="saveButton" text="Save" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
-      <cursor>
-         <Cursor fx:constant="HAND" />
-      </cursor></Button>
+        <cursor>
+            <Cursor fx:constant="HAND" />
+        </cursor>
+    </Button>
    <columnConstraints>
       <ColumnConstraints />
       <ColumnConstraints />

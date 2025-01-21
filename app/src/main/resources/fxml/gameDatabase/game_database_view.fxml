@@ -6,47 +6,38 @@
 <?import javafx.scene.layout.*?>
 
 <AnchorPane prefHeight="500.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameaffinity.view.GameDatabaseView">
-    <children>
-        <!-- Database Panel -->
-        <VBox alignment="TOP_CENTER" spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
-            <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Available Games in Database:" />
+    <!-- Database Panel -->
+    <VBox alignment="TOP_CENTER" spacing="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="10">
+        <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Available Games in Database:" />
 
-            <!-- Table to display the games -->
-            <TableView fx:id="databaseTable" prefHeight="300" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="40" focusTraversable="false">
-                <columns>
-                    <TableColumn fx:id="nameColumn" minWidth="300.0" text="Name" />
-                    <TableColumn fx:id="genreColumn" prefWidth="130.0" text="Genre" />
-                    <TableColumn fx:id="priceColumn" prefWidth="48.0" text="Price" />
-                </columns>
-            </TableView>
-   
-           <!-- Add Game Button -->
-           <Button fx:id="addGameButton" prefHeight="25.0" prefWidth="480.0" text="Add to Library" />
-         <VBox alignment="TOP_CENTER" spacing="10" />
-         <HBox alignment="CENTER" prefHeight="26.0" prefWidth="480.0">
-            <children>
-                  <Label text="Search by Name:" />
-                  <TextField fx:id="searchField" />
-                  <Button fx:id="searchButton" text="Search" />
-            </children>
-         </HBox>
-         <HBox alignment="CENTER" prefHeight="26.0" prefWidth="480.0">
-            <children>
-
-                     <Label text="Search by Genre:" />
-                  <ComboBox fx:id="genreComboBox">
-                      <items>
-                          <FXCollections fx:factory="observableArrayList">
-                              <String fx:value="All" />
-                          </FXCollections>
-                      </items>
-                  </ComboBox>
-                  <Button fx:id="filterButton" text="Filter" />
-            </children>
-         </HBox>
-        </VBox>
-
-        <!-- Back Button -->
-        <Button fx:id="backButton" layoutX="230.0" layoutY="474.0" text="Back" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="230.0" />
-    </children>
+        <!-- Table to display the games -->
+        <TableView fx:id="databaseTable" prefHeight="300" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10" AnchorPane.topAnchor="40" focusTraversable="false">
+            <columns>
+                <TableColumn fx:id="nameColumn" minWidth="300.0" text="Name" />
+                <TableColumn fx:id="genreColumn" prefWidth="130.0" text="Genre" />
+                <TableColumn fx:id="priceColumn" prefWidth="48.0" text="Price" />
+            </columns>
+        </TableView>
+        <!-- Add Game Button -->
+        <Button fx:id="addGameButton" prefHeight="25.0" prefWidth="480.0" text="Add to Library" />
+        <VBox alignment="TOP_CENTER" spacing="10" />
+        <HBox alignment="CENTER" prefHeight="26.0" prefWidth="480.0">
+              <Label text="Search by Name:" />
+              <TextField fx:id="searchField" />
+              <Button fx:id="searchButton" text="Search" />
+        </HBox>
+        <HBox alignment="CENTER" prefHeight="26.0" prefWidth="480.0">
+            <Label text="Search by Genre:" />
+                <ComboBox fx:id="genreComboBox">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="All" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            <Button fx:id="filterButton" text="Filter" />
+        </HBox>
+    </VBox>
+    <!-- Back Button -->
+    <Button fx:id="backButton" layoutX="230.0" layoutY="474.0" text="Back" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="230.0" />
 </AnchorPane>

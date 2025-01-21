@@ -6,23 +6,24 @@ import com.gameaffinity.dao.LibraryDAOImpl;
 import com.gameaffinity.dao.GameDAOImpl;
 import com.gameaffinity.model.Game;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public class LibraryService {
     private final LibraryDAO libraryDAO;
     private final GameDAO gameDAO;
 
-    public LibraryService() throws Exception {
-        this.libraryDAO = new LibraryDAOImpl();
-        this.gameDAO = new GameDAOImpl();
+    public LibraryService() {
+        try{
+            this.libraryDAO = new LibraryDAOImpl();
+            this.gameDAO = new GameDAOImpl();
+        }catch (SQLException e){
+            throw new RuntimeException(e);
+        }
     }
 
     public List<Game> getGamesByUserId(int userId) {
         return libraryDAO.getGamesByUserId(userId);
-    }
-
-    public boolean isGameInLibrary(int userId, int gameId) {
-        return libraryDAO.isGameInLibrary(userId, gameId);
     }
 
     public List<Game> getGamesByGenreUser(int userId, String genre) {
@@ -37,24 +38,27 @@ public class LibraryService {
         return libraryDAO.getGamesByGenreAndNameUser(userId, genre, name);
     }
 
-    public boolean addGameToLibrary(int userId, int gameId, String state) {
-        return libraryDAO.addGameToLibrary(userId, gameId, state);
+    public boolean addGameToLibrary(int userId, String gameName) throws Exception {
+        Game game = libraryDAO.getGameByName(gameName);
+        if (game == null) {
+            throw new Exception("Game not found in the database.");
+        }
+        boolean alreadyInLibrary = libraryDAO.isGameInLibrary(userId, game.getId());
+        if (alreadyInLibrary) {
+            return false;
+        }
+        return libraryDAO.addGameToLibrary(userId, game.getId(), "Available");
     }
 
-    public boolean removeGameFromLibrary(int libraryId, int gameId) {
+    public boolean removeGameFromLibrary(int userId, int gameId) {
+        int libraryId = libraryDAO.getLibraryIdByUserId(userId);
         return libraryDAO.removeGameFromLibrary(libraryId, gameId);
     }
 
     public boolean updateGameState(int gameId, int userId, String newState) {
+        Game game = libraryDAO.getGameByGameId(gameId);
+        game.setState(newState);
         return libraryDAO.updateGameState(gameId, userId, newState);
-    }
-
-    public Game getGameByName(String gameName) {
-        return libraryDAO.getGameByName(gameName);
-    }
-
-    public int getLibraryIdByUserId(int userId) {
-        return libraryDAO.getLibraryIdByUserId(userId);
     }
 
     //Sirve para mostrar todos los juegos en la pantalla en la que se muestran todos los juegos
@@ -67,6 +71,8 @@ public class LibraryService {
     }
 
     public boolean updateGameScore(int gameId, int userId, int score) {
+        Game game = libraryDAO.getGameByGameId(gameId);
+        game.setScore(score);
         return libraryDAO.updateGameScore(gameId, userId, score);
     }
 

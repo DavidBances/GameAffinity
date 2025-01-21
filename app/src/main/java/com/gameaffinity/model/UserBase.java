@@ -1,7 +1,7 @@
 package com.gameaffinity.model;
 
 public abstract class UserBase {
-    private int id;
+    private final int id;
     private String name;
     private String email;
     private String password;
@@ -33,15 +33,6 @@ public abstract class UserBase {
     }
 
     /**
-     * Sets the unique identifier for the user.
-     *
-     * @param id The new user ID.
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    /**
      * Gets the name of the user.
      *
      * @return The user's name.
@@ -53,7 +44,7 @@ public abstract class UserBase {
     /**
      * Sets the name of the user.
      *
-     * @param name The new user name.
+     * @param name The new username.
      */
     public void setName(String name) {
         this.name = name;
@@ -113,9 +104,8 @@ public abstract class UserBase {
         this.role = role;
     }
 
-    /**
-     * Abstract method to define an action specific to the user role.
-     * Must be implemented by subclasses.
-     */
-    public abstract void performAction();
+    @Override
+    public String toString() {
+        return "id=" + id + ", name='" + name + ", email='" + email + ", password='" + password + ", role='" + role;
+    }
 }

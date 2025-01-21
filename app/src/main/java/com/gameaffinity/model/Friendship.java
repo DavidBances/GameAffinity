@@ -1,10 +1,10 @@
 package com.gameaffinity.model;
 
 public class Friendship {
-    private int id;
-    private int requesterId;
-    private String requesterEmail;
-    private int receiverId;
+    private final int id;
+    private final int requesterId;
+    private final String requesterEmail;
+    private final int receiverId;
     private String status;
 
     /**
@@ -32,39 +32,9 @@ public class Friendship {
         return id;
     }
 
-    /**
-     * Retrieves the ID of the user who sent the friendship request.
-     *
-     * @return The requester's ID.
-     */
-    public int getRequesterId() {
-        return requesterId;
-    }
-
-    /**
-     * Retrieves the ID of the user who received the friendship request.
-     *
-     * @return The receiver's ID.
-     */
-    public int getReceiverId() {
-        return receiverId;
-    }
-
-    /**
-     * Retrieves the current status of the friendship.
-     *
-     * @return The status of the friendship.
-     */
-    public String getStatus() {
-        return status;
-    }
 
     public String getRequesterEmail() {
         return requesterEmail;
-    }
-
-    public void setRequesterEmail(String requesterEmail) {
-        this.requesterEmail = requesterEmail;
     }
 
     /**
