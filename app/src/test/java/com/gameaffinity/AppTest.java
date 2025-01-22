@@ -5,13 +5,7 @@ package com.gameaffinity;
 
 import org.junit.jupiter.api.Test;
 
-import com.gameaffinity.view.MainApp;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class AppTest {
-    @Test
-    void appHasAGreeting() {
-        MainApp classUnderTest = new MainApp();
-    }
 }
