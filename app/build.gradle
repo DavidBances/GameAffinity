@@ -8,16 +8,32 @@
 plugins {
     id 'application'
     id 'org.openjfx.javafxplugin' version '0.0.13'
+    id 'org.springframework.boot' version '3.2.2'  // Usa la versión más reciente de Spring Boot
+    id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
 }
+
+group = 'com.gameaffinity'
+version = '1.0'
+sourceCompatibility = '21'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation 'mysql:mysql-connector-java:8.0.29'
-    implementation 'org.openjfx:javafx-controls:23.0.1'
-    implementation 'org.openjfx:javafx-fxml:23.0.1'
+    implementation 'mysql:mysql-connector-java:8.0.33'
+    implementation 'org.openjfx:javafx-controls:21'
+    implementation 'org.openjfx:javafx-fxml:21'
+
+    // Spring Boot web para crear APIs REST
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // Springdoc OpenAPI para Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    // Dependencias adicionales
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+    implementation 'org.json:json:20210307'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
@@ -28,12 +44,12 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(23)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 application {
-    mainClass = 'com.gameaffinity.view.MainApp'
+    mainClass = 'com.gameaffinity.GameAffinityApplication'
 }
 
 tasks.named('test') {
@@ -42,6 +58,6 @@ tasks.named('test') {
 
 // Configuración de JavaFX
 javafx {
-    version = '23.0.1'
+    version = '21'
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics'] // Especifica los módulos que necesitas
 }

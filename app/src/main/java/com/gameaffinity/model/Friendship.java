@@ -1,5 +1,8 @@
 package com.gameaffinity.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Friendship {
     private final int id;
     private final int requesterId;
@@ -15,7 +18,12 @@ public class Friendship {
      * @param receiverId  The ID of the user who received the friendship request.
      * @param status      The current status of the friendship.
      */
-    public Friendship(int id, int requesterId, String requesterEmail, int receiverId, String status) {
+    @JsonCreator
+    public Friendship(@JsonProperty("id") int id,
+                      @JsonProperty("requesterId") int requesterId,
+                      @JsonProperty("requesterEmail") String requesterEmail,
+                      @JsonProperty("receiverId") int receiverId,
+                      @JsonProperty("status") String status) {
         this.id = id;
         this.requesterId = requesterId;
         this.requesterEmail = requesterEmail;
@@ -32,6 +40,13 @@ public class Friendship {
         return id;
     }
 
+    public int getRequesterId() {
+        return requesterId;
+    }
+
+    public int getReceiverId() {
+        return receiverId;
+    }
 
     public String getRequesterEmail() {
         return requesterEmail;
@@ -50,7 +65,6 @@ public class Friendship {
      * Provides a string representation of the friendship.
      *
      * @return A formatted string containing the friendship details.
-     *
      */
     @Override
     public String toString() {

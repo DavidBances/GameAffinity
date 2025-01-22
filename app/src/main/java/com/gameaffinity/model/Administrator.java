@@ -1,5 +1,8 @@
 package com.gameaffinity.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Administrator extends UserBase {
 
     /**
@@ -9,7 +12,10 @@ public class Administrator extends UserBase {
      * @param name  The name of the administrator.
      * @param email The email of the administrator.
      */
-    public Administrator(int id, String name, String email) {
+    @JsonCreator
+    public Administrator(@JsonProperty("id") int id,
+                         @JsonProperty("name") String name,
+                         @JsonProperty("email") String email) {
         super(id, name, email, "Administrator");
     }
 }

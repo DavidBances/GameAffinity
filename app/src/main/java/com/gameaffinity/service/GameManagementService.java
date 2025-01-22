@@ -10,6 +10,11 @@ import java.util.List;
 public class GameManagementService {
     private final GameDAO gameDAO;
 
+
+    public List<Game> getAllGames() {
+        return gameDAO.getAllGames();
+    }
+
     public GameManagementService(){
         try {
             this.gameDAO = new GameDAOImpl();
@@ -35,10 +40,5 @@ public class GameManagementService {
 
     public boolean deleteGame(int gameId) {
         return gameDAO.deleteGame(gameId);
-    }
-
-
-    public List<Game> getAllGames() {
-            return gameDAO.getAllGames();
     }
 }

@@ -2,14 +2,13 @@ package com.gameaffinity.controller;
 
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * The LoginController class handles the login process.
- * It manages user authentication by interacting with the UserService.
- *
- * @author DavidBances
- * @since 1.0
- */
+@RestController
+@RequestMapping("/api/login")
+@Tag(name = "Login", description = "API para la autenticación de usuarios")
 public class LoginController {
 
     private final UserService userService;
@@ -27,9 +26,11 @@ public class LoginController {
      * @param email    The email address of the user.
      * @param password The password of the user.
      * @return A {@code UserBase} object representing the authenticated user,
-     *         or {@code null} if authentication fails.
+     * or {@code null} if authentication fails.
      */
-    public UserBase login(String email, String password) {
+    @PostMapping
+    @Operation(summary = "Autenticar usuario", description = "Autentica a un usuario usando su email y contraseña.")
+    public UserBase login(@RequestParam String email, @RequestParam String password) {
         return userService.authenticate(email, password);
     }
 }

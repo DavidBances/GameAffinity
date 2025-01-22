@@ -48,7 +48,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
         return switch (role) {
             case "ADMINISTRATOR" -> new Administrator(id, name, email);
             case "MODERATOR" -> new Moderator(id, name, email);
-            default -> new Regular_User(id, name, email);
+            default -> new RegularUser(id, name, email);
         };
     }
 
@@ -82,7 +82,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
         return friends;
     }
 
-    public Friendship getFriendshipById(int friendshipId){
+    public Friendship getFriendshipById(int friendshipId) {
         String query = QueryLoader.getQuery("friendship.getFriendshipById");
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, friendshipId);
@@ -109,7 +109,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * @param requesterId The ID of the user sending the request.
      * @param receiverId  The ID of the user receiving the request.
      * @return {@code true} if the request was successfully sent; {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean sendFriendRequest(int requesterId, int receiverId) {
@@ -201,7 +201,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * @param friendshipId The ID of the friendship between the users.
      * @param status       The status of the request, pending, accepted...
      * @return {@code true} if the request was successfully updated; {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean updateFriendRequestStatus(int friendshipId, String status) {
@@ -263,7 +263,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * @param userId   The ID of the user that wants to delete a friend.
      * @param friendId The ID of the friend that is going to be deleted by the user.
      * @return {@code true} if the friendship was successfully removed;
-     *         {@code false} otherwise.
+     * {@code false} otherwise.
      */
     @Override
     public boolean deleteFriend(int userId, int friendId) {

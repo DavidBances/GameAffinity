@@ -11,7 +11,7 @@ import java.util.List;
 public class FriendshipService {
     private final FriendshipDAO friendshipDAO;
 
-    public FriendshipService(){
+    public FriendshipService() {
         try {
             this.friendshipDAO = new FriendshipDAOImpl();
         } catch (SQLException e) {
@@ -19,10 +19,10 @@ public class FriendshipService {
         }
     }
 
-    public boolean sendFriendRequest(int requesterId, int receiverId) {
-        if(friendshipDAO.checkValidRequest(requesterId, receiverId)){
-            return friendshipDAO.sendFriendRequest(requesterId, receiverId);
-        }else{
+    public boolean sendFriendRequest(Friendship friendship) {
+        if (friendshipDAO.checkValidRequest(friendship.getRequesterId(), friendship.getReceiverId())) {
+            return friendshipDAO.sendFriendRequest(friendship.getRequesterId(), friendship.getReceiverId());
+        } else {
             return false;
         }
     }
@@ -31,10 +31,9 @@ public class FriendshipService {
         return friendshipDAO.getFriendRequests(userId);
     }
 
-    public boolean respondToFriendRequest(int friendshipId, String status) {
-        Friendship friendship = friendshipDAO.getFriendshipById(friendshipId);
+    public boolean respondToFriendRequest(Friendship friendship, String status) {
         friendship.setStatus(status);
-        return friendshipDAO.updateFriendRequestStatus(friendshipId, status);
+        return friendshipDAO.updateFriendRequestStatus(friendship.getId(), status);
     }
 
     public List<UserBase> getFriends(int userId) {

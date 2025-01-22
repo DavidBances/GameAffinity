@@ -1,10 +1,16 @@
 package com.gameaffinity.controller;
 
-import java.util.List;
-
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/user-management")
+@Tag(name = "User Management", description = "API para la gestión de usuarios")
 public class UserManagementController {
 
     private final UserService userService;
@@ -13,33 +19,21 @@ public class UserManagementController {
         this.userService = new UserService();
     }
 
-    /**
-     * Retrieves a list of all users from the database.
-     *
-     * @return A list of all users. Returns {@code null} if an error occurs.
-     */
+    @GetMapping("/all")
+    @Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista con todos los usuarios.")
     public List<UserBase> getAllUsers() {
-            return userService.getAllUsers();
+        return userService.getAllUsers();
     }
 
-    /**
-     * Assigns a new role to a user.
-     *
-     * @param user  The ID of the user whose role is being updated.
-     * @param newRole The new role to be assigned to the user.
-     */
-    public boolean updateUserRole(UserBase user, String newRole) {
+    @PutMapping("/update-role")
+    @Operation(summary = "Actualizar rol de usuario", description = "Asigna un nuevo rol a un usuario.")
+    public boolean updateUserRole(@RequestBody UserBase user, @RequestParam String newRole) {
         return userService.updateUserRole(user, newRole);
     }
 
-    /**
-     * Deletes a user from the database.
-     *
-     * @param user The ID of the user to be deleted.
-     * @return {@code true} if the user was deleted successfully, {@code false}
-     *         otherwise.
-     */
-    public boolean deleteUser(UserBase user) {
+    @DeleteMapping("/delete")
+    @Operation(summary = "Eliminar usuario", description = "Elimina un usuario de la base de datos.")
+    public boolean deleteUser(@RequestBody UserBase user) {
         return userService.deleteUser(user.getId());
     }
 }
