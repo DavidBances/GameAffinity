@@ -25,7 +25,7 @@ public class GameManagementController {
     @GetMapping("/all")
     @Operation(summary = "Obtener todos los juegos", description = "Recupera una lista de todos los juegos en la base de datos.")
     public List<Game> getAllGames() {
-        return steamApiClient.getAllGames();
+        return gameManagementService.getAllGames();
     }
 
     @PostMapping("/add")

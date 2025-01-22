@@ -242,20 +242,24 @@ public class LibraryDAOImpl implements LibraryDAO {
     }
 
     @Override
-    public int getGameScore(int gameId, int userId) {
+    public int getGameScore(int gameId) {
         String query = QueryLoader.getQuery("library.getGameScore");
+        int totalScore = 0;
+        int numberOfScores = 0;
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, gameId);
-            stmt.setInt(2, userId);
-            stmt.setInt(3, getLibraryIdByUserId(userId));
             ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("game_score");
+            while (rs.next()) {
+                totalScore += rs.getInt("game_score");
+                numberOfScores++;
+            }
+            if(numberOfScores > 0) {
+                return totalScore / numberOfScores;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return -1;
+        return 0;
     }
 
     @Override

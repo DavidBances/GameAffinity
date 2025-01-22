@@ -78,4 +78,10 @@ public class LibraryController {
     public List<String> getAllGenres() {
         return libraryService.getAllGenres();
     }
+
+    @GetMapping("/avgScore/{gameId}")
+    @Operation(summary = "Obtiene la puntuación total de un juego", description = "Devuelve la puntuación medía de un juego")
+    public int getGameScore(@PathVariable int gameId){
+        return libraryService.getGameScore(gameId);
+    }
 }

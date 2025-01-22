@@ -27,7 +27,7 @@ public interface LibraryDAO {
 
     boolean isGameInLibrary(int libraryId, int gameId);
 
-    int getGameScore(int gameId, int userId);
+    int getGameScore(int gameId);
 
     boolean updateGameScore(int gameId, int userId, int score);
 

@@ -76,8 +76,8 @@ public class LibraryService {
         return libraryDAO.getAllGenres();
     }
 
-    public int getGameScore(int gameId, int userId) {
-        return libraryDAO.getGameScore(gameId, userId);
+    public int getGameScore(int gameId) {
+        return libraryDAO.getGameScore(gameId);
     }
 
 }
