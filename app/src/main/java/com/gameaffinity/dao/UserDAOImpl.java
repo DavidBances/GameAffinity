@@ -2,7 +2,7 @@ package com.gameaffinity.dao;
 
 import com.gameaffinity.model.Administrator;
 import com.gameaffinity.model.Moderator;
-import com.gameaffinity.model.Regular_User;
+import com.gameaffinity.model.RegularUser;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.util.DatabaseConnection;
 import com.gameaffinity.util.QueryLoader;
@@ -24,7 +24,7 @@ public class UserDAOImpl implements UserDAO {
      * @param email    The email of the user.
      * @param password The password of the user.
      * @return A {@link UserBase} object representing the user if found, or
-     *         {@code null} if not found.
+     * {@code null} if not found.
      */
     @Override
     public UserBase findByEmailAndPassword(String email, String password) {
@@ -65,7 +65,7 @@ public class UserDAOImpl implements UserDAO {
         UserBase user = switch (role.toUpperCase()) {
             case "ADMINISTRATOR" -> new Administrator(id, name, email);
             case "MODERATOR" -> new Moderator(id, name, email);
-            default -> new Regular_User(id, name, email);
+            default -> new RegularUser(id, name, email);
         };
         user.setPassword(password);
         return user;
@@ -81,7 +81,7 @@ public class UserDAOImpl implements UserDAO {
         List<UserBase> users = new ArrayList<>();
         String query = QueryLoader.getQuery("user.findAll");
         try (PreparedStatement stmt = connection.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery()) {
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 String role = rs.getString("role");
                 users.add(createUserInstance(
@@ -102,7 +102,7 @@ public class UserDAOImpl implements UserDAO {
      *
      * @param id The ID of the user to be deleted.
      * @return {@code true} if the user was successfully deleted, {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean delete(int id) {
@@ -121,7 +121,7 @@ public class UserDAOImpl implements UserDAO {
      *
      * @param user The user to be created.
      * @return {@code true} if the user was successfully created, {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean createUser(UserBase user) {
@@ -132,7 +132,7 @@ public class UserDAOImpl implements UserDAO {
             connection.setAutoCommit(false);
 
             try (PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-                    PreparedStatement stmt2 = connection.prepareStatement(query2)) {
+                 PreparedStatement stmt2 = connection.prepareStatement(query2)) {
 
                 stmt.setString(1, user.getName());
                 stmt.setString(2, user.getEmail());
@@ -169,7 +169,7 @@ public class UserDAOImpl implements UserDAO {
      *
      * @param user The user whose profile is to be updated.
      * @return {@code true} if the profile was successfully updated, {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean updateProfile(UserBase user) {
@@ -192,7 +192,7 @@ public class UserDAOImpl implements UserDAO {
      * @param userId  The ID of the user whose role is to be updated.
      * @param newRole The new role for the user.
      * @return {@code true} if the role was successfully updated, {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean updateUserRole(int userId, String newRole) {

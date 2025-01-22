@@ -4,7 +4,7 @@ import com.gameaffinity.dao.UserDAO;
 import com.gameaffinity.dao.UserDAOImpl;
 import com.gameaffinity.model.Administrator;
 import com.gameaffinity.model.Moderator;
-import com.gameaffinity.model.Regular_User;
+import com.gameaffinity.model.RegularUser;
 import com.gameaffinity.model.UserBase;
 
 import java.nio.charset.StandardCharsets;
@@ -16,7 +16,7 @@ import java.util.List;
 public class UserService {
     private final UserDAO userDAO;
 
-    public UserService()  {
+    public UserService() {
         try {
             this.userDAO = new UserDAOImpl();
         } catch (SQLException e) {
@@ -26,7 +26,7 @@ public class UserService {
 
     /**
      * Authenticates a user based on email and password.
-     * 
+     *
      * @param email    The user's email.
      * @param password The user's password.
      * @return The authenticated UserBase object or null if authentication fails.
@@ -46,7 +46,7 @@ public class UserService {
 
     /**
      * Registers a new user in the system.
-     * 
+     *
      * @param name     The user's name.
      * @param email    The user's email.
      * @param password The user's password.
@@ -72,20 +72,20 @@ public class UserService {
         }
 
         UserBase user = createUserInstance(role, 0, name, email, password);
-        if (userDAO.createUser(user)){
+        if (userDAO.createUser(user)) {
             return "Cuenta creada con éxito.";
-        }else{
+        } else {
             return "Error al crear la cuenta.";
         }
     }
 
     /**
      * Updates a user's profile.
-     * 
+     *
      * @param email       The user's email.
-     * @param password     The user's password.
-     * @param newName    The updated name.
-     * @param newEmail   The updated email.
+     * @param password    The user's password.
+     * @param newName     The updated name.
+     * @param newEmail    The updated email.
      * @param newPassword The updated password.
      * @return True if the profile was successfully updated, false otherwise.
      */
@@ -121,7 +121,7 @@ public class UserService {
 
     /**
      * Helper method to validate the email format.
-     * 
+     *
      * @param email The email to validate.
      * @return True if the email format is valid, false otherwise.
      */
@@ -156,7 +156,7 @@ public class UserService {
 
     /**
      * Overloaded helper method to create a new user instance from scratch.
-     * 
+     *
      * @param role     The user's role.
      * @param id       The user's ID.
      * @param name     The user's name.
@@ -168,7 +168,7 @@ public class UserService {
         UserBase user = switch (role.toUpperCase()) {
             case "ADMINISTRATOR" -> new Administrator(id, name, email);
             case "MODERATOR" -> new Moderator(id, name, email);
-            default -> new Regular_User(id, name, email);
+            default -> new RegularUser(id, name, email);
         };
 
         user.setPassword(password);

@@ -1,5 +1,15 @@
 package com.gameaffinity.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = RegularUser.class, name = "regular_user"),
+        @JsonSubTypes.Type(value = Moderator.class, name = "moderator"),
+        @JsonSubTypes.Type(value = Administrator.class, name = "administrator")
+})
+
 public abstract class UserBase {
     private final int id;
     private String name;

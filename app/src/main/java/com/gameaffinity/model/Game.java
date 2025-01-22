@@ -1,5 +1,8 @@
 package com.gameaffinity.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Game {
     private final int id;
     private final String name;
@@ -18,7 +21,13 @@ public class Game {
      * @param state The current state of the game (e.g., "Available", "Played").
      * @param score The user-assigned score for the game.
      */
-    public Game(int id, String name, String genre, double price, String state, int score) {
+    @JsonCreator
+    public Game(@JsonProperty("id") int id,
+                @JsonProperty("name") String name,
+                @JsonProperty("genre") String genre,
+                @JsonProperty("price") double price,
+                @JsonProperty("state") String state,
+                @JsonProperty("score") int score) {
         this.id = id;
         this.name = name;
         this.genre = genre;
@@ -93,7 +102,6 @@ public class Game {
      * Provides a string representation of the game.
      *
      * @return A formatted string containing the game's details.
-     *
      */
     @Override
     public String toString() {

@@ -1,14 +1,13 @@
 package com.gameaffinity.controller;
 
 import com.gameaffinity.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
 
-/**
- * The RegisterController class handles user registration.
- * It ensures users can create an account while checking for duplicate emails.
- *
- * @author DavidBances
- * @since 1.0
- */
+@RestController
+@RequestMapping("/api/register")
+@Tag(name = "User Registration", description = "API para la gestión del registro de usuarios")
 public class RegisterController {
 
     private final UserService userService;
@@ -26,10 +25,13 @@ public class RegisterController {
      * @param name     The name of the user.
      * @param email    The email address of the user.
      * @param password The password for the new account.
-     * @return {@code true} if the registration is successful, {@code false}
-     *         otherwise.
+     * @return A {@code String} indicating the registration result.
      */
-    public String register(String name, String email, String password) {
+    @PostMapping
+    @Operation(summary = "Registrar un nuevo usuario", description = "Registra un nuevo usuario con nombre, email y contraseña.")
+    public String register(@RequestParam String name,
+                           @RequestParam String email,
+                           @RequestParam String password) {
         return userService.registerUser(name, email, password, "REGULAR_USER");
     }
 }

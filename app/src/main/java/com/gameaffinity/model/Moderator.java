@@ -1,5 +1,8 @@
 package com.gameaffinity.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class Moderator extends UserBase {
 
     /**
@@ -9,7 +12,10 @@ public class Moderator extends UserBase {
      * @param name  The name of the moderator.
      * @param email The email of the moderator.
      */
-    public Moderator(int id, String name, String email) {
+    @JsonCreator
+    public Moderator(@JsonProperty("id") int id,
+                     @JsonProperty("name") String name,
+                     @JsonProperty("email") String email) {
         super(id, name, email, "Moderator");
     }
 }

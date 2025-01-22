@@ -2,9 +2,15 @@ package com.gameaffinity.controller;
 
 import com.gameaffinity.model.Game;
 import com.gameaffinity.service.GameManagementService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RestController
+@RequestMapping("/api/games")
+@Tag(name = "Game Management", description = "API para la gestión de juegos")
 public class GameManagementController {
 
     private final GameManagementService gameManagementService;
@@ -13,28 +19,28 @@ public class GameManagementController {
         this.gameManagementService = new GameManagementService();
     }
 
-    /**
-     * Retrieves a list of all games from the database.
-     *
-     * @return A list of all games. Returns {@code null} if an error occurs.
-     */
+    @GetMapping("/all")
+    @Operation(summary = "Obtener todos los juegos", description = "Recupera una lista de todos los juegos en la base de datos.")
     public List<Game> getAllGames() {
         return gameManagementService.getAllGames();
     }
 
-    /**
-     * Adds a new game to the database.
-     *
-     * @param name The name of the game to be added.
-     * @return {@code true} if the game was added successfully, {@code false} if the
-     *         game already exists.
-     */
-    public boolean addGame(String name, String genre, String priceText) throws NumberFormatException{
-        return gameManagementService.addGame(name, genre, priceText);
+    @PostMapping("/add")
+    @Operation(summary = "Añadir un nuevo juego", description = "Agrega un nuevo juego a la base de datos.")
+    public boolean addGame(
+            @RequestParam String name,
+            @RequestParam String genre,
+            @RequestParam String priceText) {
+        try {
+            return gameManagementService.addGame(name, genre, priceText);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("El precio debe ser un número válido.");
+        }
     }
 
-    public boolean deleteGame(Game game) {
-        return gameManagementService.deleteGame(game.getId());
+    @DeleteMapping("/delete")
+    @Operation(summary = "Eliminar un juego", description = "Elimina un juego de la base de datos utilizando su ID.")
+    public boolean deleteGame(@RequestParam int gameId) {
+        return gameManagementService.deleteGame(gameId);
     }
-
 }
