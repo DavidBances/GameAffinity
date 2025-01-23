@@ -4,12 +4,14 @@ import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/user-management")
+@PreAuthorize("hasRole('ADMIN')")
 @Tag(name = "User Management", description = "API para la gestión de usuarios")
 public class UserManagementController {
 

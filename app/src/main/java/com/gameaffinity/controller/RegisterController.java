@@ -3,6 +3,7 @@ package com.gameaffinity.controller;
 import com.gameaffinity.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,9 +30,19 @@ public class RegisterController {
      */
     @PostMapping
     @Operation(summary = "Registrar un nuevo usuario", description = "Registra un nuevo usuario con nombre, email y contraseña.")
-    public String register(@RequestParam String name,
-                           @RequestParam String email,
-                           @RequestParam String password) {
-        return userService.registerUser(name, email, password, "REGULAR_USER");
+    public ResponseEntity<?> register(@RequestParam String name,
+                                      @RequestParam String email,
+                                      @RequestParam String password) {
+
+        // Llama al servicio para registrar al usuario
+        String result = userService.registerUser(name, email, password, "REGULAR_USER");
+
+        // Si el registro fue exitoso
+        if (result.equals("Registro exitoso")) {
+            return ResponseEntity.ok().body("{\"message\": \"Usuario registrado exitosamente. Por favor, inicia sesión.\"}");
+        }
+
+        // En caso de error, devuelve un código de estado HTTP apropiado, por ejemplo, 400 (Bad Request)
+        return ResponseEntity.badRequest().body("{\"error\": \"" + result + "\"}");
     }
 }

@@ -4,6 +4,7 @@ import com.gameaffinity.model.Game;
 import com.gameaffinity.service.LibraryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,51 +20,78 @@ public class LibraryController {
         this.libraryService = new LibraryService();
     }
 
-    @GetMapping("/user/{userId}")
-    @Operation(summary = "Obtener juegos por usuario", description = "Devuelve la lista de juegos de un usuario específico.")
-    public List<Game> getGamesByUserId(@PathVariable int userId) {
+    // Obtener el userId basado en el token JWT (interfaz interna para reutilizar lógica en otros métodos)
+    private int getUserIdFromToken() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName(); // Extrae email del token
+        return libraryService.getUserIdByEmail(email); // Busca el userId usando el email
+    }
+
+    // Obtener juegos del usuario autenticado
+    @GetMapping("/user")
+    @Operation(summary = "Obtener juegos del usuario autenticado", description = "Devuelve la lista de juegos del usuario autenticado.")
+    public List<Game> getGamesByUser() {
+        int userId = getUserIdFromToken();
         return libraryService.getGamesByUserId(userId);
     }
 
-    @GetMapping("/user/{userId}/genre")
-    @Operation(summary = "Obtener juegos por género", description = "Devuelve los juegos de un usuario filtrados por género.")
-    public List<Game> getGamesByGenreUser(@PathVariable int userId, @RequestParam String genre) {
+    // Obtener juegos de un amigo (nuevo método)
+    @GetMapping("/friend/{userId}")
+    @Operation(summary = "Obtener la biblioteca de un amigo", description = "Devuelve la biblioteca de juegos de un usuario especificado si el usuario autenticado tiene permisos.")
+    public List<Game> getGamesByFriend(@PathVariable int userId) {
+        // Verificar si el usuario autenticado tiene permiso de ver esta biblioteca
+        int currentUserId = getUserIdFromToken(); // ID del usuario autenticado
+        if (!libraryService.checkFriendship(currentUserId, userId)) {
+            throw new SecurityException("Acceso denegado: no tienes permisos para ver esta biblioteca.");
+        }
+        return libraryService.getGamesByUserId(userId); // Devuelve la biblioteca de juegos del amigo
+    }
+
+    @GetMapping("/user/genre")
+    @Operation(summary = "Obtener juegos por género", description = "Devuelve los juegos del usuario autenticado filtrados por género.")
+    public List<Game> getGamesByGenre(@RequestParam String genre) {
+        int userId = getUserIdFromToken();
         return libraryService.getGamesByGenreUser(userId, genre);
     }
 
-    @GetMapping("/user/{userId}/name")
-    @Operation(summary = "Obtener juegos por nombre", description = "Devuelve los juegos de un usuario filtrados por nombre.")
-    public List<Game> getGamesByNameUser(@PathVariable int userId, @RequestParam String name) {
+    @GetMapping("/user/name")
+    @Operation(summary = "Obtener juegos por nombre", description = "Devuelve los juegos del usuario autenticado filtrados por nombre.")
+    public List<Game> getGamesByName(@RequestParam String name) {
+        int userId = getUserIdFromToken();
         return libraryService.getGamesByNameUser(userId, name);
     }
 
-    @GetMapping("/user/{userId}/genre-and-name")
-    @Operation(summary = "Obtener juegos por género y nombre", description = "Devuelve los juegos de un usuario filtrados por género y nombre.")
-    public List<Game> getGamesByGenreAndNameUser(@PathVariable int userId, @RequestParam String genre, @RequestParam String name) {
+    @GetMapping("/user/genre-and-name")
+    @Operation(summary = "Obtener juegos por género y nombre", description = "Devuelve los juegos del usuario autenticado filtrados por género y nombre.")
+    public List<Game> getGamesByGenreAndName(@RequestParam String genre, @RequestParam String name) {
+        int userId = getUserIdFromToken();
         return libraryService.getGamesByGenreAndNameUser(userId, genre, name);
     }
 
     @PostMapping("/add")
-    @Operation(summary = "Añadir juego a la biblioteca", description = "Añade un juego a la biblioteca de un usuario.")
-    public boolean addGameToLibrary(@RequestParam int userId, @RequestParam String gameName) throws Exception {
+    @Operation(summary = "Añadir juego a la biblioteca", description = "Añade un juego a la biblioteca del usuario autenticado.")
+    public boolean addGameToLibrary(@RequestParam String gameName) throws Exception {
+        int userId = getUserIdFromToken();
         return libraryService.addGameToLibrary(userId, gameName);
     }
 
     @DeleteMapping("/remove")
-    @Operation(summary = "Eliminar juego de la biblioteca", description = "Elimina un juego de la biblioteca de un usuario.")
-    public boolean removeGameFromLibrary(@RequestParam int userId, @RequestParam int gameId) {
+    @Operation(summary = "Eliminar juego de la biblioteca", description = "Elimina un juego de la biblioteca del usuario autenticado.")
+    public boolean removeGameFromLibrary(@RequestParam int gameId) {
+        int userId = getUserIdFromToken();
         return libraryService.removeGameFromLibrary(userId, gameId);
     }
 
     @PutMapping("/update/state")
-    @Operation(summary = "Actualizar estado del juego", description = "Actualiza el estado de un juego en la biblioteca de un usuario.")
-    public boolean updateGameState(@RequestParam int gameId, @RequestParam int userId, @RequestParam String newState) {
+    @Operation(summary = "Actualizar estado del juego", description = "Actualiza el estado de un juego en la biblioteca del usuario autenticado.")
+    public boolean updateGameState(@RequestParam int gameId, @RequestParam String newState) {
+        int userId = getUserIdFromToken();
         return libraryService.updateGameState(gameId, userId, newState);
     }
 
     @PutMapping("/update/score")
-    @Operation(summary = "Actualizar puntuación del juego", description = "Actualiza la puntuación de un juego en la biblioteca de un usuario.")
-    public boolean updateGameScore(@RequestParam int gameId, @RequestParam int userId, @RequestParam int score) {
+    @Operation(summary = "Actualizar puntuación del juego", description = "Actualiza la puntuación de un juego en la biblioteca del usuario autenticado.")
+    public boolean updateGameScore(@RequestParam int gameId, @RequestParam int score) {
+        int userId = getUserIdFromToken();
         return libraryService.updateGameScore(gameId, userId, score);
     }
 
@@ -80,8 +108,8 @@ public class LibraryController {
     }
 
     @GetMapping("/avgScore/{gameId}")
-    @Operation(summary = "Obtiene la puntuación total de un juego", description = "Devuelve la puntuación medía de un juego")
-    public int getGameScore(@PathVariable int gameId){
+    @Operation(summary = "Obtener puntuación de un juego", description = "Devuelve la puntuación promedio de un juego.")
+    public int getGameScore(@PathVariable int gameId) {
         return libraryService.getGameScore(gameId);
     }
 }

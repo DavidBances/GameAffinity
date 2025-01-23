@@ -1,36 +1,48 @@
 package com.gameaffinity.controller;
 
 import com.gameaffinity.model.UserBase;
+import com.gameaffinity.service.JwtService;
 import com.gameaffinity.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collections;
 
 @RestController
 @RequestMapping("/api/login")
-@Tag(name = "Login", description = "API para la autenticación de usuarios")
 public class LoginController {
 
     private final UserService userService;
+    private final JwtService jwtService;
 
     /**
-     * Constructs a new LoginController and initializes the UserService.
+     * Constructor sin parámetros, inicializa manualmente los servicios requeridos.
      */
-    public LoginController() {
-        this.userService = new UserService();
+    public LoginController(JwtService jwtService
+    ) {
+        this.userService = new UserService(); // Inicialización manual
+        this.jwtService = jwtService;  // Inicialización manual
     }
 
     /**
-     * Authenticates a user using their email and password.
+     * Endpoint para autenticar usuarios y devolver un token JWT.
      *
-     * @param email    The email address of the user.
-     * @param password The password of the user.
-     * @return A {@code UserBase} object representing the authenticated user,
-     * or {@code null} if authentication fails.
+     * @param email    Email del usuario
+     * @param password Contraseña del usuario
+     * @return Un token JWT válido si las credenciales son correctas, o un error de autenticación.
      */
     @PostMapping
-    @Operation(summary = "Autenticar usuario", description = "Autentica a un usuario usando su email y contraseña.")
-    public UserBase login(@RequestParam String email, @RequestParam String password) {
-        return userService.authenticate(email, password);
+    public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
+        UserBase user = userService.authenticate(email, password);
+
+        // Si la autenticación falla
+        if (user == null) {
+            return ResponseEntity.status(401).body("Credenciales inválidas");
+        }
+
+        // Genera y devuelve el token JWT
+        String token = jwtService.generateToken(email, Collections.singletonList(user.getRole()));
+        System.out.println(token);
+        return ResponseEntity.ok(token);
     }
 }

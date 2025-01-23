@@ -5,6 +5,7 @@ import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.FriendshipService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,8 +47,10 @@ public class FriendshipController {
 
     @GetMapping("/user-id")
     @Operation(summary = "Obtener ID de usuario por email", description = "Busca un usuario por email y devuelve su ID.")
-    public int getUserIdByEmail(@RequestParam String userEmail) {
+    public int getUserIdByEmail() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return friendshipService.getUserIdByEmail(userEmail);
+
     }
 
     @DeleteMapping("/delete")

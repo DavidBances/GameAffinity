@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Friendship {
     private final int id;
     private final int requesterId;
-    private final String requesterEmail;
+    private String requesterEmail;
     private final int receiverId;
     private String status;
 
@@ -46,6 +46,10 @@ public class Friendship {
 
     public int getReceiverId() {
         return receiverId;
+    }
+
+    public void setRequesterEmail(String requesterEmail) {
+        this.requesterEmail = requesterEmail;
     }
 
     public String getRequesterEmail() {

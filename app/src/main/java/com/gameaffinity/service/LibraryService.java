@@ -14,10 +14,10 @@ public class LibraryService {
     private final GameDAO gameDAO;
 
     public LibraryService() {
-        try{
+        try {
             this.libraryDAO = new LibraryDAOImpl();
             this.gameDAO = new GameDAOImpl();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -80,4 +80,11 @@ public class LibraryService {
         return libraryDAO.getGameScore(gameId);
     }
 
+    public int getUserIdByEmail(String email) {
+        return libraryDAO.getUserIdByEmail(email);
+    }
+
+    public boolean checkFriendship(int userId, int friendId) {
+        return libraryDAO.checkFriendship(userId, friendId);
+    }
 }

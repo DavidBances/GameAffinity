@@ -96,13 +96,13 @@ public class UserService {
             return false;
         }
 
-        if (newName.isEmpty()) {
+        if (newName == null || newName.isEmpty()) {
             newName = authenticated.getName();
         }
-        if (newEmail.isEmpty()) {
+        if (newEmail == null || newEmail.isEmpty()) {
             newEmail = authenticated.getEmail();
         }
-        if (newPassword.isEmpty()) {
+        if (newPassword == null || newPassword.isEmpty()) {
             newPassword = authenticated.getPassword();
         } else {
             newPassword = hashPassword(newPassword);
@@ -196,5 +196,9 @@ public class UserService {
 
     public boolean deleteUser(int userId) {
         return userDAO.delete(userId);
+    }
+
+    public UserBase getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
     }
 }

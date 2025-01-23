@@ -36,7 +36,6 @@ public class UserDAOImpl implements UserDAO {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 String role = rs.getString("role");
-                System.out.println("Role from database: " + role);
                 user = createUserInstance(
                         role,
                         rs.getInt("id"),
@@ -225,5 +224,26 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public UserBase getUserByEmail(String email) {
+        UserBase user = null;
+        String query = QueryLoader.getQuery("user.findByEmail");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String role = rs.getString("role");
+                user = createUserInstance(
+                        role,
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
     }
 }

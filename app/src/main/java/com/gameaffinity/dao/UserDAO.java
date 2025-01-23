@@ -1,6 +1,7 @@
 package com.gameaffinity.dao;
 
 import com.gameaffinity.model.UserBase;
+
 import java.util.List;
 
 public interface UserDAO {
@@ -18,4 +19,6 @@ public interface UserDAO {
     boolean updateUserRole(int userId, String newRole);
 
     boolean emailExists(String email);
+
+    UserBase getUserByEmail(String email);
 }

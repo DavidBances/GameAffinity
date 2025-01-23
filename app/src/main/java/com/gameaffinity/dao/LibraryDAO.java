@@ -32,4 +32,8 @@ public interface LibraryDAO {
     boolean updateGameScore(int gameId, int userId, int score);
 
     List<String> getAllGenres();
+
+    int getUserIdByEmail(String email);
+
+    boolean checkFriendship(int userId, int friendId);
 }

@@ -105,7 +105,7 @@ public class LibraryDAOImpl implements LibraryDAO {
         return null;
     }
 
-    public Game getGameByGameId(int gameId){
+    public Game getGameByGameId(int gameId) {
         String query = QueryLoader.getQuery("game.getGameByGameId");
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, gameId);
@@ -165,26 +165,26 @@ public class LibraryDAOImpl implements LibraryDAO {
     }
 
     @Override
-    public List<Game> getGamesByNameUser(int userId, String name){
-            List<Game> games = new ArrayList<>();
-            String query = QueryLoader.getQuery("library.getGamesByNameUser");
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setInt(1, userId);
-                stmt.setString(2, "%" + name + "%");
-                ResultSet rs = stmt.executeQuery();
-                while (rs.next()) {
-                    games.add(new Game(
-                            rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("genre"),
-                            rs.getDouble("price"),
-                            rs.getString("state"),
-                            rs.getInt("game_score")));
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+    public List<Game> getGamesByNameUser(int userId, String name) {
+        List<Game> games = new ArrayList<>();
+        String query = QueryLoader.getQuery("library.getGamesByNameUser");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, "%" + name + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                games.add(new Game(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("genre"),
+                        rs.getDouble("price"),
+                        rs.getString("state"),
+                        rs.getInt("game_score")));
             }
-            return games;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
     }
 
     @Override
@@ -253,7 +253,7 @@ public class LibraryDAOImpl implements LibraryDAO {
                 totalScore += rs.getInt("game_score");
                 numberOfScores++;
             }
-            if(numberOfScores > 0) {
+            if (numberOfScores > 0) {
                 return totalScore / numberOfScores;
             }
         } catch (SQLException e) {
@@ -267,7 +267,7 @@ public class LibraryDAOImpl implements LibraryDAO {
         List<String> genres = new ArrayList<>();
         String query = QueryLoader.getQuery("library.getAllGenres");
         try (PreparedStatement stmt = connection.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery()) {
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 genres.add(rs.getString("genre"));
             }
@@ -277,4 +277,48 @@ public class LibraryDAOImpl implements LibraryDAO {
         return genres;
     }
 
+    /**
+     * Searches a user ID based on the email.
+     *
+     * @param email The email of the user.
+     * @return The ID of the user if it can be found; -1 otherwise.
+     */
+    @Override
+    public int getUserIdByEmail(String email) {
+        String query = QueryLoader.getQuery("friendship.getUserIdByUserEmail");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt("id");
+            } else {
+                return -1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean checkFriendship(int userId, int friendId) {
+        String checkFriendshipQuery = QueryLoader.getQuery("friendship.checkFriendship");
+        try (PreparedStatement checkFriendshipStmt = connection.prepareStatement(checkFriendshipQuery)) {
+            checkFriendshipStmt.setInt(1, userId);
+            checkFriendshipStmt.setInt(2, friendId);
+            checkFriendshipStmt.setInt(3, friendId);
+            checkFriendshipStmt.setInt(4, userId);
+            try (ResultSet rs = checkFriendshipStmt.executeQuery()) {
+                if (rs.next()) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error checking valid request", e);
+        }
+    }
 }
+
