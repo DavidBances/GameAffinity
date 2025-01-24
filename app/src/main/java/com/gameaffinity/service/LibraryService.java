@@ -1,9 +1,7 @@
 package com.gameaffinity.service;
 
 import com.gameaffinity.dao.LibraryDAO;
-import com.gameaffinity.dao.GameDAO;
 import com.gameaffinity.dao.LibraryDAOImpl;
-import com.gameaffinity.dao.GameDAOImpl;
 import com.gameaffinity.model.Game;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +11,10 @@ import java.util.List;
 @Service
 public class LibraryService {
     private final LibraryDAO libraryDAO;
-    private final GameDAO gameDAO;
 
     public LibraryService() {
         try {
             this.libraryDAO = new LibraryDAOImpl();
-            this.gameDAO = new GameDAOImpl();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -67,11 +63,6 @@ public class LibraryService {
         Game game = libraryDAO.getGameByGameId(gameId);
         game.setScore(score);
         return libraryDAO.updateGameScore(gameId, userId, score);
-    }
-
-    //Sirve para mostrar todos los juegos en la pantalla en la que se muestran todos los juegos
-    public List<Game> getAllGames() {
-        return gameDAO.getAllGames();
     }
 
     public List<String> getAllGenres() {

@@ -85,13 +85,12 @@ public class UserService {
      * Updates a user's profile.
      *
      * @param email       The user's email.
-     * @param password    The user's password.
      * @param newName     The updated name.
      * @param newEmail    The updated email.
      * @param newPassword The updated password.
      * @return True if the profile was successfully updated, false otherwise.
      */
-    public boolean updateUserProfile(String email, String password, String newName, String newEmail, String newPassword) {
+    public boolean updateUserProfile(String email, String newName, String newEmail, String newPassword) {
 
         UserBase user = getUserByEmail(email);
 
@@ -132,9 +131,9 @@ public class UserService {
     private String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedhash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
             StringBuilder hexString = new StringBuilder();
-            for (byte b : encodedhash) {
+            for (byte b : encodedHash) {
                 String hex = Integer.toHexString(0xff & b);
                 if (hex.length() == 1) {
                     hexString.append('0');

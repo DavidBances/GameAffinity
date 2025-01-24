@@ -73,11 +73,10 @@ public class FriendshipController {
        return ResponseEntity.ok(friends);
     }
 
-    @GetMapping("/user-id")
+    @GetMapping("/friend-id/{friendEmail}")
     @Operation(summary = "Obtener ID de usuario por email", description = "Busca un usuario por email y devuelve su ID.")
-    public int getUserIdByEmail() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        return friendshipService.getUserIdByEmail(userEmail);
+    public int getFriendIdByEmail(@PathVariable String friendEmail) {
+        return friendshipService.getUserIdByEmail(friendEmail);
     }
 
     @DeleteMapping("/delete")
@@ -87,7 +86,7 @@ public class FriendshipController {
         boolean result = friendshipService.deleteFriend(userId, friendId);
 
         if (result) {
-            return ResponseEntity.status(201).body("{\"message\": \"Amingo eliminado.\"}");
+            return ResponseEntity.status(201).body("{\"message\": \"Amigo eliminado.\"}");
         }else{
             return ResponseEntity.badRequest().body("{\"error\": \"No se pudo eliminar.\"}");
         }

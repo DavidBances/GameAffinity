@@ -139,16 +139,6 @@ public class LibraryController {
         }
     }
 
-    @GetMapping("/all")
-    @Operation(summary = "Obtener todos los juegos", description = "Devuelve la lista de todos los juegos de la biblioteca.")
-    public ResponseEntity<List<Game>> getAllGames() {
-        List<Game> games = libraryService.getAllGames();
-        if(games.isEmpty()){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(games);
-    }
-
     @GetMapping("/genres")
     @Operation(summary = "Obtener todos los géneros", description = "Devuelve una lista de todos los géneros de la biblioteca.")
     public ResponseEntity<List<String>> getAllGenres() {
@@ -160,7 +150,7 @@ public class LibraryController {
     }
 
     @GetMapping("/avgScore/{gameId}")
-    @Operation(summary = "Obtener puntuación de un juego", description = "Devuelve la puntuación promedio de un juego.")
+    @Operation(summary = "Obtener puntuación promedio de un juego", description = "Devuelve la puntuación promedio de un juego.")
     public ResponseEntity<Integer> getGameScore(@PathVariable int gameId) {
         int score = libraryService.getGameScore(gameId);
         return ResponseEntity.ok(score);

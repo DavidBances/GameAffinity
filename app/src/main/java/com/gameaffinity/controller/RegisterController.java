@@ -18,8 +18,8 @@ public class RegisterController {
      * Constructs a new RegisterController and initializes the UserService.
      */
     @Autowired
-    public RegisterController() {
-        this.userService = new UserService();
+    public RegisterController(UserService userService) {
+        this.userService = userService;
     }
 
     /**
