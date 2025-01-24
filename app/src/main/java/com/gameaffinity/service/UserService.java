@@ -93,19 +93,16 @@ public class UserService {
      */
     public boolean updateUserProfile(String email, String password, String newName, String newEmail, String newPassword) {
 
-        UserBase authenticated = authenticate(email, password);
-        if (authenticated == null) {
-            return false;
-        }
+        UserBase user = getUserByEmail(email);
 
         if (newName == null || newName.isEmpty()) {
-            newName = authenticated.getName();
+            newName = user.getName();
         }
         if (newEmail == null || newEmail.isEmpty()) {
-            newEmail = authenticated.getEmail();
+            newEmail = user.getEmail();
         }
         if (newPassword == null || newPassword.isEmpty()) {
-            newPassword = authenticated.getPassword();
+            newPassword = user.getPassword();
         } else {
             newPassword = hashPassword(newPassword);
         }
@@ -114,11 +111,11 @@ public class UserService {
             throw new IllegalArgumentException("Invalid email format.");
         }
 
-        authenticated.setName(newName);
-        authenticated.setEmail(newEmail);
-        authenticated.setPassword(newPassword);
+        user.setName(newName);
+        user.setEmail(newEmail);
+        user.setPassword(newPassword);
 
-        return userDAO.updateProfile(authenticated);
+        return userDAO.updateProfile(user);
     }
 
     /**
