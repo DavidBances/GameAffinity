@@ -4,10 +4,12 @@ import com.gameaffinity.dao.FriendshipDAO;
 import com.gameaffinity.dao.FriendshipDAOImpl;
 import com.gameaffinity.model.Friendship;
 import com.gameaffinity.model.UserBase;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class FriendshipService {
     private final FriendshipDAO friendshipDAO;
 

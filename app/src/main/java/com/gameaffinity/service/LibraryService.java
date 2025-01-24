@@ -5,10 +5,12 @@ import com.gameaffinity.dao.GameDAO;
 import com.gameaffinity.dao.LibraryDAOImpl;
 import com.gameaffinity.dao.GameDAOImpl;
 import com.gameaffinity.model.Game;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class LibraryService {
     private final LibraryDAO libraryDAO;
     private final GameDAO gameDAO;

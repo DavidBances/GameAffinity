@@ -18,9 +18,10 @@ public class JwtService {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String generateToken(String email, List<String> roles) {
+    public String generateToken(int userId, String email, List<String> roles) {
         return Jwts.builder()
                 .setSubject(email) // Añade el email del usuario
+                .claim("id", userId) // Añade el ID del usuario
                 .claim("roles", roles) // Añade roles al payload
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) // Expiración
@@ -39,6 +40,11 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return getClaims(token).getSubject(); // Generalmente el email se almacena en `sub` (Subject)
+    }
+
+    public int extractUserId(String token) {
+        Claims claims = getClaims(token);
+        return claims.get("id", Integer.class); // Extraer el ID como Long
     }
 
     public List<String> extractRoles(String token) {

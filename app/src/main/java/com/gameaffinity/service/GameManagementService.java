@@ -3,10 +3,12 @@ package com.gameaffinity.service;
 import com.gameaffinity.dao.GameDAO;
 import com.gameaffinity.dao.GameDAOImpl;
 import com.gameaffinity.model.Game;
+import io.swagger.v3.oas.annotations.servers.Server;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Server
 public class GameManagementService {
     private final GameDAO gameDAO;
 

@@ -6,6 +6,7 @@ import com.gameaffinity.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,10 @@ public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
 
-    public UserController() {
-        this.userService = new UserService(); // Usa el constructor actual
-        this.jwtService = new JwtService();
+    @Autowired
+    public UserController(UserService userService, JwtService jwtService) {
+        this.userService = userService; // Usa el constructor actual
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/authenticate")
@@ -31,21 +33,26 @@ public class UserController {
         UserBase user = userService.authenticate(email, password);
         if (user != null) {
             // Devuelve un token JWT en lugar del UserBase completo
-            return jwtService.generateToken(email, Collections.singletonList(user.getRole()));
+            return jwtService.generateToken(user.getId(), email, Collections.singletonList(user.getRole()));
         }
         throw new IllegalArgumentException("Credenciales inválidas.");
     }
 
     @PutMapping("/update-profile")
     @Operation(summary = "Actualizar perfil de usuario", description = "Actualiza la información del perfil del usuario.")
-    public boolean updateProfile(
+    public ResponseEntity<?> updateProfile(
             @RequestParam String password,
             @RequestParam(required = false) String newName,
             @RequestParam(required = false) String newEmail,
             @RequestParam(required = false) String newPassword
     ) {
         String emailFromToken = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userService.updateUserProfile(emailFromToken, password, newName, newEmail, newPassword);
+        boolean result = userService.updateUserProfile(emailFromToken, password, newName, newEmail, newPassword);
+        if(result){
+            return ResponseEntity.ok("{\"message\": \"Perfil actualizado.\"}");
+        }else{
+            return ResponseEntity.badRequest().body("{\"error\": \"Error al actualizar el perfil.\"}");
+        }
     }
 
     @GetMapping("/getRole")

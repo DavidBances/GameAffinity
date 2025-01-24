@@ -6,6 +6,7 @@ import com.gameaffinity.model.Administrator;
 import com.gameaffinity.model.Moderator;
 import com.gameaffinity.model.RegularUser;
 import com.gameaffinity.model.UserBase;
+import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
 
+@Service
 public class UserService {
     private final UserDAO userDAO;
 

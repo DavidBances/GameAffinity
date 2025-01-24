@@ -3,10 +3,12 @@ package com.gameaffinity.controller;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.JwtService;
 import com.gameaffinity.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/login")
@@ -18,9 +20,9 @@ public class LoginController {
     /**
      * Constructor sin parámetros, inicializa manualmente los servicios requeridos.
      */
-    public LoginController(JwtService jwtService
-    ) {
-        this.userService = new UserService(); // Inicialización manual
+    @Autowired
+    public LoginController(JwtService jwtService, UserService userService) {
+        this.userService = userService; // Inicialización manual
         this.jwtService = jwtService;  // Inicialización manual
     }
 
@@ -41,8 +43,11 @@ public class LoginController {
         }
 
         // Genera y devuelve el token JWT
-        String token = jwtService.generateToken(email, Collections.singletonList(user.getRole()));
-        System.out.println(token);
-        return ResponseEntity.ok(token);
+        String token = jwtService.generateToken(user.getId(), email, Collections.singletonList(user.getRole()));
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "id", user.getId(),
+                "email", user.getEmail(),
+                "role", user.getRole()));
     }
 }
