@@ -56,9 +56,9 @@ public class FriendshipController {
     public ResponseEntity<?> respondToFriendRequest(@RequestBody Friendship friendship, @RequestParam String status) {
         boolean result = friendshipService.respondToFriendRequest(friendship, status);
         if(result){
-            return ResponseEntity.status(201).body(true);
+            return ResponseEntity.status(201).body("{\"message\": \"Respuesta enviada.\"}");
         }else{
-            return ResponseEntity.badRequest().body(false);
+            return ResponseEntity.badRequest().body("{\"error\": \"Error al enviar respuesta.\"}");
         }
     }
 
