@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/friendships")
@@ -31,12 +33,20 @@ public class FriendshipController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity<?> sendFriendRequest(@RequestBody Friendship friendship) {
-        boolean result = friendshipService.sendFriendRequest(friendship);
+    public ResponseEntity<?> sendFriendRequest(@RequestParam String friendEmail) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean result = friendshipService.sendFriendRequest(email, friendEmail);
+        System.out.println(result + "   " + friendEmail + "   " + email);
+        Map<String, Object> response = new HashMap<>();
         if (result) {
-            return ResponseEntity.status(201).body("{\"message\": \"Solicitud enviada.\"}");
+            response.put("message", "Solicitud enviada.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al enviar la solicitud.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
-        return ResponseEntity.badRequest().body("{\"error\": \"No se pudo enviar la solicitud.\"}");
     }
 
 
@@ -45,7 +55,7 @@ public class FriendshipController {
     public ResponseEntity<List<Friendship>> getFriendRequests() {
         int userId = getUserIdFromToken();
         List<Friendship> requests = friendshipService.getFriendRequests(userId);
-        if(requests.isEmpty()){
+        if (requests.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(requests);
@@ -55,10 +65,15 @@ public class FriendshipController {
     @Operation(summary = "Responder solicitud de amistad", description = "Acepta o rechaza una solicitud de amistad.")
     public ResponseEntity<?> respondToFriendRequest(@RequestBody Friendship friendship, @RequestParam String status) {
         boolean result = friendshipService.respondToFriendRequest(friendship, status);
-        if(result){
-            return ResponseEntity.status(201).body("{\"message\": \"Respuesta enviada.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al enviar respuesta.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Respuesta enviada.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al enviar respuesta.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -67,15 +82,16 @@ public class FriendshipController {
     public ResponseEntity<List<UserBase>> getFriends() {
         int userId = getUserIdFromToken();
         List<UserBase> friends = friendshipService.getFriends(userId);
-       if(friends.isEmpty()){
-           return ResponseEntity.noContent().build();
-       }
-       return ResponseEntity.ok(friends);
+        if (friends.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(friends);
     }
 
-    @GetMapping("/friend-id/{friendEmail}")
+    @GetMapping("/friend-id")
     @Operation(summary = "Obtener ID de usuario por email", description = "Busca un usuario por email y devuelve su ID.")
-    public int getFriendIdByEmail(@PathVariable String friendEmail) {
+    public int getFriendIdByEmail(@RequestParam String friendEmail) {
+        System.out.println(friendEmail);
         return friendshipService.getUserIdByEmail(friendEmail);
     }
 
@@ -85,10 +101,15 @@ public class FriendshipController {
         int userId = getUserIdFromToken();
         boolean result = friendshipService.deleteFriend(userId, friendId);
 
+        Map<String, Object> response = new HashMap<>();
         if (result) {
-            return ResponseEntity.status(201).body("{\"message\": \"Amigo eliminado.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"No se pudo eliminar.\"}");
+            response.put("message", "Amigo eliminado.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al eliminar amigo.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

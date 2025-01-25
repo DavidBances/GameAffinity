@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/users")
 @Tag(name = "User Management", description = "API para la gestión de usuarios")
@@ -31,10 +34,15 @@ public class UserController {
     ) {
         String emailFromToken = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boolean result = userService.updateUserProfile(emailFromToken, newName, newEmail, newPassword);
-        if(result){
-            return ResponseEntity.ok("{\"message\": \"Perfil actualizado.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al actualizar el perfil.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Perfil actualizado.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al actualizar el perfil.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 

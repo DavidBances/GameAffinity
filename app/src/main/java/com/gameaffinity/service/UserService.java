@@ -37,6 +37,7 @@ public class UserService {
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
             throw new IllegalArgumentException("Email and password are required.");
         }
+        System.out.println(email + "   " + password);
 
         UserBase user = userDAO.findByEmailAndPassword(email, password);
         if (user == null) {

@@ -40,7 +40,7 @@ public class RegisterController {
         String result = userService.registerUser(name, email, password, "REGULAR_USER");
 
         // Si el registro fue exitoso
-        if (result.equals("Registro exitoso")) {
+        if (result.equals("Cuenta creada con éxito.")) {
             return ResponseEntity.ok().body("{\"message\": \"Usuario registrado exitosamente. Por favor, inicia sesión.\"}");
         }
 

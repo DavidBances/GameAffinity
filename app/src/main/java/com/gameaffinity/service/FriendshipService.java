@@ -21,9 +21,9 @@ public class FriendshipService {
         }
     }
 
-    public boolean sendFriendRequest(Friendship friendship) {
-        if (friendshipDAO.checkValidRequest(friendship.getRequesterId(), friendship.getReceiverId())) {
-            return friendshipDAO.sendFriendRequest(friendship.getRequesterId(), friendship.getReceiverId());
+    public boolean sendFriendRequest(String userEmail, String friendEmail) {
+        if (friendshipDAO.checkValidRequest(getUserIdByEmail(userEmail), getUserIdByEmail(friendEmail))) {
+            return friendshipDAO.sendFriendRequest(getUserIdByEmail(userEmail), getUserIdByEmail(friendEmail));
         } else {
             return false;
         }

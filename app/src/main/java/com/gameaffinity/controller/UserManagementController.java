@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/user-management")
@@ -28,7 +30,7 @@ public class UserManagementController {
     @Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista con todos los usuarios.")
     public ResponseEntity<List<UserBase>> getAllUsers() {
         List<UserBase> users = userService.getAllUsers();
-        if (users.isEmpty()){
+        if (users.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(users);
@@ -38,10 +40,15 @@ public class UserManagementController {
     @Operation(summary = "Actualizar rol de usuario", description = "Asigna un nuevo rol a un usuario.")
     public ResponseEntity<?> updateUserRole(@RequestBody UserBase user, @RequestParam String newRole) {
         boolean result = userService.updateUserRole(user, newRole);
-        if (result){
-            return ResponseEntity.ok("{\"message\": \"Rol del usuario actualizado.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al actualizar el rol del usuario.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Rol del usuario actualizado.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al actualizar el rol del usuario.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -49,10 +56,15 @@ public class UserManagementController {
     @Operation(summary = "Eliminar usuario", description = "Elimina un usuario de la base de datos.")
     public ResponseEntity<?> deleteUser(@RequestBody UserBase user) {
         boolean result = userService.deleteUser(user.getId());
-        if (result){
-            return ResponseEntity.ok("{\"message\": \"Usuario eliminado.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al eliminar el usuario.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Usuario eliminado.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al eliminar al usuario.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }

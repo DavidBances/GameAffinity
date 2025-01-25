@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/library")
@@ -35,23 +37,22 @@ public class LibraryController {
     public ResponseEntity<List<Game>> getGamesByUser() {
         int userId = getUserIdFromToken();
         List<Game> games = libraryService.getGamesByUserId(userId);
-        if(games.isEmpty()){
+        if (games.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(games);
     }
 
     // Obtener juegos de un amigo (nuevo método)
-    @GetMapping("/friend/{userId}")
+    @GetMapping("/friendId")
     @Operation(summary = "Obtener la biblioteca de un amigo", description = "Devuelve la biblioteca de juegos de un usuario especificado si el usuario autenticado tiene permisos.")
-    public ResponseEntity<List<Game>> getGamesByFriend(@PathVariable int friendId) {
-        // Verificar si el usuario autenticado tiene permiso de ver esta biblioteca
+    public ResponseEntity<List<Game>> getGamesByFriend(@RequestParam int friendId) {
         int currentUserId = getUserIdFromToken(); // ID del usuario autenticado
         if (!libraryService.checkFriendship(currentUserId, friendId)) {
             throw new SecurityException("Acceso denegado: no tienes permisos para ver esta biblioteca.");
         }
         List<Game> friendGames = libraryService.getGamesByUserId(friendId);
-        if(friendGames.isEmpty()){
+        if (friendGames.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(friendGames);
@@ -63,7 +64,7 @@ public class LibraryController {
         int userId = getUserIdFromToken();
 
         List<Game> games = libraryService.getGamesByGenreUser(userId, genre);
-        if(games.isEmpty()){
+        if (games.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(games);
@@ -73,8 +74,8 @@ public class LibraryController {
     @Operation(summary = "Obtener juegos por nombre", description = "Devuelve los juegos del usuario autenticado filtrados por nombre.")
     public ResponseEntity<List<Game>> getGamesByName(@RequestParam String name) {
         int userId = getUserIdFromToken();
-        List<Game> games=  libraryService.getGamesByNameUser(userId, name);
-        if(games.isEmpty()){
+        List<Game> games = libraryService.getGamesByNameUser(userId, name);
+        if (games.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(games);
@@ -85,7 +86,7 @@ public class LibraryController {
     public ResponseEntity<List<Game>> getGamesByGenreAndName(@RequestParam String genre, @RequestParam String name) {
         int userId = getUserIdFromToken();
         List<Game> games = libraryService.getGamesByGenreAndNameUser(userId, genre, name);
-        if(games.isEmpty()){
+        if (games.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(games);
@@ -96,10 +97,15 @@ public class LibraryController {
     public ResponseEntity<?> addGameToLibrary(@RequestParam String gameName) throws Exception {
         int userId = getUserIdFromToken();
         boolean result = libraryService.addGameToLibrary(userId, gameName);
-        if (result){
-            return ResponseEntity.ok("{\"message\": \"Juego añadido a tu librería.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al añadir el juego a tu librería.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Juego añadido a tu biblioteca.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al añadir juego a la biblioteca.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -108,10 +114,15 @@ public class LibraryController {
     public ResponseEntity<?> removeGameFromLibrary(@RequestParam int gameId) {
         int userId = getUserIdFromToken();
         boolean result = libraryService.removeGameFromLibrary(userId, gameId);
-        if (result){
-            return ResponseEntity.ok("{\"message\": \"Juego eliminado de tu biblioteca.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al eliminar el juego de tu biblioteca.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Juego eliminado de tu biblioteca.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al eliminar juego de la biblioteca.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -120,10 +131,15 @@ public class LibraryController {
     public ResponseEntity<?> updateGameState(@RequestParam int gameId, @RequestParam String newState) {
         int userId = getUserIdFromToken();
         boolean result = libraryService.updateGameState(gameId, userId, newState);
-        if (result){
-            return ResponseEntity.ok("{\"message\": \"Estado del juego actualizado.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al actualizar el estado del juego.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Estado del juego actualizado.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al actualizar el estado del juego.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -132,10 +148,15 @@ public class LibraryController {
     public ResponseEntity<?> updateGameScore(@RequestParam int gameId, @RequestParam int score) {
         int userId = getUserIdFromToken();
         boolean result = libraryService.updateGameScore(gameId, userId, score);
-        if (result){
-            return ResponseEntity.ok("{\"message\": \"Puntuación del juego actualizada.\"}");
-        }else{
-            return ResponseEntity.badRequest().body("{\"error\": \"Error al actualizar la puntuación del juego.\"}");
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Puntuación del juego actualizada.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al actualizar la puntuación del juego.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
         }
     }
 
@@ -143,7 +164,7 @@ public class LibraryController {
     @Operation(summary = "Obtener todos los géneros", description = "Devuelve una lista de todos los géneros de la biblioteca.")
     public ResponseEntity<List<String>> getAllGenres() {
         List<String> genres = libraryService.getAllGenres();
-        if(genres.isEmpty()){
+        if (genres.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(genres);

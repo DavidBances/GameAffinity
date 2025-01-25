@@ -311,10 +311,10 @@ public class LibraryDAOImpl implements LibraryDAO {
             checkFriendshipStmt.setInt(4, userId);
             try (ResultSet rs = checkFriendshipStmt.executeQuery()) {
                 if (rs.next()) {
-                    return false;
+                    return true;
                 }
             }
-            return true;
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Error checking valid request", e);
