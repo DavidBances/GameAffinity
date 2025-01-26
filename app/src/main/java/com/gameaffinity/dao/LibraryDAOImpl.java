@@ -32,7 +32,8 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getString("genre"),
                         rs.getDouble("price"),
                         rs.getString("state"),
-                        rs.getInt("game_score")));
+                        rs.getInt("game_score"),
+                        rs.getString("image_url")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,7 +98,8 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getString("genre"),
                         rs.getDouble("price"),
                         "Available",
-                        0);
+                        0,
+                        "");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,7 +119,8 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getString("genre"),
                         rs.getDouble("price"),
                         "Available",
-                        0);
+                        0,
+                        "");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -156,7 +159,8 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getString("genre"),
                         rs.getDouble("price"),
                         rs.getString("state"),
-                        rs.getInt("game_score")));
+                        rs.getInt("game_score"),
+                        rs.getString("image_url")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -179,7 +183,8 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getString("genre"),
                         rs.getDouble("price"),
                         rs.getString("state"),
-                        rs.getInt("game_score")));
+                        rs.getInt("game_score"),
+                        rs.getString("image_url")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -203,7 +208,8 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getString("genre"),
                         rs.getDouble("price"),
                         rs.getString("state"),
-                        rs.getInt("game_score")));
+                        rs.getInt("game_score"),
+                        rs.getString("image_url")));
             }
         } catch (SQLException e) {
             e.printStackTrace();

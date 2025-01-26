@@ -28,7 +28,7 @@ public class GameManagementService {
     public boolean addGame(String name, String genre, String priceText) {
         try {
             double price = Double.parseDouble(priceText);
-            Game newGame = new Game(1, name, genre, price, "Available", 0);
+            Game newGame = new Game(1, name, genre, price, "Available", 0, "");
             if (gameDAO.isGameInDatabase(newGame.getName())) {
                 return false;
             } else {

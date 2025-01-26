@@ -17,6 +17,7 @@ CREATE TABLE Games (
                        name VARCHAR(255) NOT NULL,
                        genre VARCHAR(255),
                        price DECIMAL(10,2) NOT NULL
+                       image_url VARCHAR(255);
 );
 
 CREATE TABLE LibraryGames (

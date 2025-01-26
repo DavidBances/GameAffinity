@@ -51,7 +51,7 @@ public class SteamApiClient {
                     JSONObject priceOverview = gameData.optJSONObject("price_overview");
                     double price = priceOverview != null ? priceOverview.optDouble("final", 0.0) / 100.0 : 0.0;
 
-                    return new Game(appId, name, genre, price, "Available", 0);
+                    return new Game(appId, name, genre, price, "Available", 0, "");
                 }
             }
         }
@@ -88,7 +88,8 @@ public class SteamApiClient {
                                     gameDetails.getGenre(),
                                     gameDetails.getPrice(),
                                     gameDetails.getState(),
-                                    gameDetails.getScore()
+                                    gameDetails.getScore(),
+                                    gameDetails.getImageUrl()
                             );
                         }
                         return null;  // Si no se encuentran detalles del juego, devolver null (puedes manejarlo si es necesario)

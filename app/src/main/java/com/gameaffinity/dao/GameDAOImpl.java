@@ -96,7 +96,8 @@ public class GameDAOImpl implements GameDAO {
                         rs.getString("genre"),
                         rs.getDouble("price"),
                         "Available",
-                        0));
+                        0,
+                        rs.getString("image_url")));
             }
         } catch (Exception e) {
             e.printStackTrace();
