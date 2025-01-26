@@ -172,11 +172,16 @@ public class LibraryDAOImpl implements LibraryDAO {
     public List<Game> getGamesByNameUser(int userId, String name) {
         List<Game> games = new ArrayList<>();
         String query = QueryLoader.getQuery("library.getGamesByNameUser");
+        System.out.println("SQL Query: " + query);
+        System.out.println("Parameters: userId=" + userId + ", name=%" + name.trim() + "%");
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
-            stmt.setString(2, "%" + name + "%");
+            stmt.setString(2, "%" + name.trim() + "%");
+            System.out.println("Search query: %" + name.trim() + "%");
             ResultSet rs = stmt.executeQuery();
+            System.out.println(rs.next());
             while (rs.next()) {
+                System.out.println(rs.next());
                 games.add(new Game(
                         rs.getInt("id"),
                         rs.getString("name"),

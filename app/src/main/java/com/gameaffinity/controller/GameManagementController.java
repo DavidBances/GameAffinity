@@ -39,6 +39,37 @@ public class GameManagementController {
         return ResponseEntity.ok(games);
     }
 
+    @GetMapping("/genre")
+    @Operation(summary = "Obtener juegos por género", description = "Devuelve los juegos filtrados por género.")
+    public ResponseEntity<List<Game>> getGamesByGenre(@RequestParam String genre) {
+        List<Game> games = gameManagementService.getGamesByGenre(genre);
+        if (games.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(games);
+    }
+
+    @GetMapping("/name")
+    @Operation(summary = "Obtener juegos por nombre", description = "Devuelve los juegos filtrados por nombre.")
+    public ResponseEntity<List<Game>> getGamesByName(@RequestParam String name) {
+
+        List<Game> games = gameManagementService.getGamesByName(name);
+        if (games.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(games);
+    }
+
+    @GetMapping("/genre-and-name")
+    @Operation(summary = "Obtener juegos por género y nombre", description = "Devuelve los juegos filtrados por género y nombre.")
+    public ResponseEntity<List<Game>> getGamesByGenreAndName(@RequestParam String genre, @RequestParam String name) {
+        List<Game> games = gameManagementService.getGamesByGenreAndName(genre, name);
+        if (games.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(games);
+    }
+
     @PostMapping("/add")
     @Operation(summary = "Añadir un nuevo juego", description = "Agrega un nuevo juego a la base de datos.")
     public ResponseEntity<?> addGame(

@@ -23,7 +23,7 @@ public class GameDAOImpl implements GameDAO {
      *
      * @param gameName The name of the game to check.
      * @return {@code true} if the game exists in the database; {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean isGameInDatabase(String gameName) {
@@ -38,12 +38,82 @@ public class GameDAOImpl implements GameDAO {
         }
     }
 
+    @Override
+    public List<Game> getGamesByName(String name) {
+        List<Game> games = new ArrayList<>();
+        String query = QueryLoader.getQuery("game.getGamesByName");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, "%" + name + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                games.add(new Game(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("genre"),
+                        rs.getDouble("price"),
+                        "Available",
+                        0,
+                        rs.getString("image_url")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
+    }
+
+    @Override
+    public List<Game> getGamesByGenre(String genre) {
+        List<Game> games = new ArrayList<>();
+        String query = QueryLoader.getQuery("game.getGamesByGenre");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, "%" + genre + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                games.add(new Game(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("genre"),
+                        rs.getDouble("price"),
+                        "Available",
+                        0,
+                        rs.getString("image_url")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
+    }
+
+    @Override
+    public List<Game> getGamesByGenreAndName(String genre, String name) {
+        List<Game> games = new ArrayList<>();
+        String query = QueryLoader.getQuery("game.getGamesByGenreAndName");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, "%" + genre + "%");
+            stmt.setString(2, "%" + name + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                games.add(new Game(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("genre"),
+                        rs.getDouble("price"),
+                        "Available",
+                        0,
+                        rs.getString("image_url")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return games;
+    }
+
     /**
      * Adds a new game to the database.
      *
      * @param game The {@code Game} object to be added to the database.
      * @return {@code true} if the game was successfully added; {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean addGame(Game game) {
@@ -64,7 +134,7 @@ public class GameDAOImpl implements GameDAO {
      *
      * @param gameId The ID of the game to be deleted.
      * @return {@code true} if the game was successfully deleted; {@code false}
-     *         otherwise.
+     * otherwise.
      */
     @Override
     public boolean deleteGame(int gameId) {
@@ -88,7 +158,7 @@ public class GameDAOImpl implements GameDAO {
         List<Game> games = new ArrayList<>();
         String query = QueryLoader.getQuery("game.findAll");
         try (PreparedStatement stmt = connection.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery()) {
+             ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 games.add(new Game(
                         rs.getInt("id"),

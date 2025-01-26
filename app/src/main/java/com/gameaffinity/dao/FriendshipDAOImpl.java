@@ -113,9 +113,6 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      */
     @Override
     public boolean sendFriendRequest(int requesterId, int receiverId) {
-        if (requesterId == receiverId) {
-            return false;
-        }
         String query = QueryLoader.getQuery("friendship.sendRequest");
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, requesterId);
@@ -136,6 +133,11 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * @return {@code true} if the request is valid; {@code false} otherwise.
      */
     public boolean checkValidRequest(int requesterId, int receiverId) {
+        if (requesterId == receiverId) {
+            return false;
+        } else if (receiverId == -1 || requesterId == -1) {
+            return false;
+        }
         String checkFriendshipQuery = QueryLoader.getQuery("friendship.checkFriendship");
         try (PreparedStatement checkFriendshipStmt = connection.prepareStatement(checkFriendshipQuery)) {
             checkFriendshipStmt.setInt(1, requesterId);
@@ -160,13 +162,14 @@ public class FriendshipDAOImpl implements FriendshipDAO {
                     }
                 }
             }
-
+            //TODO hay que hacer que devuelva String para devolver mejores respuestas
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Error checking valid request", e);
         }
     }
+
 
     /**
      * Receives a friend request from one user to another.

@@ -36,7 +36,6 @@ public class FriendshipController {
     public ResponseEntity<?> sendFriendRequest(@RequestParam String friendEmail) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         boolean result = friendshipService.sendFriendRequest(email, friendEmail);
-        System.out.println(result + "   " + friendEmail + "   " + email);
         Map<String, Object> response = new HashMap<>();
         if (result) {
             response.put("message", "Solicitud enviada.");

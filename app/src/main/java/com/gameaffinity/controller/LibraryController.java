@@ -74,10 +74,14 @@ public class LibraryController {
     @Operation(summary = "Obtener juegos por nombre", description = "Devuelve los juegos del usuario autenticado filtrados por nombre.")
     public ResponseEntity<List<Game>> getGamesByName(@RequestParam String name) {
         int userId = getUserIdFromToken();
+        System.out.println("Buscando juegos para userId: " + userId + " con nombre: " + name);
+
         List<Game> games = libraryService.getGamesByNameUser(userId, name);
         if (games.isEmpty()) {
+            System.out.println("No se encontraron juegos.");
             return ResponseEntity.noContent().build();
         }
+        System.out.println("Juegos encontrados: " + games.size());
         return ResponseEntity.ok(games);
     }
 

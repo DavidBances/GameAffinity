@@ -17,7 +17,7 @@ public class GameManagementService {
         return gameDAO.getAllGames();
     }
 
-    public GameManagementService(){
+    public GameManagementService() {
         try {
             this.gameDAO = new GameDAOImpl();
         } catch (SQLException e) {
@@ -38,6 +38,18 @@ public class GameManagementService {
             System.err.println("Invalid price format: " + priceText);
             return false;
         }
+    }
+
+    public List<Game> getGamesByName(String name) {
+        return gameDAO.getGamesByName(name);
+    }
+
+    public List<Game> getGamesByGenre(String genre) {
+        return gameDAO.getGamesByGenre(genre);
+    }
+
+    public List<Game> getGamesByGenreAndName(String genre, String name) {
+        return gameDAO.getGamesByGenreAndName(genre, name);
     }
 
     public boolean deleteGame(int gameId) {
