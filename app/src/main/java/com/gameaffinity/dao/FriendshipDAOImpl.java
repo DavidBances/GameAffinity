@@ -112,16 +112,16 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * otherwise.
      */
     @Override
-    public boolean sendFriendRequest(int requesterId, int receiverId) {
+    public String sendFriendRequest(int requesterId, int receiverId) {
         String query = QueryLoader.getQuery("friendship.sendRequest");
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, requesterId);
             stmt.setInt(2, receiverId);
             stmt.setString(3, "Pending");
-            return stmt.executeUpdate() > 0;
+            return stmt.executeUpdate() > 0 ? "true" : "Error sending friend request";
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;
+            return e.getMessage();
         }
     }
 
@@ -132,11 +132,11 @@ public class FriendshipDAOImpl implements FriendshipDAO {
      * @param receiverId  The ID of the receiving user.
      * @return {@code true} if the request is valid; {@code false} otherwise.
      */
-    public boolean checkValidRequest(int requesterId, int receiverId) {
+    public String checkValidRequest(int requesterId, int receiverId) {
         if (requesterId == receiverId) {
-            return false;
+            return "No puedes enviar una solicitud de amistad a ti mismo";
         } else if (receiverId == -1 || requesterId == -1) {
-            return false;
+            return "Email incorrecto";
         }
         String checkFriendshipQuery = QueryLoader.getQuery("friendship.checkFriendship");
         try (PreparedStatement checkFriendshipStmt = connection.prepareStatement(checkFriendshipQuery)) {
@@ -146,7 +146,7 @@ public class FriendshipDAOImpl implements FriendshipDAO {
             checkFriendshipStmt.setInt(4, requesterId);
             try (ResultSet rs = checkFriendshipStmt.executeQuery()) {
                 if (rs.next()) {
-                    return false;
+                    return "No puedes enviar una solicitud de amistad a un usuario que ya es tu amigo.";
                 }
             }
 
@@ -158,12 +158,12 @@ public class FriendshipDAOImpl implements FriendshipDAO {
                 checkPendingRequestStmt.setInt(4, requesterId);
                 try (ResultSet rs = checkPendingRequestStmt.executeQuery()) {
                     if (rs.next()) {
-                        return false;
+                        return "No puedes enviar una solicitud de amistad a un usuario que ya tiene/s una solicitud pendiente.";
                     }
                 }
             }
             //TODO hay que hacer que devuelva String para devolver mejores respuestas
-            return true;
+            return "true";
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException("Error checking valid request", e);

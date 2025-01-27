@@ -7,9 +7,9 @@ import java.util.List;
 
 public interface FriendshipDAO {
 
-    boolean sendFriendRequest(int requesterId, int receiverId);
+    String sendFriendRequest(int requesterId, int receiverId);
 
-    boolean checkValidRequest(int requesterId, int receiverId);
+    String checkValidRequest(int requesterId, int receiverId);
 
     List<Friendship> getFriendRequests(int userId);
 

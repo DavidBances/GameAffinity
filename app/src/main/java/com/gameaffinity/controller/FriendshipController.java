@@ -33,17 +33,17 @@ public class FriendshipController {
     }
 
     @PostMapping("/request")
-    public ResponseEntity<?> sendFriendRequest(@RequestParam String friendEmail) {
+    public ResponseEntity<Map<String, Object>> sendFriendRequest(@RequestParam String friendEmail) {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean result = friendshipService.sendFriendRequest(email, friendEmail);
+        String result = friendshipService.sendFriendRequest(email, friendEmail);
         Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Solicitud enviada.");
-            response.put("success", true);  // Incluimos el resultado booleano
+
+        response.put("message", result.equals("true") ? "Solicitud enviada." : result);
+        response.put("success", result.equals("true"));
+
+        if (result.equals("true")) {
             return ResponseEntity.ok(response);
         } else {
-            response.put("error", "Error al enviar la solicitud.");
-            response.put("success", false);  // Incluimos el resultado booleano
             return ResponseEntity.badRequest().body(response);
         }
     }

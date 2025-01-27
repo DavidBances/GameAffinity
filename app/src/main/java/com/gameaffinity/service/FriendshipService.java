@@ -21,11 +21,12 @@ public class FriendshipService {
         }
     }
 
-    public boolean sendFriendRequest(String userEmail, String friendEmail) {
-        if (friendshipDAO.checkValidRequest(getUserIdByEmail(userEmail), getUserIdByEmail(friendEmail))) {
+    public String sendFriendRequest(String userEmail, String friendEmail) {
+        String result = friendshipDAO.checkValidRequest(getUserIdByEmail(userEmail), getUserIdByEmail(friendEmail));
+        if (result.equals("true")) {
             return friendshipDAO.sendFriendRequest(getUserIdByEmail(userEmail), getUserIdByEmail(friendEmail));
         } else {
-            return false;
+            return result;
         }
     }
 
