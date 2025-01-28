@@ -35,7 +35,6 @@ public class GameManagementController {
             System.out.println("No se encontraron juegos");
             return ResponseEntity.noContent().build();
         }
-        System.out.println("Juegos encontrados: " + games.size());
         return ResponseEntity.ok(games);
     }
 

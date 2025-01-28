@@ -5,10 +5,13 @@ import com.gameaffinity.service.LibraryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,34 +102,57 @@ public class LibraryController {
     @PostMapping("/add")
     @Operation(summary = "Añadir juego a la biblioteca", description = "Añade un juego a la biblioteca del usuario autenticado.")
     public ResponseEntity<?> addGameToLibrary(@RequestParam String gameName) throws Exception {
-        int userId = getUserIdFromToken();
-        boolean result = libraryService.addGameToLibrary(userId, gameName);
-        Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Juego añadido a tu biblioteca.");
-            response.put("success", true);  // Incluimos el resultado booleano
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "Error al añadir juego a la biblioteca.");
-            response.put("success", false);  // Incluimos el resultado booleano
-            return ResponseEntity.badRequest().body(response);
+        try {
+            // Decodificación manual del gameName
+            String decodedGameName = URLDecoder.decode(gameName, StandardCharsets.UTF_8);
+
+            int userId = getUserIdFromToken();
+            boolean result = libraryService.addGameToLibrary(userId, decodedGameName);
+
+            Map<String, Object> response = new HashMap<>();
+            if (result) {
+                response.put("message", "Juego añadido a tu biblioteca.");
+                response.put("success", true);  // Incluimos el resultado booleano
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("error", "Error al añadir juego a la biblioteca.");
+                response.put("success", false);  // Incluimos el resultado booleano
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error al procesar el nombre del juego.");
+            errorResponse.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
+
     @DeleteMapping("/remove")
     @Operation(summary = "Eliminar juego de la biblioteca", description = "Elimina un juego de la biblioteca del usuario autenticado.")
-    public ResponseEntity<?> removeGameFromLibrary(@RequestParam int gameId) {
-        int userId = getUserIdFromToken();
-        boolean result = libraryService.removeGameFromLibrary(userId, gameId);
-        Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Juego eliminado de tu biblioteca.");
-            response.put("success", true);  // Incluimos el resultado booleano
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "Error al eliminar juego de la biblioteca.");
-            response.put("success", false);  // Incluimos el resultado booleano
-            return ResponseEntity.badRequest().body(response);
+    public ResponseEntity<?> removeGameFromLibrary(@RequestParam String gameName) {
+        try {
+            String decodedGameName = URLDecoder.decode(gameName, StandardCharsets.UTF_8);
+
+            int userId = getUserIdFromToken();
+            boolean result = libraryService.removeGameFromLibrary(userId, decodedGameName);
+            Map<String, Object> response = new HashMap<>();
+            if (result) {
+                response.put("message", "Juego eliminado de tu biblioteca.");
+                response.put("success", true);  // Incluimos el resultado booleano
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("error", "Error al eliminar juego de la biblioteca.");
+                response.put("success", false);  // Incluimos el resultado booleano
+                return ResponseEntity.badRequest().body(response);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error al procesar el nombre del juego.");
+            errorResponse.put("success", false);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 

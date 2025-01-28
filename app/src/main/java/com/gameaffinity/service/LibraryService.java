@@ -48,9 +48,10 @@ public class LibraryService {
         return libraryDAO.addGameToLibrary(userId, game.getId(), "Available");
     }
 
-    public boolean removeGameFromLibrary(int userId, int gameId) {
+    public boolean removeGameFromLibrary(int userId, String gameName) {
         int libraryId = libraryDAO.getLibraryIdByUserId(userId);
-        return libraryDAO.removeGameFromLibrary(libraryId, gameId);
+        Game game = libraryDAO.getGameByName(gameName);
+        return libraryDAO.removeGameFromLibrary(libraryId, game.getId());
     }
 
     public boolean updateGameState(int gameId, int userId, String newState) {
