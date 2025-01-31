@@ -33,7 +33,11 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getDouble("price"),
                         rs.getString("state"),
                         rs.getInt("game_score"),
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        rs.getString("review"),
+                        rs.getDouble("time_played")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -99,7 +103,11 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getDouble("price"),
                         "Available",
                         0,
-                        "");
+                        "",
+                        "",
+                        "",
+                        0
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -120,7 +128,11 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getDouble("price"),
                         "Available",
                         0,
-                        "");
+                        "",
+                        "",
+                        "",
+                        0
+                );
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -160,7 +172,11 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getDouble("price"),
                         rs.getString("state"),
                         rs.getInt("game_score"),
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        rs.getString("review"),
+                        rs.getDouble("time_played")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -172,16 +188,11 @@ public class LibraryDAOImpl implements LibraryDAO {
     public List<Game> getGamesByNameUser(int userId, String name) {
         List<Game> games = new ArrayList<>();
         String query = QueryLoader.getQuery("library.getGamesByNameUser");
-        System.out.println("SQL Query: " + query);
-        System.out.println("Parameters: userId=" + userId + ", name=%" + name.trim() + "%");
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setInt(1, userId);
             stmt.setString(2, "%" + name.trim() + "%");
-            System.out.println("Search query: %" + name.trim() + "%");
             ResultSet rs = stmt.executeQuery();
-            System.out.println(rs.next());
             while (rs.next()) {
-                System.out.println(rs.next());
                 games.add(new Game(
                         rs.getInt("id"),
                         rs.getString("name"),
@@ -189,7 +200,11 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getDouble("price"),
                         rs.getString("state"),
                         rs.getInt("game_score"),
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        rs.getString("review"),
+                        rs.getDouble("time_played")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -214,7 +229,11 @@ public class LibraryDAOImpl implements LibraryDAO {
                         rs.getDouble("price"),
                         rs.getString("state"),
                         rs.getInt("game_score"),
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        rs.getString("review"),
+                        rs.getDouble("time_played")
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -253,6 +272,38 @@ public class LibraryDAOImpl implements LibraryDAO {
     }
 
     @Override
+    public boolean updateGameReview(int gameId, int userId, String review) {
+        String query = QueryLoader.getQuery("library.updateGameReview");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, review);
+            stmt.setInt(2, gameId);
+            stmt.setInt(3, userId);
+            stmt.setInt(4, getLibraryIdByUserId(userId));
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public boolean updateTimePlayed(int gameId, int userId, Double timePlayed) {
+        String query = QueryLoader.getQuery("library.updateTimePlayed");
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setDouble(1, timePlayed);
+            stmt.setInt(2, gameId);
+            stmt.setInt(3, userId);
+            stmt.setInt(4, getLibraryIdByUserId(userId));
+            int rowsAffected = stmt.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
     public int getGameScore(int gameId) {
         String query = QueryLoader.getQuery("library.getGameScore");
         int totalScore = 0;
@@ -271,6 +322,27 @@ public class LibraryDAOImpl implements LibraryDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    @Override
+    public Double getTimePlayed(int gameId) {
+        String query = QueryLoader.getQuery("library.getTimePlayed");
+        double totalTime = 0;
+        int numberOfTimes = 0;
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, gameId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                totalTime += rs.getDouble("time_played");
+                numberOfTimes++;
+            }
+            if (numberOfTimes > 0) {
+                return totalTime / numberOfTimes;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0.0;
     }
 
     @Override

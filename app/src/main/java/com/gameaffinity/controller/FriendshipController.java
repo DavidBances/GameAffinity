@@ -90,7 +90,6 @@ public class FriendshipController {
     @GetMapping("/friend-id")
     @Operation(summary = "Obtener ID de usuario por email", description = "Busca un usuario por email y devuelve su ID.")
     public int getFriendIdByEmail(@RequestParam String friendEmail) {
-        System.out.println(friendEmail);
         return friendshipService.getUserIdByEmail(friendEmail);
     }
 

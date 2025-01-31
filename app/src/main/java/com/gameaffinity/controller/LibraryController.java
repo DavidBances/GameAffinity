@@ -77,14 +77,11 @@ public class LibraryController {
     @Operation(summary = "Obtener juegos por nombre", description = "Devuelve los juegos del usuario autenticado filtrados por nombre.")
     public ResponseEntity<List<Game>> getGamesByName(@RequestParam String name) {
         int userId = getUserIdFromToken();
-        System.out.println("Buscando juegos para userId: " + userId + " con nombre: " + name);
 
         List<Game> games = libraryService.getGamesByNameUser(userId, name);
         if (games.isEmpty()) {
-            System.out.println("No se encontraron juegos.");
             return ResponseEntity.noContent().build();
         }
-        System.out.println("Juegos encontrados: " + games.size());
         return ResponseEntity.ok(games);
     }
 
@@ -190,6 +187,43 @@ public class LibraryController {
         }
     }
 
+    @PutMapping("/update/review")
+    @Operation(summary = "Actualizar puntuación del juego", description = "Actualiza la puntuación de un juego en la biblioteca del usuario autenticado.")
+    public ResponseEntity<?> updateReview(@RequestParam int gameId, @RequestParam String review) {
+        int userId = getUserIdFromToken();
+
+        String decodedReview = URLDecoder.decode(review, StandardCharsets.UTF_8);
+
+        boolean result = libraryService.updateGameReview(gameId, userId, decodedReview);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Reseña del juego actualizada.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al actualizar la reseña del juego.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PutMapping("/update/time_played")
+    @Operation(summary = "Actualizar puntuación del juego", description = "Actualiza la puntuación de un juego en la biblioteca del usuario autenticado.")
+    public ResponseEntity<?> updateTimePlayed(@RequestParam int gameId, @RequestParam Double timePlayed) {
+        int userId = getUserIdFromToken();
+        boolean result = libraryService.updateTimePlayed(gameId, userId, timePlayed);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("message", "Tiempo de juego del juego actualizada.");
+            response.put("success", true);  // Incluimos el resultado booleano
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("error", "Error al actualizar el tiempo de juego del juego.");
+            response.put("success", false);  // Incluimos el resultado booleano
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
     @GetMapping("/genres")
     @Operation(summary = "Obtener todos los géneros", description = "Devuelve una lista de todos los géneros de la biblioteca.")
     public ResponseEntity<List<String>> getAllGenres() {
@@ -205,5 +239,12 @@ public class LibraryController {
     public ResponseEntity<Integer> getGameScore(@PathVariable int gameId) {
         int score = libraryService.getGameScore(gameId);
         return ResponseEntity.ok(score);
+    }
+
+    @GetMapping("/avgTimePlayed/{gameId}")
+    @Operation(summary = "Obtener puntuación promedio de un juego", description = "Devuelve la puntuación promedio de un juego.")
+    public ResponseEntity<Double> getTimePlayed(@PathVariable int gameId) {
+        double timePlayed = libraryService.getTimePlayed(gameId);
+        return ResponseEntity.ok(timePlayed);
     }
 }

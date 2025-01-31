@@ -3,6 +3,8 @@ package com.gameaffinity.model;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
+
 public class Game {
     private final int id;
     private final String name;
@@ -11,6 +13,9 @@ public class Game {
     private String state;
     private int score;
     private String imageUrl;
+    private String description;
+    private String review;
+    private double timePlayed;
 
     /**
      * Constructor for the Game class.
@@ -29,7 +34,10 @@ public class Game {
                 @JsonProperty("price") double price,
                 @JsonProperty("state") String state,
                 @JsonProperty("score") int score,
-                @JsonProperty("imageUrl") String imageUrl){
+                @JsonProperty("imageUrl") String imageUrl,
+                @JsonProperty("description") String description,
+                @JsonProperty("review") String review,
+                @JsonProperty("timePlayed") double timePlayed) {
         this.id = id;
         this.name = name;
         this.genre = genre;
@@ -37,6 +45,9 @@ public class Game {
         this.state = state;
         this.score = score;
         this.imageUrl = imageUrl;
+        this.description = description;
+        this.review = review;
+        this.timePlayed = timePlayed;
     }
 
     /**
@@ -108,6 +119,31 @@ public class Game {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getReview() {
+        return review;
+    }
+
+    public void setReview(String review) {
+        this.review = review;
+    }
+
+    public double getTimePlayed() {
+        return timePlayed;
+    }
+
+    public void setTimePlayed(double timePlayed) {
+        this.timePlayed = timePlayed;
+    }
+
     /**
      * Provides a string representation of the game.
      *

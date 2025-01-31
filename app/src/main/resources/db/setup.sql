@@ -16,7 +16,8 @@ CREATE TABLE Games (
                        id INT AUTO_INCREMENT PRIMARY KEY,
                        name VARCHAR(255) NOT NULL,
                        genre VARCHAR(255),
-                       price DECIMAL(10,2) NOT NULL
+                       price DECIMAL(10,2) NOT NULL,
+                       description TEXT NULL,
                        image_url VARCHAR(255);
 );
 
@@ -27,6 +28,8 @@ CREATE TABLE LibraryGames (
                             game_id INT NOT NULL,
                             state ENUM('Available', 'Playing', 'Paused', 'Completed', 'Dropped', 'Wishlist', 'Replaying') DEFAULT 'Available',
                             game_score INT DEFAULT NULL,
+                            review TEXT NULL;
+                            time_played DECIMAL(5,1);
                             FOREIGN KEY (library_id) REFERENCES Libraries(id) ON DELETE CASCADE,
                             FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
                             FOREIGN KEY (game_id) REFERENCES Games(id) ON DELETE CASCADE

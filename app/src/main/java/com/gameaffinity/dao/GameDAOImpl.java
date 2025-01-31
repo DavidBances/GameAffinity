@@ -53,7 +53,11 @@ public class GameDAOImpl implements GameDAO {
                         rs.getDouble("price"),
                         "Available",
                         0,
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        "",
+                        0
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,7 +80,11 @@ public class GameDAOImpl implements GameDAO {
                         rs.getDouble("price"),
                         "Available",
                         0,
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        "",
+                        0
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -100,7 +108,11 @@ public class GameDAOImpl implements GameDAO {
                         rs.getDouble("price"),
                         "Available",
                         0,
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        "",
+                        0
+                ));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,7 +179,11 @@ public class GameDAOImpl implements GameDAO {
                         rs.getDouble("price"),
                         "Available",
                         0,
-                        rs.getString("image_url")));
+                        rs.getString("image_url"),
+                        rs.getString("description"),
+                        "",
+                        0
+                ));
             }
         } catch (Exception e) {
             e.printStackTrace();

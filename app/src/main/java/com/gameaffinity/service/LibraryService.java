@@ -66,12 +66,28 @@ public class LibraryService {
         return libraryDAO.updateGameScore(gameId, userId, score);
     }
 
+    public boolean updateGameReview(int gameId, int userId, String review) {
+        Game game = libraryDAO.getGameByGameId(gameId);
+        game.setReview(review);
+        return libraryDAO.updateGameReview(gameId, userId, review);
+    }
+
+    public boolean updateTimePlayed(int gameId, int userId, Double timePlayed) {
+        Game game = libraryDAO.getGameByGameId(gameId);
+        game.setTimePlayed(timePlayed);
+        return libraryDAO.updateTimePlayed(gameId, userId, timePlayed);
+    }
+
     public List<String> getAllGenres() {
         return libraryDAO.getAllGenres();
     }
 
     public int getGameScore(int gameId) {
         return libraryDAO.getGameScore(gameId);
+    }
+
+    public Double getTimePlayed(int gameId) {
+        return libraryDAO.getTimePlayed(gameId);
     }
 
     public int getUserIdByEmail(String email) {

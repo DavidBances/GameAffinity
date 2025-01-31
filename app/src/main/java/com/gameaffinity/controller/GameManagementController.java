@@ -28,11 +28,8 @@ public class GameManagementController {
     @GetMapping("/all")
     @Operation(summary = "Obtener todos los juegos", description = "Recupera una lista de todos los juegos en la base de datos.")
     public ResponseEntity<List<Game>> getAllGames() {
-        System.out.println("Entrando en el método getAllGames");
-
         List<Game> games = gameManagementService.getAllGames();
         if (games.isEmpty()) {
-            System.out.println("No se encontraron juegos");
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(games);

@@ -51,7 +51,7 @@ public class SteamApiClient {
                     JSONObject priceOverview = gameData.optJSONObject("price_overview");
                     double price = priceOverview != null ? priceOverview.optDouble("final", 0.0) / 100.0 : 0.0;
 
-                    return new Game(appId, name, genre, price, "Available", 0, "");
+                    return new Game(appId, name, genre, price, "Available", 0, "", "", "", 0);
                 }
             }
         }
@@ -72,7 +72,6 @@ public class SteamApiClient {
             return apps.stream()
                     .map(app -> {
                         if (requestCount >= MAX_REQUESTS) {
-                            System.out.println("Se alcanzó el límite de solicitudes: " + MAX_REQUESTS);
                             return null;  // Detener el flujo cuando se alcanza el límite
                         }
 
@@ -80,7 +79,6 @@ public class SteamApiClient {
                         Game gameDetails = getGameDetails(appId);  // Llamada a getGameDetails
 
                         if (gameDetails != null) {
-                            System.out.println(requestCount);
                             requestCount++;  // Incrementar el contador de solicitudes
                             return new Game(
                                     appId,
@@ -89,7 +87,10 @@ public class SteamApiClient {
                                     gameDetails.getPrice(),
                                     gameDetails.getState(),
                                     gameDetails.getScore(),
-                                    gameDetails.getImageUrl()
+                                    gameDetails.getImageUrl(),
+                                    gameDetails.getDescription(),
+                                    gameDetails.getReview(),
+                                    gameDetails.getTimePlayed()
                             );
                         }
                         return null;  // Si no se encuentran detalles del juego, devolver null (puedes manejarlo si es necesario)

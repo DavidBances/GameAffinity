@@ -29,7 +29,13 @@ public interface LibraryDAO {
 
     int getGameScore(int gameId);
 
+    Double getTimePlayed(int gameId);
+
     boolean updateGameScore(int gameId, int userId, int score);
+
+    boolean updateGameReview(int gameId, int userId, String review);
+
+    boolean updateTimePlayed(int gameId, int userId, Double timePlayed);
 
     List<String> getAllGenres();
 
