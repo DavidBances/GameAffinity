@@ -22,35 +22,43 @@ repositories {
 }
 
 dependencies {
+    // Conector de MySQL para Hibernate
     implementation 'mysql:mysql-connector-java:8.0.33'
-    implementation 'org.openjfx:javafx-controls:21'
-    implementation 'org.openjfx:javafx-fxml:21'
 
-    // Spring Boot web para crear APIs REST
+    // Spring Boot Web (para crear APIs REST)
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    // Springdoc OpenAPI para Swagger
+
+    // Spring Boot JPA + Hibernate (para manejar la base de datos)
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // OpenAPI/Swagger (para documentar la API)
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
-    // Dependencias adicionales
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-    implementation 'org.json:json:20210307'
-
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-
+    // Spring Security (para autenticación y control de accesos)
     implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    // Dependencias para JWT
+    // JWT (para autenticación con tokens)
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Para parsear los JWT más fácilmente (usa Jackson)
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // Usa Jackson para parsear JWT
 
+    // Jackson (para manejar JSON fácilmente)
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.16.1'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.16.1'
 
+    // Spring Boot Test (para pruebas)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // Cliente HTTP (para llamadas a APIs externas como RAWG.io)
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    // Biblioteca JSON de Google
     implementation 'com.google.guava:guava:31.1-jre'
 }
+
 
 java {
     toolchain {

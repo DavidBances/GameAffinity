@@ -1,157 +1,129 @@
 package com.gameaffinity.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 
-import java.math.BigDecimal;
+import java.util.Set;
 
+@Entity
+@Table(name = "Games")
 public class Game {
-    private final int id;
-    private final String name;
-    private final String genre;
-    private final double price;
-    private String state;
-    private int score;
-    private String imageUrl;
-    private String description;
-    private String review;
-    private double timePlayed;
 
-    /**
-     * Constructor for the Game class.
-     *
-     * @param id    The unique ID of the game.
-     * @param name  The name of the game.
-     * @param genre The genre of the game.
-     * @param price The price of the game.
-     * @param state The current state of the game (e.g., "Available", "Played").
-     * @param score The user-assigned score for the game.
-     */
-    @JsonCreator
-    public Game(@JsonProperty("id") int id,
-                @JsonProperty("name") String name,
-                @JsonProperty("genre") String genre,
-                @JsonProperty("price") double price,
-                @JsonProperty("state") String state,
-                @JsonProperty("score") int score,
-                @JsonProperty("imageUrl") String imageUrl,
-                @JsonProperty("description") String description,
-                @JsonProperty("review") String review,
-                @JsonProperty("timePlayed") double timePlayed) {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String name;
+    private String genre;
+    private double price;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+    private String imageUrl;
+    private int releaseYear;
+    private String developer;
+
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<LibraryGames> libraryGames;
+
+    // 🔹 Relación con plataformas
+    @ManyToMany
+    @JoinTable(
+            name = "GamePlatforms",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "platform_id")
+    )
+    private Set<Platform> platforms;
+
+    public Game() {
+    }
+
+    public Game(int id, String name, String genre, double price, String description, String imageUrl, int releaseYear, String developer, Set<Platform> platforms) {
         this.id = id;
         this.name = name;
         this.genre = genre;
         this.price = price;
-        this.state = state;
-        this.score = score;
-        this.imageUrl = imageUrl;
         this.description = description;
-        this.review = review;
-        this.timePlayed = timePlayed;
+        this.imageUrl = imageUrl;
+        this.releaseYear = releaseYear;
+        this.developer = developer;
+        this.platforms = platforms;
     }
 
-    /**
-     * Retrieves the unique ID of the game.
-     *
-     * @return The game ID.
-     */
+
+    // Getters y Setters
     public int getId() {
         return id;
     }
 
-    /**
-     * Retrieves the name of the game.
-     *
-     * @return The name of the game.
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Retrieves the genre of the game.
-     *
-     * @return The genre of the game.
-     */
     public String getGenre() {
         return genre;
     }
 
-    /**
-     * Retrieves the price of the game.
-     *
-     * @return The price of the game.
-     */
     public double getPrice() {
         return price;
-    }
-
-    /**
-     * Retrieves the current state of the game.
-     *
-     * @return The state of the game (e.g., "Available", "Played"...).
-     */
-    public String getState() {
-        return state;
-    }
-
-    /**
-     * Retrieves the user-assigned score of the game.
-     *
-     * @return The score of the game.
-     */
-    public int getScore() {
-        return score;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
     public String getDescription() {
         return description;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public int getReleaseYear() {
+        return releaseYear;
+    }
+
+    public String getDeveloper() {
+        return developer;
+    }
+
+    public Set<LibraryGames> getLibraryGames() {
+        return libraryGames;
+    }
+
+    public Set<Platform> getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(Set<Platform> platforms) {
+        this.platforms = platforms;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getReview() {
-        return review;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public void setReview(String review) {
-        this.review = review;
+    public void setReleaseYear(int releaseYear) {
+        this.releaseYear = releaseYear;
     }
 
-    public double getTimePlayed() {
-        return timePlayed;
+    public void setDeveloper(String developer) {
+        this.developer = developer;
     }
 
-    public void setTimePlayed(double timePlayed) {
-        this.timePlayed = timePlayed;
-    }
-
-    /**
-     * Provides a string representation of the game.
-     *
-     * @return A formatted string containing the game's details.
-     */
-    @Override
-    public String toString() {
-        return "ID: " + id + ", Name: " + name + ", Genre: " + genre + ", Price: $" + price + ", State: " + state
-                + ", Score: " + score;
+    public void setLibraryGames(Set<LibraryGames> libraryGames) {
+        this.libraryGames = libraryGames;
     }
 }

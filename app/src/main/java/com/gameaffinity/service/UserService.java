@@ -1,132 +1,114 @@
 package com.gameaffinity.service;
 
-import com.gameaffinity.dao.UserDAO;
-import com.gameaffinity.dao.UserDAOImpl;
-import com.gameaffinity.model.Administrator;
-import com.gameaffinity.model.Moderator;
-import com.gameaffinity.model.RegularUser;
-import com.gameaffinity.model.UserBase;
+import com.gameaffinity.repository.UserRepository;
+import com.gameaffinity.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
-    private final UserDAO userDAO;
 
-    public UserService() {
-        try {
-            this.userDAO = new UserDAOImpl();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     /**
-     * Authenticates a user based on email and password.
+     * Autentica a un usuario basado en email y contraseña.
      *
-     * @param email    The user's email.
-     * @param password The user's password.
-     * @return The authenticated UserBase object or null if authentication fails.
+     * @param email    Email del usuario.
+     * @param password Contraseña en texto plano.
+     * @return El usuario autenticado o null si falla la autenticación.
      */
     public UserBase authenticate(String email, String password) {
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Email and password are required.");
-        }
-        UserBase user = userDAO.findByEmailAndPassword(email, password);
-        if (user == null) {
-            return null;
+            throw new IllegalArgumentException("Email y contraseña son obligatorios.");
         }
 
-        return createUserInstance(user.getRole(), user.getId(), user.getName(), user.getEmail(), user.getPassword());
+        // Buscar usuario por email y password (debería estar hasheado)
+        Optional<UserBase> userOpt = userRepository.findByEmailAndPassword(email, password);
+
+        return userOpt.orElse(null);
     }
 
     /**
-     * Registers a new user in the system.
+     * Registra un nuevo usuario en el sistema.
      *
-     * @param name     The user's name.
-     * @param email    The user's email.
-     * @param password The user's password.
-     * @param role     The user's role (Administrator, Moderator, Regular_User).
-     * @return A String with the register result.
+     * @param name     Nombre del usuario.
+     * @param email    Email del usuario.
+     * @param password Contraseña del usuario.
+     * @param role     Rol del usuario.
+     * @return Mensaje indicando el resultado del registro.
      */
+    @Transactional
     public String registerUser(String name, String email, String password, String role) {
-        if (name == null || name.isEmpty() || email == null || email.isEmpty() || password == null || password.isEmpty()
-                || role == null || role.isEmpty()) {
-            return "All fields are required.";
+        if (name == null || name.isEmpty() || email == null || email.isEmpty() ||
+                password == null || password.isEmpty() || role == null || role.isEmpty()) {
+            return "Todos los campos son obligatorios.";
         }
 
         if (!isValidEmail(email)) {
-            return "Invalid email format.";
+            return "Formato de email inválido.";
         }
 
-        if (emailExists(email)) {
+        if (userRepository.existsByEmail(email)) {
             return "El email ya está en uso.";
         }
 
-        if (!isValidRole(role)) {
-            return "Invalid role. Accepted roles: Administrator, Moderator, Regular_User.";
-        }
+        // Crear usuario con el rol correcto
+        UserBase user = createUserInstance(role, name, email);
+        user.setPassword(hashPassword(password));
+        userRepository.save(user);
 
-        UserBase user = createUserInstance(role, 0, name, email, password);
-        if (userDAO.createUser(user)) {
-            return "Cuenta creada con éxito.";
-        } else {
-            return "Error al crear la cuenta.";
-        }
+        return "Cuenta creada con éxito.";
     }
 
     /**
-     * Updates a user's profile.
+     * Actualiza el perfil de un usuario.
      *
-     * @param email       The user's email.
-     * @param newName     The updated name.
-     * @param newEmail    The updated email.
-     * @param newPassword The updated password.
-     * @return True if the profile was successfully updated, false otherwise.
+     * @param email       Email del usuario.
+     * @param newName     Nuevo nombre.
+     * @param newEmail    Nuevo email.
+     * @param newPassword Nueva contraseña.
+     * @return True si se actualizó exitosamente, false en caso contrario.
      */
+    @Transactional
     public boolean updateUserProfile(String email, String newName, String newEmail, String newPassword) {
-
         UserBase user = getUserByEmail(email);
 
-        if (newName == null || newName.isEmpty()) {
-            newName = user.getName();
+        if (newName != null && !newName.isEmpty()) user.setName(newName);
+        if (newEmail != null && !newEmail.isEmpty()) {
+            if (!isValidEmail(newEmail)) throw new IllegalArgumentException("Formato de email inválido.");
+            user.setEmail(newEmail);
         }
-        if (newEmail == null || newEmail.isEmpty()) {
-            newEmail = user.getEmail();
-        }
-        if (newPassword == null || newPassword.isEmpty()) {
-            newPassword = user.getPassword();
-        } else {
-            newPassword = hashPassword(newPassword);
+        if (newPassword != null && !newPassword.isEmpty()) {
+            user.setPassword(hashPassword(newPassword));
         }
 
-        if (!isValidEmail(email)) {
-            throw new IllegalArgumentException("Invalid email format.");
-        }
-
-        user.setName(newName);
-        user.setEmail(newEmail);
-        user.setPassword(newPassword);
-
-        return userDAO.updateProfile(user);
+        userRepository.save(user);
+        return true;
     }
 
     /**
-     * Helper method to validate the email format.
-     *
-     * @param email The email to validate.
-     * @return True if the email format is valid, false otherwise.
+     * Valida el formato de un email.
      */
     private boolean isValidEmail(String email) {
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$";
         return email.matches(emailRegex);
     }
 
+    /**
+     * Hashea una contraseña con SHA-256.
+     */
     private String hashPassword(String password) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -134,9 +116,7 @@ public class UserService {
             StringBuilder hexString = new StringBuilder();
             for (byte b : encodedHash) {
                 String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
+                if (hex.length() == 1) hexString.append('0');
                 hexString.append(hex);
             }
             return hexString.toString();
@@ -145,57 +125,59 @@ public class UserService {
         }
     }
 
-    private boolean isValidRole(String role) {
-        return role.equalsIgnoreCase("ADMINISTRATOR") ||
-                role.equalsIgnoreCase("MODERATOR") ||
-                role.equalsIgnoreCase("REGULAR_USER");
+    /**
+     * Crea una instancia de usuario según el rol.
+     */
+    private UserBase createUserInstance(String role, String name, String email) {
+        return switch (role.toUpperCase()) {
+            case "ADMINISTRATOR" -> new Administrator(0, name, email);
+            case "MODERATOR" -> new Moderator(0, name, email);
+            default -> new RegularUser(0, name, email);
+        };
     }
 
     /**
-     * Overloaded helper method to create a new user instance from scratch.
-     *
-     * @param role     The user's role.
-     * @param id       The user's ID.
-     * @param name     The user's name.
-     * @param email    The user's email.
-     * @param password The user's password.
-     * @return A subclass instance of UserBase.
+     * Verifica si un email ya está registrado.
      */
-    private UserBase createUserInstance(String role, int id, String name, String email, String password) {
-        UserBase user = switch (role.toUpperCase()) {
-            case "ADMINISTRATOR" -> new Administrator(id, name, email);
-            case "MODERATOR" -> new Moderator(id, name, email);
-            default -> new RegularUser(id, name, email);
-        };
-
-        user.setPassword(password);
-        return user;
+    public boolean emailExists(String email) {
+        return userRepository.existsByEmail(email);
     }
 
-    private boolean emailExists(String email) {
-        if (email == null || email.isEmpty()) {
-            throw new IllegalArgumentException("Email is required.");
-        }
-        return userDAO.emailExists(email);
-    }
-
+    /**
+     * Obtiene todos los usuarios registrados.
+     */
     public List<UserBase> getAllUsers() {
-        return userDAO.findAll();
+        return userRepository.findAll();
     }
 
-    public boolean updateUserRole(UserBase user, String newRole) {
-        if (!isValidRole(newRole)) {
-            return false;
-        }
+    /**
+     * Actualiza el rol de un usuario.
+     */
+    @Transactional
+    public boolean updateUserRole(int userId, UserRole newRole) {
+
+        UserBase user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
         user.setRole(newRole);
-        return userDAO.updateUserRole(user.getId(), newRole);
+        userRepository.save(user);
+        return true;
     }
 
+    /**
+     * Elimina un usuario por ID.
+     */
+    @Transactional
     public boolean deleteUser(int userId) {
-        return userDAO.delete(userId);
+        if (!userRepository.existsById(userId)) return false;
+
+        userRepository.deleteById(userId);
+        return true;
     }
 
+    /**
+     * Obtiene un usuario por su email.
+     */
     public UserBase getUserByEmail(String email) {
-        return userDAO.getUserByEmail(email);
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
     }
 }

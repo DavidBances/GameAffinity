@@ -26,88 +26,72 @@ public class FriendshipController {
         this.friendshipService = friendshipService;
     }
 
-    // Obtener el userId basado en el token JWT (interfaz interna para reutilizar lógica en otros métodos)
-    private int getUserIdFromToken() {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName(); // Extrae email del token
-        return friendshipService.getUserIdByEmail(email); // Busca el userId usando el email
+    // Obtener el email del usuario autenticado basado en el token JWT
+    private String getUserEmailFromToken() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
     @PostMapping("/request")
+    @Operation(summary = "Enviar solicitud de amistad", description = "Envía una solicitud de amistad a otro usuario.")
     public ResponseEntity<Map<String, Object>> sendFriendRequest(@RequestParam String friendEmail) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        String result = friendshipService.sendFriendRequest(email, friendEmail);
-        Map<String, Object> response = new HashMap<>();
+        String userEmail = getUserEmailFromToken();
+        String result = friendshipService.sendFriendRequest(userEmail, friendEmail);
 
+        Map<String, Object> response = new HashMap<>();
         response.put("message", result.equals("true") ? "Solicitud enviada." : result);
         response.put("success", result.equals("true"));
 
-        if (result.equals("true")) {
-            return ResponseEntity.ok(response);
-        } else {
-            return ResponseEntity.badRequest().body(response);
-        }
+        return result.equals("true") ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 
-
     @GetMapping("/requests")
-    @Operation(summary = "Obtener solicitudes de amistad", description = "Obtiene las solicitudes de amistad pendientes de un usuario.")
+    @Operation(summary = "Obtener solicitudes de amistad", description = "Obtiene las solicitudes de amistad pendientes del usuario autenticado.")
     public ResponseEntity<List<Friendship>> getFriendRequests() {
-        int userId = getUserIdFromToken();
-        List<Friendship> requests = friendshipService.getFriendRequests(userId);
-        if (requests.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(requests);
+        String userEmail = getUserEmailFromToken();
+        List<Friendship> requests = friendshipService.getFriendRequests(userEmail);
+        return requests.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(requests);
     }
 
     @PutMapping("/respond")
     @Operation(summary = "Responder solicitud de amistad", description = "Acepta o rechaza una solicitud de amistad.")
-    public ResponseEntity<?> respondToFriendRequest(@RequestBody Friendship friendship, @RequestParam String status) {
-        boolean result = friendshipService.respondToFriendRequest(friendship, status);
+    public ResponseEntity<Map<String, Object>> respondToFriendRequest(@RequestParam int friendshipId, @RequestParam String status) {
+        boolean result = friendshipService.respondToFriendRequest(friendshipId, status);
+
         Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Respuesta enviada.");
-            response.put("success", true);  // Incluimos el resultado booleano
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "Error al enviar respuesta.");
-            response.put("success", false);  // Incluimos el resultado booleano
-            return ResponseEntity.badRequest().body(response);
-        }
+        response.put("message", result ? "Respuesta enviada." : "Error al enviar respuesta.");
+        response.put("success", result);
+
+        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 
     @GetMapping("/friends")
-    @Operation(summary = "Obtener lista de amigos", description = "Devuelve la lista de amigos de un usuario.")
+    @Operation(summary = "Obtener lista de amigos", description = "Devuelve la lista de amigos del usuario autenticado.")
     public ResponseEntity<List<UserBase>> getFriends() {
-        int userId = getUserIdFromToken();
-        List<UserBase> friends = friendshipService.getFriends(userId);
-        if (friends.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(friends);
+        String userEmail = getUserEmailFromToken();
+        List<UserBase> friends = friendshipService.getFriends(userEmail);
+        return friends.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(friends);
     }
 
     @GetMapping("/friend-id")
     @Operation(summary = "Obtener ID de usuario por email", description = "Busca un usuario por email y devuelve su ID.")
-    public int getFriendIdByEmail(@RequestParam String friendEmail) {
-        return friendshipService.getUserIdByEmail(friendEmail);
+    public ResponseEntity<Map<String, Object>> getFriendIdByEmail(@RequestParam String friendEmail) {
+        int userId = friendshipService.getUserIdByEmail(friendEmail);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("userId", userId);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/delete")
-    @Operation(summary = "Eliminar amigo", description = "Elimina un amigo de la lista de amistades.")
-    public ResponseEntity<?> deleteFriend(@RequestParam int friendId) {
-        int userId = getUserIdFromToken();
-        boolean result = friendshipService.deleteFriend(userId, friendId);
+    @Operation(summary = "Eliminar amigo", description = "Elimina a un usuario de la lista de amistades.")
+    public ResponseEntity<Map<String, Object>> deleteFriend(@RequestParam String friendEmail) {
+        String userEmail = getUserEmailFromToken();
+        boolean result = friendshipService.deleteFriend(userEmail, friendEmail);
 
         Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Amigo eliminado.");
-            response.put("success", true);  // Incluimos el resultado booleano
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "Error al eliminar amigo.");
-            response.put("success", false);  // Incluimos el resultado booleano
-            return ResponseEntity.badRequest().body(response);
-        }
+        response.put("message", result ? "Amigo eliminado." : "Error al eliminar amigo.");
+        response.put("success", result);
+
+        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 }

@@ -1,6 +1,7 @@
 package com.gameaffinity.controller;
 
 import com.gameaffinity.model.UserBase;
+import com.gameaffinity.model.UserRole;
 import com.gameaffinity.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -30,41 +31,35 @@ public class UserManagementController {
     @Operation(summary = "Obtener todos los usuarios", description = "Devuelve una lista con todos los usuarios.")
     public ResponseEntity<List<UserBase>> getAllUsers() {
         List<UserBase> users = userService.getAllUsers();
-        if (users.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(users);
+        return users.isEmpty() ? ResponseEntity.noContent().build() : ResponseEntity.ok(users);
     }
 
     @PutMapping("/update-role")
     @Operation(summary = "Actualizar rol de usuario", description = "Asigna un nuevo rol a un usuario.")
-    public ResponseEntity<?> updateUserRole(@RequestBody UserBase user, @RequestParam String newRole) {
-        boolean result = userService.updateUserRole(user, newRole);
-        Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Rol del usuario actualizado.");
-            response.put("success", true);  // Incluimos el resultado booleano
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "Error al actualizar el rol del usuario.");
-            response.put("success", false);  // Incluimos el resultado booleano
-            return ResponseEntity.badRequest().body(response);
+    public ResponseEntity<?> updateUserRole(@RequestParam int userId, @RequestParam String newRole) {
+        try {
+            UserRole roleEnum = UserRole.valueOf(newRole.toUpperCase());
+            boolean result = userService.updateUserRole(userId, roleEnum);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", result);
+            response.put(result ? "message" : "error", result ? "Rol del usuario actualizado." : "Error al actualizar el rol del usuario.");
+
+            return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Rol no válido."));
         }
     }
 
     @DeleteMapping("/delete")
     @Operation(summary = "Eliminar usuario", description = "Elimina un usuario de la base de datos.")
-    public ResponseEntity<?> deleteUser(@RequestBody UserBase user) {
-        boolean result = userService.deleteUser(user.getId());
+    public ResponseEntity<?> deleteUser(@RequestParam int userId) {
+        boolean result = userService.deleteUser(userId);
+
         Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Usuario eliminado.");
-            response.put("success", true);  // Incluimos el resultado booleano
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "Error al eliminar al usuario.");
-            response.put("success", false);  // Incluimos el resultado booleano
-            return ResponseEntity.badRequest().body(response);
-        }
+        response.put("success", result);
+        response.put(result ? "message" : "error", result ? "Usuario eliminado." : "Error al eliminar al usuario.");
+
+        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 }

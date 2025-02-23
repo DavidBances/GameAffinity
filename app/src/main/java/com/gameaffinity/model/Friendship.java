@@ -1,78 +1,69 @@
 package com.gameaffinity.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "Friendships")
 public class Friendship {
-    private final int id;
-    private final int requesterId;
-    private String requesterEmail;
-    private final int receiverId;
-    private String status;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-    /**
-     * Constructor for the Friendship class.
-     *
-     * @param id          The unique ID of the friendship.
-     * @param requesterId The ID of the user who sent the friendship request.
-     * @param receiverId  The ID of the user who received the friendship request.
-     * @param status      The current status of the friendship.
-     */
-    @JsonCreator
-    public Friendship(@JsonProperty("id") int id,
-                      @JsonProperty("requesterId") int requesterId,
-                      @JsonProperty("requesterEmail") String requesterEmail,
-                      @JsonProperty("receiverId") int receiverId,
-                      @JsonProperty("status") String status) {
-        this.id = id;
-        this.requesterId = requesterId;
-        this.requesterEmail = requesterEmail;
-        this.receiverId = receiverId;
+    @ManyToOne
+    @JoinColumn(name = "requester_id", nullable = false)
+    private UserBase requester;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id", nullable = false)
+    private UserBase receiver;
+
+    @Enumerated(EnumType.STRING)
+    private FriendshipStatus status;
+
+    public Friendship() {
+    }
+
+    public Friendship(UserBase requester, UserBase receiver, FriendshipStatus status) {
+        this.requester = requester;
+        this.receiver = receiver;
         this.status = status;
     }
 
-    /**
-     * Retrieves the unique ID of the friendship.
-     *
-     * @return The friendship ID.
-     */
     public int getId() {
         return id;
     }
 
-    public int getRequesterId() {
-        return requesterId;
+    public UserBase getRequester() {
+        return requester;
     }
 
-    public int getReceiverId() {
-        return receiverId;
+    public void setRequester(UserBase requester) {
+        this.requester = requester;
     }
 
-    public void setRequesterEmail(String requesterEmail) {
-        this.requesterEmail = requesterEmail;
+    public UserBase getReceiver() {
+        return receiver;
     }
 
-    public String getRequesterEmail() {
-        return requesterEmail;
+    public void setReceiver(UserBase receiver) {
+        this.receiver = receiver;
     }
 
-    /**
-     * Updates the current status of the friendship.
-     *
-     * @param status The new status to set.
-     */
-    public void setStatus(String status) {
+    public FriendshipStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(FriendshipStatus status) {
         this.status = status;
     }
 
-    /**
-     * Provides a string representation of the friendship.
-     *
-     * @return A formatted string containing the friendship details.
-     */
     @Override
     public String toString() {
-        return "Friendship ID: " + id + ", Requester ID: " + requesterId + ", Receiver ID: " + receiverId + ", Status: "
-                + status;
+        return "Friendship{" +
+                "id=" + id +
+                ", requester=" + requester.getName() +
+                ", receiver=" + receiver.getName() +
+                ", status=" + status +
+                '}';
     }
 }

@@ -1,7 +1,6 @@
 package com.gameaffinity.controller;
 
 import com.gameaffinity.model.UserBase;
-
 import com.gameaffinity.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +21,7 @@ public class UserController {
 
     @Autowired
     public UserController(UserService userService) {
-        this.userService = userService; // Usa el constructor actual
+        this.userService = userService;
     }
 
     @PutMapping("/update-profile")
@@ -30,30 +29,28 @@ public class UserController {
     public ResponseEntity<?> updateProfile(
             @RequestParam(required = false) String newName,
             @RequestParam(required = false) String newEmail,
-            @RequestParam(required = false) String newPassword
-    ) {
-        String emailFromToken = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            @RequestParam(required = false) String newPassword) {
+
+        String emailFromToken = SecurityContextHolder.getContext().getAuthentication().getName();
         boolean result = userService.updateUserProfile(emailFromToken, newName, newEmail, newPassword);
+
         Map<String, Object> response = new HashMap<>();
-        if (result) {
-            response.put("message", "Perfil actualizado.");
-            response.put("success", true);  // Incluimos el resultado booleano
-            return ResponseEntity.ok(response);
-        } else {
-            response.put("error", "Error al actualizar el perfil.");
-            response.put("success", false);  // Incluimos el resultado booleano
-            return ResponseEntity.badRequest().body(response);
-        }
+        response.put("success", result);
+        response.put(result ? "message" : "error", result ? "Perfil actualizado." : "Error al actualizar el perfil.");
+
+        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 
     @GetMapping("/getRole")
+    @Operation(summary = "Obtener rol del usuario", description = "Devuelve el rol del usuario autenticado.")
     public ResponseEntity<?> getRole() {
-        String emailFromToken = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("Hola");
+        String emailFromToken = SecurityContextHolder.getContext().getAuthentication().getName();
         UserBase user = userService.getUserByEmail(emailFromToken);
 
         if (user == null) {
-            return ResponseEntity.status(404).body("Usuario no encontrado");
+            return ResponseEntity.status(404).body(Map.of("error", "Usuario no encontrado"));
         }
-        return ResponseEntity.ok(user.getRole());
+        return ResponseEntity.ok(Map.of("role", user.getRole().toString()));
     }
 }

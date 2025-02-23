@@ -1,22 +1,15 @@
 package com.gameaffinity.model;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Entity;
+import jakarta.persistence.DiscriminatorValue;
 
+@Entity
+@DiscriminatorValue("REGULAR_USER")
 public class RegularUser extends UserBase {
+    public RegularUser() {
+    }
 
-    /**
-     * Constructor for the RegularUser class.
-     *
-     * @param id    The unique ID of the regular user.
-     * @param name  The name of the regular user.
-     * @param email The email of the regular user.
-     */
-    @JsonCreator
-    public RegularUser(@JsonProperty("id") int id,
-                       @JsonProperty("name") String name,
-                       @JsonProperty("email") String email) {
-        super(id, name, email, "Regular_User");
+    public RegularUser(int id, String name, String email) {
+        super(id, name, email, UserRole.REGULAR_USER);
     }
 }
-

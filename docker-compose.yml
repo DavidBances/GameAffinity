@@ -12,6 +12,7 @@ services:
       - ./app/src/main/resources/db/setup.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - mynetwork
+    command: --lower_case_table_names=1
 
 networks:
   mynetwork:
