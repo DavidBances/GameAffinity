@@ -1,9 +1,11 @@
 package com.gameaffinity.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.Set;
 
+@JsonIgnoreProperties(ignoreUnknown = true) // 👈 Esto hace que Jackson ignore los atributos desconocidos
 @Entity
 @Table(name = "Games")
 public class Game {
@@ -28,7 +30,7 @@ public class Game {
     // 🔹 Relación con plataformas
     @ManyToMany
     @JoinTable(
-            name = "GamePlatforms",
+            name = "game_platforms",
             joinColumns = @JoinColumn(name = "game_id"),
             inverseJoinColumns = @JoinColumn(name = "platform_id")
     )
