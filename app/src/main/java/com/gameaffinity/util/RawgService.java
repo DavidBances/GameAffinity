@@ -3,7 +3,6 @@ package com.gameaffinity.util;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.gameaffinity.model.Game;
-import com.gameaffinity.model.GameState;
 import com.gameaffinity.model.Platform;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -22,8 +21,9 @@ public class RawgService {
     private static final String BASE_URL = "https://api.rawg.io/api/games";
     private static final int PAGE_SIZE = 40;
     private static final String OUTPUT_FOLDER = "rawg_json";
-    private static final int MAX_REQUESTS = 10000;
+    private static final int MAX_REQUESTS = 1808;
     private static int requestsMade = 0;
+    private static int actualPage = 245;
 
 
     private static final RestTemplate restTemplate = new RestTemplate();
@@ -40,13 +40,12 @@ public class RawgService {
             folder.mkdirs();
         }
 
-        int page = 1;
         boolean morePages = true;
 
         while (morePages && requestsMade < MAX_REQUESTS) {
-            String url = BASE_URL + "?key=" + API_KEY + "&page=" + page + "&page_size=" + PAGE_SIZE;
+            String url = BASE_URL + "?key=" + API_KEY + "&page=" + actualPage + "&page_size=" + PAGE_SIZE;
 
-            System.out.println("Obteniendo página " + page + ": " + url);
+            System.out.println("Obteniendo página " + actualPage + ": " + url);
 
             try {
                 HttpHeaders headers = new HttpHeaders();
@@ -100,16 +99,16 @@ public class RawgService {
                     gameList.add(extractedGame);
                 }
 
-                guardarJsonEnArchivo(gameList, page);
+                guardarJsonEnArchivo(gameList, actualPage);
 
                 int resultsEnPagina = games.size();
                 if (resultsEnPagina < PAGE_SIZE) {
                     morePages = false;
                 } else {
-                    page++;
+                    actualPage++;
                 }
             } catch (Exception e) {
-                System.err.println("Error al obtener la página " + page);
+                System.err.println("Error al obtener la página " + actualPage);
                 e.printStackTrace();
                 morePages = false;
             }

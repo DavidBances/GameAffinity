@@ -5,7 +5,6 @@ import com.gameaffinity.model.Game;
 import com.gameaffinity.model.Platform;
 import com.gameaffinity.repository.GameRepository;
 import com.gameaffinity.repository.PlatformRepository;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +17,7 @@ import java.util.Set;
 @Service
 public class GameDatabaseLoader {
 
-    private static final String INPUT_FILE = "games_final.json";
+    private static final String INPUT_FILE = "./GameAffinity/games_final.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     private final GameRepository gameRepository;
@@ -68,7 +67,9 @@ public class GameDatabaseLoader {
     public void insert1FileOfGamesIntoDatabase() {
         try {
             // Leer JSON y convertirlo en lista de juegos
-            File file = new File("D:/Java/GameAffinity/rawg_json/juegos_pagina_1.json");
+            // Para el portatil: "D:/Java/GameAffinity/rawg_json/juegos_pagina_1.json"
+            // Para el ordenador sobremesa: "E:/Cosas/GameAffinity/GameAffinity/rawg_json/juegos_pagina_1.json"
+            File file = new File("E:/Cosas/GameAffinity/GameAffinity/rawg_json/juegos_pagina_1.json");
             List<Game> games = List.of(objectMapper.readValue(file, Game[].class));
 
             for (Game game : games) {

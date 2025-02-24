@@ -26,7 +26,7 @@ CREATE TABLE library_games (
     library_id INT NOT NULL,
     user_id INT NOT NULL,
     game_id INT NOT NULL,
-    state ENUM('Available', 'Playing', 'Paused', 'Completed', 'Dropped', 'Wishlist', 'Replaying') DEFAULT 'Available',
+    state ENUM('AVAILABLE', 'PLAYING', 'PAUSED', 'COMPLETED', 'DROPPED', 'WISHLIST') DEFAULT 'AVAILABLE',
     game_score INT DEFAULT NULL,
     review TEXT NULL,
     time_played DECIMAL(5,1) DEFAULT 0,
