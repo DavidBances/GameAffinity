@@ -1,5 +1,6 @@
 package com.gameaffinity.service;
 
+import com.gameaffinity.repository.LibraryRepository;
 import com.gameaffinity.repository.UserRepository;
 import com.gameaffinity.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +17,14 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final LibraryRepository libraryRepository;
+
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, LibraryRepository libraryRepository) {
         this.userRepository = userRepository;
+        this.libraryRepository = libraryRepository;
     }
-
     /**
      * Autentica a un usuario basado en email y contraseña.
      *
@@ -68,6 +71,9 @@ public class UserService {
         UserBase user = createUserInstance(role, name, email);
         user.setPassword(hashPassword(password));
         userRepository.save(user);
+
+        Library library = new Library(user);
+        libraryRepository.save(library);
 
         return "Cuenta creada con éxito.";
     }

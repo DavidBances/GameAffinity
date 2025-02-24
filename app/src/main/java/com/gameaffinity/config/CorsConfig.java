@@ -14,7 +14,7 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:8080", "http://localhost:8080") // Ajusta tus dominios
+                        .allowedOrigins("http://localhost:8081", "http://localhost:8081") // Ajusta tus dominios
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("Authorization", "Content-Type") // Permitir encabezados personalizados
                         .allowCredentials(true);

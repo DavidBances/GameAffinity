@@ -21,8 +21,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Deshabilitar CSRF si es API REST
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/api/register", "/api/login").permitAll()
-                        .requestMatchers("/api/admin/**").hasRole("ADMINISTRATOR") // Cambiado a `hasRole`
-                        .requestMatchers("/api/users/**").hasRole("REGULAR_USER") // Cambiado a `hasRole`
+                        .requestMatchers("/api/user-management/**").hasAuthority("ADMINISTRATOR")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

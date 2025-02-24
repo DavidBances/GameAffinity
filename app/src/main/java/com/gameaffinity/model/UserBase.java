@@ -1,7 +1,18 @@
 package com.gameaffinity.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import jakarta.persistence.*;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME, // Usa el nombre de la clase para diferenciar tipos
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type" // Esto aparecerá en el JSON para indicar el tipo de usuario
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Administrator.class, name = "ADMINISTRATOR"),
+        @JsonSubTypes.Type(value = RegularUser.class, name = "REGULAR_USER")
+})
 @Entity
 @Table(name = "Users")
 public abstract class UserBase {
