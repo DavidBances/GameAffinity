@@ -14,7 +14,8 @@ import java.util.Optional;
 public interface FriendshipRepository extends JpaRepository<Friendship, Integer> {
 
     // Buscar una amistad específica entre dos usuarios
-    Optional<Friendship> findByRequesterAndReceiver(UserBase requester, UserBase receiver);
+
+    Optional<Friendship> findByRequesterAndReceiverOrReceiverAndRequester(UserBase user1, UserBase user2, UserBase user2Again, UserBase user1Again);
 
     // Obtener solicitudes de amistad recibidas por un usuario
     List<Friendship> findByReceiverAndStatus(UserBase receiver, FriendshipStatus status);

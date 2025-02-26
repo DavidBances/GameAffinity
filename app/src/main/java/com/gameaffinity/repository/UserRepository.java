@@ -20,10 +20,7 @@ public interface UserRepository extends JpaRepository<UserBase, Integer> {
 
     // Verificar si un email ya está registrado
     boolean existsByEmail(String email);
-
-    // Obtener todos los usuarios
-    List<UserBase> findAll();
-
+    
     // Eliminar usuario por ID
     void deleteById(int id);
 }

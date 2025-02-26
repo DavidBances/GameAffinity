@@ -16,9 +16,11 @@ CREATE TABLE games (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     genre VARCHAR(255),
-    price DECIMAL(10,2) NOT NULL,
+    avg_score DOUBLE DEFAULT 0,
     description TEXT NULL,
-    image_url VARCHAR(255)
+    image_url VARCHAR(255),
+    developer VARCHAR(255),
+    release_year INT NOT NULL,
 );
 
 CREATE TABLE library_games (

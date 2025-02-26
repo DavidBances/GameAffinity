@@ -10,17 +10,17 @@
             <columns>
                 <TableColumn text="Name" fx:id="nameColumn">
                     <cellValueFactory>
-                        <PropertyValueFactory property="name" />
+                        <PropertyValueFactory property="name"/>
                     </cellValueFactory>
                 </TableColumn>
                 <TableColumn text="Genre" fx:id="genreColumn">
                     <cellValueFactory>
-                        <PropertyValueFactory property="genre" />
+                        <PropertyValueFactory property="genre"/>
                     </cellValueFactory>
                 </TableColumn>
                 <TableColumn text="Price" fx:id="priceColumn">
                     <cellValueFactory>
-                        <PropertyValueFactory property="price" />
+                        <PropertyValueFactory property="avg_score"/>
                     </cellValueFactory>
                 </TableColumn>
             </columns>
@@ -28,8 +28,8 @@
     </center>
     <bottom>
         <HBox spacing="10" alignment="CENTER">
-            <Button fx:id="addGameButton" text="Add Game" />
-            <Button fx:id="deleteGameButton" text="Delete Game" />
+            <Button fx:id="addGameButton" text="Add Game"/>
+            <Button fx:id="deleteGameButton" text="Delete Game"/>
         </HBox>
     </bottom>
 </BorderPane>

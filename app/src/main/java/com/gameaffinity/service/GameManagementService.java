@@ -2,10 +2,11 @@ package com.gameaffinity.service;
 
 import com.gameaffinity.model.Game;
 import com.gameaffinity.repository.GameRepository;
+import com.gameaffinity.repository.LibraryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class GameManagementService {
@@ -19,7 +20,7 @@ public class GameManagementService {
         return gameRepository.findAll();
     }
 
-    public boolean addGame(String name, String genre, double price) {
+    public boolean addGame(String name, String genre) {
         if (gameRepository.existsByName(name)) {
             return false;
         }
@@ -27,7 +28,6 @@ public class GameManagementService {
         Game newGame = new Game();
         newGame.setName(name);
         newGame.setGenre(genre);
-        newGame.setPrice(price);
         gameRepository.save(newGame);
         return true;
     }

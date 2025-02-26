@@ -75,6 +75,17 @@ public class LibraryController {
         return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
     }
 
+    @PutMapping("/update/state")
+    @Operation(summary = "Actualizar estado del juego", description = "Actualiza el estado de un juego en la biblioteca del usuario autenticado.")
+    public ResponseEntity<Map<String, Object>> updateGameScore(@RequestParam int gameId, @RequestParam int score) {
+        boolean result = libraryService.updateGameScore(gameId, getUserIdFromToken(), score);
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", result ? "Estado del juego actualizado." : "Error al actualizar el estado del juego.");
+        response.put("success", result);
+
+        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+    }
+
     @GetMapping("/genres")
     @Operation(summary = "Obtener todos los géneros", description = "Devuelve una lista de todos los géneros de la biblioteca del usuario.")
     public ResponseEntity<List<String>> getAllGenres() {
@@ -84,7 +95,7 @@ public class LibraryController {
 
     @GetMapping("/avgScore/{gameId}")
     @Operation(summary = "Obtener puntuación promedio de un juego", description = "Devuelve la puntuación promedio de un juego en la biblioteca del usuario.")
-    public ResponseEntity<Integer> getGameScore(@PathVariable int gameId) {
+    public ResponseEntity<Double> getGameScore(@PathVariable int gameId) {
         return ResponseEntity.ok(libraryService.getGameScore(gameId));
     }
 

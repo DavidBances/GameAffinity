@@ -16,7 +16,7 @@ public class Game {
 
     private String name;
     private String genre;
-    private double price;
+    private Double avg_score;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -39,11 +39,11 @@ public class Game {
     public Game() {
     }
 
-    public Game(int id, String name, String genre, double price, String description, String imageUrl, int releaseYear, String developer, Set<Platform> platforms) {
+    public Game(int id, String name, String genre, Double avg_score, String description, String imageUrl, int releaseYear, String developer, Set<Platform> platforms) {
         this.id = id;
         this.name = name;
         this.genre = genre;
-        this.price = price;
+        this.avg_score = avg_score;
         this.description = description;
         this.imageUrl = imageUrl;
         this.releaseYear = releaseYear;
@@ -65,8 +65,8 @@ public class Game {
         return genre;
     }
 
-    public double getPrice() {
-        return price;
+    public Double getAvg_score() {
+        return avg_score;
     }
 
     public String getDescription() {
@@ -105,8 +105,8 @@ public class Game {
         this.genre = genre;
     }
 
-    public void setPrice(double price) {
-        this.price = price;
+    public void setAvg_score(Double avg_score) {
+        this.avg_score = avg_score;
     }
 
     public void setDescription(String description) {

@@ -20,7 +20,6 @@ public interface LibraryRepository extends JpaRepository<Library, Integer> {
     @Query("SELECT l FROM Library l WHERE l.user.id = :userId")
     Optional<Library> findByUserId(int userId);
 
-
     // 📌 Obtener los juegos de la biblioteca de un usuario (corrigiendo la consulta)
     @Query("SELECT lg.game FROM LibraryGames lg WHERE lg.library.user.id = :userId")
     List<Game> findGamesByUserId(int userId);
@@ -47,7 +46,7 @@ public interface LibraryRepository extends JpaRepository<Library, Integer> {
 
     // 📌 Obtener la puntuación media de un juego en todas las bibliotecas
     @Query("SELECT AVG(lg.gameScore) FROM LibraryGames lg WHERE lg.game.id = :gameId")
-    Optional<Integer> getGameScore(int gameId);
+    Optional<Double> getGameScore(int gameId);
 
     // 📌 Obtener el tiempo total jugado de un juego en todas las bibliotecas
     @Query("SELECT COALESCE(SUM(lg.timePlayed), 0) FROM LibraryGames lg WHERE lg.game.id = :gameId")

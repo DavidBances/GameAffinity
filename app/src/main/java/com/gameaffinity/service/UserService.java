@@ -25,6 +25,7 @@ public class UserService {
         this.userRepository = userRepository;
         this.libraryRepository = libraryRepository;
     }
+
     /**
      * Autentica a un usuario basado en email y contraseña.
      *
@@ -140,13 +141,6 @@ public class UserService {
             case "MODERATOR" -> new Moderator(0, name, email);
             default -> new RegularUser(0, name, email);
         };
-    }
-
-    /**
-     * Verifica si un email ya está registrado.
-     */
-    public boolean emailExists(String email) {
-        return userRepository.existsByEmail(email);
     }
 
     /**

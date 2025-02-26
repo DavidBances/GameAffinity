@@ -59,7 +59,7 @@ public class GameManagementController {
             @RequestParam String genre,
             @RequestParam String priceText
     ) {
-        boolean result = gameManagementService.addGame(name, genre, Double.parseDouble(priceText));
+        boolean result = gameManagementService.addGame(name, genre);
         Map<String, Object> response = new HashMap<>();
         response.put("message", result ? "Juego añadido." : "Error al añadir el juego.");
         response.put("success", result);

@@ -31,20 +31,25 @@ public class FriendshipService {
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado: " + friendEmail));
 
         if (requester.equals(receiver)) {
-            return "No puedes enviarte una solicitud a ti mismo.";
+            return "❌ No puedes enviarte una solicitud a ti mismo.";
         }
 
-        // Verificar si ya hay una solicitud pendiente o si ya son amigos
-        Optional<Friendship> existingFriendship = friendshipRepository.findByRequesterAndReceiver(requester, receiver);
+        // ✅ Verificar si ya hay una solicitud pendiente en **cualquier dirección**
+        Optional<Friendship> existingFriendship = friendshipRepository.findByRequesterAndReceiverOrReceiverAndRequester(
+                requester, receiver, receiver, requester
+        );
+
         if (existingFriendship.isPresent()) {
-            return "Ya tienes una solicitud pendiente o son amigos.";
+            return "⚠️ Ya hay una solicitud pendiente o ya son amigos.";
         }
 
-        // Crear la solicitud de amistad
+        // ✅ Crear la solicitud de amistad
         Friendship newFriendship = new Friendship(requester, receiver, FriendshipStatus.PENDING);
         friendshipRepository.save(newFriendship);
-        return "true"; // Se mantiene este valor para compatibilidad con el controlador
+
+        return "✅ Solicitud enviada correctamente.";
     }
+
 
     // 📌 Obtener solicitudes de amistad recibidas
     public List<Friendship> getFriendRequests(String userEmail) {
@@ -90,7 +95,7 @@ public class FriendshipService {
         UserBase friend = userRepository.findByEmail(friendEmail)
                 .orElseThrow(() -> new IllegalArgumentException("Amigo no encontrado: " + friendEmail));
 
-        Optional<Friendship> friendshipOpt = friendshipRepository.findByRequesterAndReceiver(user, friend);
+        Optional<Friendship> friendshipOpt = friendshipRepository.findByRequesterAndReceiverOrReceiverAndRequester(user, friend, friend, user);
         if (friendshipOpt.isPresent()) {
             friendshipRepository.delete(friendshipOpt.get());
             return true;

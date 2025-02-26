@@ -118,8 +118,15 @@ public class LibraryService {
         LibraryGames libraryGame = findLibraryGame(gameId, userId);
         libraryGame.setGameScore(score);
         libraryRepository.save(libraryGame.getLibrary());
+        Double avgScore = libraryRepository.getGameScore(gameId).orElse(0.0); // Si es null, usar 0.0
+        Game game = gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException("Game not found in database"));
+        // 🔹 Llamamos a GameManagementService para actualizar avg_score
+        game.setAvg_score(avgScore);
+        gameRepository.save(game);
         return true;
     }
+
 
     // 📌 Actualizar la reseña de un juego en la biblioteca del usuario
     @Transactional
@@ -148,18 +155,13 @@ public class LibraryService {
     }
 
     // 📌 Obtener la puntuación media de un juego
-    public int getGameScore(int gameId) {
-        return libraryRepository.getGameScore(gameId).orElse(0);
+    public Double getGameScore(int gameId) {
+        return libraryRepository.getGameScore(gameId).orElse(0.0);
     }
 
     // 📌 Obtener el tiempo total jugado de un juego
     public Double getTimePlayed(int gameId) {
         return libraryRepository.getTotalTimePlayed(gameId).orElse(0.0);
-    }
-
-    // 📌 Verificar si dos usuarios tienen una amistad
-    public boolean checkFriendship(int userId, int friendId) {
-        return libraryRepository.existsGameInLibrary(userId, friendId);
     }
 
     // 📌 Obtener el ID de un usuario por email
