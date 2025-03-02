@@ -26,10 +26,11 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<?> login(@RequestParam String email, @RequestParam String password) {
-        UserBase user = userService.authenticate(email, password);
-
-        if (user == null) {
-            return ResponseEntity.status(401).body(Map.of("error", "Credenciales inválidas"));
+        UserBase user = null;
+        try {
+            user = userService.authenticate(email, password);
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
         }
 
         String token = jwtService.generateToken(user.getId(), email, Collections.singletonList(user.getRole()));

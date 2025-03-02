@@ -1,8 +1,11 @@
 package com.gameaffinity.service;
 
+import com.gameaffinity.exception.GameAffinityException;
+import com.gameaffinity.exception.UserNotFoundException;
 import com.gameaffinity.repository.LibraryRepository;
 import com.gameaffinity.repository.UserRepository;
 import com.gameaffinity.model.*;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +30,41 @@ public class UserService {
     }
 
     /**
+     * Registra un nuevo usuario en el sistema.
+     *
+     * @param name     Nombre del usuario.
+     * @param email    Email del usuario.
+     * @param password Contraseña del usuario.
+     * @return Mensaje indicando el resultado del registro.
+     */
+    @Transactional
+    public boolean registerUser(String name, String email, String password) {
+        if (name == null || name.isEmpty() || email == null || email.isEmpty() ||
+                password == null || password.isEmpty()) {
+            throw new GameAffinityException("Todos los campos son obligatorios.");
+        }
+
+        if (!isValidEmail(email)) {
+            throw new GameAffinityException("Formato de email inválido.");
+        }
+
+        if (userRepository.existsByEmail(email)) {
+            throw new GameAffinityException("El email ya está en uso.");
+        }
+
+        // Crear usuario con el rol correcto
+        UserBase user = new RegularUser(0, name, email);
+        String hashedPassword = DigestUtils.sha256Hex(password);
+        user.setPassword(hashedPassword);
+        userRepository.save(user);
+
+        Library library = new Library(user);
+        libraryRepository.save(library);
+
+        return true;
+    }
+
+    /**
      * Autentica a un usuario basado en email y contraseña.
      *
      * @param email    Email del usuario.
@@ -35,48 +73,17 @@ public class UserService {
      */
     public UserBase authenticate(String email, String password) {
         if (email == null || email.isEmpty() || password == null || password.isEmpty()) {
-            throw new IllegalArgumentException("Email y contraseña son obligatorios.");
+            throw new GameAffinityException("Email y contraseña son obligatorios.");
+        }
+
+        if (!userRepository.existsByEmail(email)) {
+            throw new UserNotFoundException(email);
         }
 
         // Buscar usuario por email y password (debería estar hasheado)
         Optional<UserBase> userOpt = userRepository.findByEmailAndPassword(email, password);
 
-        return userOpt.orElse(null);
-    }
-
-    /**
-     * Registra un nuevo usuario en el sistema.
-     *
-     * @param name     Nombre del usuario.
-     * @param email    Email del usuario.
-     * @param password Contraseña del usuario.
-     * @param role     Rol del usuario.
-     * @return Mensaje indicando el resultado del registro.
-     */
-    @Transactional
-    public String registerUser(String name, String email, String password, String role) {
-        if (name == null || name.isEmpty() || email == null || email.isEmpty() ||
-                password == null || password.isEmpty() || role == null || role.isEmpty()) {
-            return "Todos los campos son obligatorios.";
-        }
-
-        if (!isValidEmail(email)) {
-            return "Formato de email inválido.";
-        }
-
-        if (userRepository.existsByEmail(email)) {
-            return "El email ya está en uso.";
-        }
-
-        // Crear usuario con el rol correcto
-        UserBase user = createUserInstance(role, name, email);
-        user.setPassword(hashPassword(password));
-        userRepository.save(user);
-
-        Library library = new Library(user);
-        libraryRepository.save(library);
-
-        return "Cuenta creada con éxito.";
+        return userOpt.orElseThrow(() -> new GameAffinityException("Contraseña incorrecta."));
     }
 
     /**
@@ -92,13 +99,16 @@ public class UserService {
     public boolean updateUserProfile(String email, String newName, String newEmail, String newPassword) {
         UserBase user = getUserByEmail(email);
 
-        if (newName != null && !newName.isEmpty()) user.setName(newName);
+        if (newName != null && !newName.isEmpty()) {
+            user.setName(newName);
+        }
         if (newEmail != null && !newEmail.isEmpty()) {
-            if (!isValidEmail(newEmail)) throw new IllegalArgumentException("Formato de email inválido.");
+            if (!isValidEmail(newEmail)) throw new GameAffinityException("Formato de email inválido.");
             user.setEmail(newEmail);
         }
         if (newPassword != null && !newPassword.isEmpty()) {
-            user.setPassword(hashPassword(newPassword));
+            String hashedPassword = DigestUtils.sha256Hex(newPassword);
+            user.setPassword(hashedPassword);
         }
 
         userRepository.save(user);
@@ -114,36 +124,6 @@ public class UserService {
     }
 
     /**
-     * Hashea una contraseña con SHA-256.
-     */
-    private String hashPassword(String password) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] encodedHash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : encodedHash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error al inicializar el algoritmo de hash", e);
-        }
-    }
-
-    /**
-     * Crea una instancia de usuario según el rol.
-     */
-    private UserBase createUserInstance(String role, String name, String email) {
-        return switch (role.toUpperCase()) {
-            case "ADMINISTRATOR" -> new Administrator(0, name, email);
-            case "MODERATOR" -> new Moderator(0, name, email);
-            default -> new RegularUser(0, name, email);
-        };
-    }
-
-    /**
      * Obtiene todos los usuarios registrados.
      */
     public List<UserBase> getAllUsers() {
@@ -154,9 +134,9 @@ public class UserService {
      * Actualiza el rol de un usuario.
      */
     @Transactional
-    public boolean updateUserRole(int userId, UserRole newRole) {
+    public boolean updateUserRole(String userEmail, UserRole newRole) {
 
-        UserBase user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+        UserBase user = userRepository.findByEmail(userEmail).orElseThrow(() -> new UserNotFoundException(userEmail));
         user.setRole(newRole);
         userRepository.save(user);
         return true;
@@ -166,10 +146,12 @@ public class UserService {
      * Elimina un usuario por ID.
      */
     @Transactional
-    public boolean deleteUser(int userId) {
-        if (!userRepository.existsById(userId)) return false;
+    public boolean deleteUser(String email) {
+        if (!userRepository.existsByEmail(email)) {
+            return false;
+        }
 
-        userRepository.deleteById(userId);
+        userRepository.deleteByEmail(email);
         return true;
     }
 
@@ -178,6 +160,6 @@ public class UserService {
      */
     public UserBase getUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado."));
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 }

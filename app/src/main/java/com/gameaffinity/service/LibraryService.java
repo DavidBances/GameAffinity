@@ -1,5 +1,7 @@
 package com.gameaffinity.service;
 
+import com.gameaffinity.exception.GameAffinityException;
+import com.gameaffinity.exception.UserNotFoundException;
 import com.gameaffinity.model.*;
 import com.gameaffinity.repository.GameRepository;
 import com.gameaffinity.repository.LibraryRepository;
@@ -10,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class LibraryService {
@@ -26,47 +27,35 @@ public class LibraryService {
 
     // 📌 Obtener juegos de la biblioteca del usuario
     public List<Game> getGamesByUserId(int userId) {
-        Library library = libraryRepository.findByUserId(userId)
-                .orElseThrow(() -> new RuntimeException("Library not found for user"));
-        return library.getLibraryGames().stream()
-                .map(LibraryGames::getGame)
-                .collect(Collectors.toList());
+        return libraryRepository.findGamesByUserId(userId);
     }
 
     public List<Game> findGamesByUserAndName(int userId, String gameName) {
-        return getGamesByUserId(userId).stream()
-                .filter(game -> game.getName().toLowerCase().contains(gameName.toLowerCase()))
-                .collect(Collectors.toList());
+        return libraryRepository.findGamesByUserAndName(userId, gameName);
     }
 
     public List<Game> findGamesByUserAndGenre(int userId, String genre) {
-        return getGamesByUserId(userId).stream()
-                .filter(game -> game.getGenre() != null && game.getGenre().toLowerCase().contains(genre.toLowerCase()))
-                .collect(Collectors.toList());
+        return libraryRepository.findGamesByUserAndGenre(userId, genre);
     }
 
     public List<Game> findGamesByUserAndGenreAndName(int userId, String genre, String name) {
-        return getGamesByUserId(userId).stream()
-                .filter(game -> game.getName().toLowerCase().contains(name.toLowerCase()) &&
-                        game.getGenre() != null && game.getGenre().toLowerCase().contains(genre.toLowerCase()))
-                .collect(Collectors.toList());
+        return libraryRepository.findGamesByUserAndGenreAndName(userId, genre, name);
     }
 
     // 📌 Añadir un juego a la biblioteca del usuario
     @Transactional
     public boolean addGameToLibrary(int userId, String gameName) {
         UserBase user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new GameAffinityException("No se encontró tu biblioteca"));
 
         Library library = libraryRepository.findByUser(user)
                 .orElseGet(() -> libraryRepository.save(new Library(user)));
 
         Game game = gameRepository.findByName(gameName)
-                .orElseThrow(() -> new RuntimeException("Game not found in database"));
+                .orElseThrow(() -> new GameAffinityException("Game not found in database"));
 
         // Verificar si el juego ya está en la biblioteca
-        boolean exists = library.getLibraryGames().stream()
-                .anyMatch(lg -> lg.getGame().getId() == game.getId());
+        boolean exists = libraryRepository.existsGameInLibrary(userId, game.getId());
 
         if (exists) {
             return false; // El juego ya está en la biblioteca
@@ -84,10 +73,10 @@ public class LibraryService {
     @Transactional
     public boolean removeGameFromLibrary(int userId, String gameName) {
         UserBase user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new GameAffinityException("No se encontró tu biblioteca."));
 
         Library library = libraryRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Library not found for user"));
+                .orElseThrow(() -> new GameAffinityException("No se encontró tu biblioteca"));
 
         Optional<LibraryGames> libraryGameOptional = library.getLibraryGames().stream()
                 .filter(lg -> lg.getGame().getName().equalsIgnoreCase(gameName))
@@ -118,12 +107,12 @@ public class LibraryService {
         LibraryGames libraryGame = findLibraryGame(gameId, userId);
         libraryGame.setGameScore(score);
         libraryRepository.save(libraryGame.getLibrary());
-        Double avgScore = libraryRepository.getGameScore(gameId).orElse(0.0); // Si es null, usar 0.0
-        Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new RuntimeException("Game not found in database"));
-        // 🔹 Llamamos a GameManagementService para actualizar avg_score
-        game.setAvg_score(avgScore);
-        gameRepository.save(game);
+        Double avgScore = libraryRepository.getAvgGameScore(gameId).orElse(0.0); // Si es null, usar 0.0
+        gameRepository.findById(gameId).ifPresent(game -> {
+            game.setAvg_score(avgScore);
+            gameRepository.save(game);
+        });
+
         return true;
     }
 
@@ -148,40 +137,27 @@ public class LibraryService {
 
     // 📌 Obtener todos los géneros de juegos en la biblioteca del usuario
     public List<String> getAllGenres(int userId) {
-        return getGamesByUserId(userId).stream()
-                .map(Game::getGenre)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-    // 📌 Obtener la puntuación media de un juego
-    public Double getGameScore(int gameId) {
-        return libraryRepository.getGameScore(gameId).orElse(0.0);
-    }
-
-    // 📌 Obtener el tiempo total jugado de un juego
-    public Double getTimePlayed(int gameId) {
-        return libraryRepository.getTotalTimePlayed(gameId).orElse(0.0);
+        return libraryRepository.getAllGenres(userId);
     }
 
     // 📌 Obtener el ID de un usuario por email
     public int getUserIdByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(UserBase::getId)
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new UserNotFoundException(email));
     }
 
-    // 🔹 Método auxiliar para encontrar un juego en la biblioteca
-    private LibraryGames findLibraryGame(int gameId, int userId) {
+    public LibraryGames findLibraryGame(int gameId, int userId) {
         UserBase user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new GameAffinityException("No se encontró tu biblioteca"));
 
         Library library = libraryRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Library not found for user"));
+                .orElseThrow(() -> new GameAffinityException("No se encontró tu biblioteca"));
 
-        return library.getLibraryGames().stream()
+        return library.getLibraryGames()
+                .stream()
                 .filter(lg -> lg.getGame().getId() == gameId)
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("Game not found in user's library."));
+                .findAny()
+                .orElseThrow(() -> new GameAffinityException("Game not found in user's library."));
     }
 }

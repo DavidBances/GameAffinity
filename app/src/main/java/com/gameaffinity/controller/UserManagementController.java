@@ -1,5 +1,6 @@
 package com.gameaffinity.controller;
 
+import com.gameaffinity.exception.UserNotFoundException;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.model.UserRole;
 import com.gameaffinity.service.UserService;
@@ -36,25 +37,24 @@ public class UserManagementController {
 
     @PutMapping("/update-role")
     @Operation(summary = "Actualizar rol de usuario", description = "Asigna un nuevo rol a un usuario.")
-    public ResponseEntity<?> updateUserRole(@RequestParam int userId, @RequestParam String newRole) {
+    public ResponseEntity<?> updateUserRole(@RequestParam String userEmail, @RequestParam UserRole newRole) {
         try {
-            UserRole roleEnum = UserRole.valueOf(newRole.toUpperCase());
-            boolean result = userService.updateUserRole(userId, roleEnum);
+            boolean result = userService.updateUserRole(userEmail, newRole);
 
             Map<String, Object> response = new HashMap<>();
             response.put("success", result);
             response.put(result ? "message" : "error", result ? "Rol del usuario actualizado." : "Error al actualizar el rol del usuario.");
 
             return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
-        } catch (IllegalArgumentException e) {
+        } catch (UserNotFoundException e) {
             return ResponseEntity.badRequest().body(Map.of("error", "Rol no válido."));
         }
     }
 
     @DeleteMapping("/delete")
     @Operation(summary = "Eliminar usuario", description = "Elimina un usuario de la base de datos.")
-    public ResponseEntity<?> deleteUser(@RequestParam int userId) {
-        boolean result = userService.deleteUser(userId);
+    public ResponseEntity<?> deleteUser(@RequestParam String userEmail) {
+        boolean result = userService.deleteUser(userEmail);
 
         Map<String, Object> response = new HashMap<>();
         response.put("success", result);

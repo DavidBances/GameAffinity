@@ -16,7 +16,7 @@ public class Game {
 
     private String name;
     private String genre;
-    private Double avg_score;
+    private Double avg_score = 0.0;
 
     @Column(columnDefinition = "TEXT")
     private String description;

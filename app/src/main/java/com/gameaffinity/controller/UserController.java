@@ -31,14 +31,18 @@ public class UserController {
             @RequestParam(required = false) String newEmail,
             @RequestParam(required = false) String newPassword) {
 
-        String emailFromToken = SecurityContextHolder.getContext().getAuthentication().getName();
-        boolean result = userService.updateUserProfile(emailFromToken, newName, newEmail, newPassword);
-
         Map<String, Object> response = new HashMap<>();
-        response.put("success", result);
-        response.put(result ? "message" : "error", result ? "Perfil actualizado." : "Error al actualizar el perfil.");
-
-        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+        String emailFromToken = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean result = false;
+        try {
+            response.put("success", userService.updateUserProfile(emailFromToken, newName, newEmail, newPassword));
+            response.put("message", "Perfil actualizado.");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("error", e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @GetMapping("/getRole")

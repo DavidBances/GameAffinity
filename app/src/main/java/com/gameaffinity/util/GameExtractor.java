@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameExtractor {
-    private static final String RAWG_FOLDER = "rawg_json";
+    private static final String RAWG_FOLDER = "igdb_json";
     private static final String OUTPUT_FILE = "games_final.json";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 

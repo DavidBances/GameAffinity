@@ -1,6 +1,9 @@
 package com.gameaffinity.controller;
 
+import com.gameaffinity.exception.GameAffinityException;
+import com.gameaffinity.exception.UserNotFoundException;
 import com.gameaffinity.model.Friendship;
+import com.gameaffinity.model.FriendshipStatus;
 import com.gameaffinity.model.UserBase;
 import com.gameaffinity.service.FriendshipService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,13 +38,16 @@ public class FriendshipController {
     @Operation(summary = "Enviar solicitud de amistad", description = "Envía una solicitud de amistad a otro usuario.")
     public ResponseEntity<Map<String, Object>> sendFriendRequest(@RequestParam String friendEmail) {
         String userEmail = getUserEmailFromToken();
-        String result = friendshipService.sendFriendRequest(userEmail, friendEmail);
-
         Map<String, Object> response = new HashMap<>();
-        response.put("message", result.equals("true") ? "Solicitud enviada." : result);
-        response.put("success", result.equals("true"));
-
-        return result.equals("true") ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+        try {
+            response.put("message", "Solicitud enviada.");
+            response.put("success", friendshipService.sendFriendRequest(userEmail, friendEmail));
+            return ResponseEntity.ok(response);
+        } catch (GameAffinityException e) {
+            response.put("message", e.getMessage());
+            response.put("success", false);
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @GetMapping("/requests")
@@ -54,14 +60,17 @@ public class FriendshipController {
 
     @PutMapping("/respond")
     @Operation(summary = "Responder solicitud de amistad", description = "Acepta o rechaza una solicitud de amistad.")
-    public ResponseEntity<Map<String, Object>> respondToFriendRequest(@RequestParam int friendshipId, @RequestParam String status) {
-        boolean result = friendshipService.respondToFriendRequest(friendshipId, status);
-
+    public ResponseEntity<Map<String, Object>> respondToFriendRequest(@RequestParam int friendshipId, @RequestParam FriendshipStatus status) {
         Map<String, Object> response = new HashMap<>();
-        response.put("message", result ? "Respuesta enviada." : "Error al enviar respuesta.");
-        response.put("success", result);
-
-        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+        try {
+            response.put("message", "Respuesta enviada.");
+            response.put("success", friendshipService.respondToFriendRequest(friendshipId, status));
+            return ResponseEntity.ok(response);
+        } catch (GameAffinityException e) {
+            response.put("message", e.getMessage());
+            response.put("success", false);
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @GetMapping("/friends")
@@ -86,12 +95,15 @@ public class FriendshipController {
     @Operation(summary = "Eliminar amigo", description = "Elimina a un usuario de la lista de amistades.")
     public ResponseEntity<Map<String, Object>> deleteFriend(@RequestParam String friendEmail) {
         String userEmail = getUserEmailFromToken();
-        boolean result = friendshipService.deleteFriend(userEmail, friendEmail);
-
         Map<String, Object> response = new HashMap<>();
-        response.put("message", result ? "Amigo eliminado." : "Error al eliminar amigo.");
-        response.put("success", result);
-
-        return result ? ResponseEntity.ok(response) : ResponseEntity.badRequest().body(response);
+        try {
+            response.put("message", "Amigo eliminado correctamente");
+            response.put("success", friendshipService.deleteFriend(userEmail, friendEmail));
+            return ResponseEntity.ok(response);
+        } catch (GameAffinityException e) {
+            response.put("message", e.getMessage());
+            response.put("success", false);
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 }

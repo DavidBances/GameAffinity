@@ -1,5 +1,7 @@
 package com.gameaffinity.controller;
 
+import com.gameaffinity.exception.GameAffinityException;
+import com.gameaffinity.model.UserRole;
 import com.gameaffinity.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -26,12 +28,12 @@ public class RegisterController {
     public ResponseEntity<?> register(@RequestParam String name,
                                       @RequestParam String email,
                                       @RequestParam String password) {
-        String result = userService.registerUser(name, email, password, "REGULAR_USER");
 
-        if ("Cuenta creada con éxito.".equals(result)) {
-            return ResponseEntity.ok(Map.of("message", "Usuario registrado exitosamente. Por favor, inicia sesión."));
+        try {
+            userService.registerUser(name.trim(), email.trim(), password.trim());
+        } catch (GameAffinityException e) {
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
-
-        return ResponseEntity.badRequest().body(Map.of("error", result));
+        return ResponseEntity.ok(Map.of("message", "Usuario registrado exitosamente. Por favor, inicia sesión."));
     }
 }

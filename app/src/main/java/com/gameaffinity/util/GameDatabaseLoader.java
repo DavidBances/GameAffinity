@@ -69,7 +69,7 @@ public class GameDatabaseLoader {
             // Leer JSON y convertirlo en lista de juegos
             // Para el portatil: "D:/Java/GameAffinity/rawg_json/juegos_pagina_1.json"
             // Para el ordenador sobremesa: "E:/Cosas/GameAffinity/GameAffinity/rawg_json/juegos_pagina_1.json"
-            File file = new File("E:/Cosas/GameAffinity/GameAffinity/rawg_json/juegos_pagina_1.json");
+            File file = new File("D:/Java/GameAffinity/igdb_json/juegos_offset_0.json");
             List<Game> games = List.of(objectMapper.readValue(file, Game[].class));
 
             for (Game game : games) {

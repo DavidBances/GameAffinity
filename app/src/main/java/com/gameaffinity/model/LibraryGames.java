@@ -1,11 +1,10 @@
 package com.gameaffinity.model;
 
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "LibraryGames")
+@Table(name = "library_games")
 public class LibraryGames {
 
     @Id
@@ -28,8 +27,7 @@ public class LibraryGames {
     @Column(nullable = false)
     private GameState state = GameState.AVAILABLE;
 
-    @Column(nullable = true)
-    private Integer gameScore;
+    private Integer gameScore;  // `nullable` no es necesario, ya que los `Integer` pueden ser `null`
 
     @Column(columnDefinition = "TEXT")
     private String review;
@@ -37,9 +35,8 @@ public class LibraryGames {
     @Column(nullable = false, precision = 5, scale = 1)
     private BigDecimal timePlayed = BigDecimal.ZERO;
 
-
-    public LibraryGames() {
-    }
+    // ✅ Constructores
+    public LibraryGames() {}
 
     public LibraryGames(Library library, UserBase user, Game game, GameState state, Integer gameScore, String review, BigDecimal timePlayed) {
         this.library = library;
@@ -51,64 +48,20 @@ public class LibraryGames {
         this.timePlayed = timePlayed;
     }
 
-    // Getters y Setters
-    public int getId() {
-        return id;
-    }
-
-    public Library getLibrary() {
-        return library;
-    }
-
-    public void setLibrary(Library library) {
-        this.library = library;
-    }
-
-    public UserBase getUser() {
-        return user;
-    }
-
-    public void setUser(UserBase user) {
-        this.user = user;
-    }
-
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
-    }
-
-    public GameState getState() {
-        return state;
-    }
-
-    public void setState(GameState state) {
-        this.state = state;
-    }
-
-    public Integer getGameScore() {
-        return gameScore;
-    }
-
-    public void setGameScore(Integer gameScore) {
-        this.gameScore = gameScore;
-    }
-
-    public String getReview() {
-        return review;
-    }
-
-    public void setReview(String review) {
-        this.review = review;
-    }
-
-    public BigDecimal getTimePlayed() {
-        return timePlayed;
-    }
-
-    public void setTimePlayed(BigDecimal timePlayed) {
-        this.timePlayed = timePlayed;
-    }
+    // ✅ Getters y Setters
+    public int getId() { return id; }
+    public Library getLibrary() { return library; }
+    public void setLibrary(Library library) { this.library = library; }
+    public UserBase getUser() { return user; }
+    public void setUser(UserBase user) { this.user = user; }
+    public Game getGame() { return game; }
+    public void setGame(Game game) { this.game = game; }
+    public GameState getState() { return state; }
+    public void setState(GameState state) { this.state = state; }
+    public Integer getGameScore() { return gameScore; }
+    public void setGameScore(Integer gameScore) { this.gameScore = gameScore; }
+    public String getReview() { return review; }
+    public void setReview(String review) { this.review = review; }
+    public BigDecimal getTimePlayed() { return timePlayed; }
+    public void setTimePlayed(BigDecimal timePlayed) { this.timePlayed = timePlayed; }
 }

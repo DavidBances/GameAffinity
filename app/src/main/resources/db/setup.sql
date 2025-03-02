@@ -20,7 +20,7 @@ CREATE TABLE games (
     description TEXT NULL,
     image_url VARCHAR(255),
     developer VARCHAR(255),
-    release_year INT NOT NULL,
+    release_year INT NOT NULL
 );
 
 CREATE TABLE library_games (
@@ -29,7 +29,7 @@ CREATE TABLE library_games (
     user_id INT NOT NULL,
     game_id INT NOT NULL,
     state ENUM('AVAILABLE', 'PLAYING', 'PAUSED', 'COMPLETED', 'DROPPED', 'WISHLIST') DEFAULT 'AVAILABLE',
-    game_score INT DEFAULT NULL,
+    game_score INT DEFAULT 0,
     review TEXT NULL,
     time_played DECIMAL(5,1) DEFAULT 0,
     FOREIGN KEY (library_id) REFERENCES libraries(id) ON DELETE CASCADE,
