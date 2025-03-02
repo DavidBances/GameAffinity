@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 import java.util.Set;
 
-@JsonIgnoreProperties(ignoreUnknown = true) // 👈 Esto hace que Jackson ignore los atributos desconocidos
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name = "Games")
 public class Game {
@@ -15,19 +15,36 @@ public class Game {
     private int id;
 
     private String name;
-    private String genre;
+
+    // Relación con géneros (ahora 'genres' en lugar de 'genre')
+    @ManyToMany
+    @JoinTable(
+            name = "game_genres",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres; // Aquí el campo genres como Set<Genre>
+
     private Double avg_score = 0.0;
 
     @Column(columnDefinition = "TEXT")
     private String description;
     private String imageUrl;
     private int releaseYear;
-    private String developer;
+
+    // Relación con desarrolladores
+    @ManyToMany
+    @JoinTable(
+            name = "game_developers",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "developer_id")
+    )
+    private Set<Developer> developers;
 
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<LibraryGames> libraryGames;
 
-    // 🔹 Relación con plataformas
+    // Relación con plataformas
     @ManyToMany
     @JoinTable(
             name = "game_platforms",
@@ -39,18 +56,17 @@ public class Game {
     public Game() {
     }
 
-    public Game(int id, String name, String genre, Double avg_score, String description, String imageUrl, int releaseYear, String developer, Set<Platform> platforms) {
+    public Game(int id, String name, Set<Genre> genres, Double avg_score, String description, String imageUrl, int releaseYear, Set<Developer> developers, Set<Platform> platforms) {
         this.id = id;
         this.name = name;
-        this.genre = genre;
+        this.genres = genres; // Inicializamos genres como Set<Genre>
         this.avg_score = avg_score;
         this.description = description;
         this.imageUrl = imageUrl;
         this.releaseYear = releaseYear;
-        this.developer = developer;
+        this.developers = developers;
         this.platforms = platforms;
     }
-
 
     // Getters y Setters
     public int getId() {
@@ -61,8 +77,8 @@ public class Game {
         return name;
     }
 
-    public String getGenre() {
-        return genre;
+    public Set<Genre> getGenres() {
+        return genres;
     }
 
     public Double getAvg_score() {
@@ -81,8 +97,8 @@ public class Game {
         return releaseYear;
     }
 
-    public String getDeveloper() {
-        return developer;
+    public Set<Developer> getDevelopers() {
+        return developers;
     }
 
     public Set<LibraryGames> getLibraryGames() {
@@ -93,16 +109,12 @@ public class Game {
         return platforms;
     }
 
-    public void setPlatforms(Set<Platform> platforms) {
-        this.platforms = platforms;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setGenre(String genre) {
-        this.genre = genre;
+    public void setGenres(Set<Genre> genres) {
+        this.genres = genres;
     }
 
     public void setAvg_score(Double avg_score) {
@@ -121,11 +133,15 @@ public class Game {
         this.releaseYear = releaseYear;
     }
 
-    public void setDeveloper(String developer) {
-        this.developer = developer;
+    public void setDevelopers(Set<Developer> developers) {
+        this.developers = developers;
     }
 
     public void setLibraryGames(Set<LibraryGames> libraryGames) {
         this.libraryGames = libraryGames;
+    }
+
+    public void setPlatforms(Set<Platform> platforms) {
+        this.platforms = platforms;
     }
 }

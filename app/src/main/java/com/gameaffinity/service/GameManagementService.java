@@ -1,12 +1,13 @@
 package com.gameaffinity.service;
 
 import com.gameaffinity.model.Game;
+import com.gameaffinity.model.Genre;
 import com.gameaffinity.repository.GameRepository;
-import com.gameaffinity.repository.LibraryRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class GameManagementService {
@@ -20,14 +21,20 @@ public class GameManagementService {
         return gameRepository.findAll();
     }
 
-    public boolean addGame(String name, String genre) {
+    public boolean addGame(String name, String genreName) {
         if (gameRepository.existsByName(name)) {
             return false;
         }
 
+        // Crear un Set<Genre> con el nombre del género
+        Set<Genre> genres = new HashSet<>();
+        Genre genre = new Genre(genreName); // Crear un nuevo objeto Genre con el nombre
+        genres.add(genre);
+
+        // Crear el objeto Game y asignar los géneros
         Game newGame = new Game();
         newGame.setName(name);
-        newGame.setGenre(genre);
+        newGame.setGenres(genres);  // Aquí asignas el Set<Genre> en lugar de un String
         gameRepository.save(newGame);
         return true;
     }

@@ -15,9 +15,13 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
 
     List<Game> findByNameContainingIgnoreCase(String name);
 
+    // 📌 Buscar juegos por género
+    @Query("SELECT g FROM Game g JOIN g.genres genre WHERE LOWER(genre.name) LIKE LOWER(CONCAT('%', :genre, '%'))")
     List<Game> findByGenreContainingIgnoreCase(String genre);
 
-    @Query("SELECT g FROM Game g WHERE LOWER(g.genre) LIKE LOWER(CONCAT('%', :genre, '%')) AND LOWER(g.name) LIKE LOWER(CONCAT('%', :name, '%'))")
+    // 📌 Buscar juegos por nombre y género
+    @Query("SELECT g FROM Game g JOIN g.genres genre WHERE LOWER(genre.name) LIKE LOWER(CONCAT('%', :genre, '%')) " +
+            "AND LOWER(g.name) LIKE LOWER(CONCAT('%', :name, '%'))")
     List<Game> findByGenreAndName(String genre, String name);
 
     Optional<Game> findByName(String name);

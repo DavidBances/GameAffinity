@@ -1,9 +1,13 @@
 package com.gameaffinity.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gameaffinity.model.Developer;
 import com.gameaffinity.model.Game;
+import com.gameaffinity.model.Genre;
 import com.gameaffinity.model.Platform;
+import com.gameaffinity.repository.DeveloperRepository;
 import com.gameaffinity.repository.GameRepository;
+import com.gameaffinity.repository.GenreRepository;
 import com.gameaffinity.repository.PlatformRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,10 +26,14 @@ public class GameDatabaseLoader {
 
     private final GameRepository gameRepository;
     private final PlatformRepository platformRepository;
+    private final GenreRepository genreRepository;
+    private final DeveloperRepository developerRepository;
 
-    public GameDatabaseLoader(GameRepository gameRepository, PlatformRepository platformRepository) {
+    public GameDatabaseLoader(GameRepository gameRepository, PlatformRepository platformRepository, GenreRepository genreRepository, DeveloperRepository developerRepository) {
         this.gameRepository = gameRepository;
         this.platformRepository = platformRepository;
+        this.genreRepository = genreRepository;
+        this.developerRepository = developerRepository;
     }
 
     @Transactional
@@ -49,8 +57,26 @@ public class GameDatabaseLoader {
                     savedPlatforms.add(existingPlatform.orElseGet(() -> platformRepository.save(platform)));
                 }
 
-                // Asociar las plataformas al juego y guardarlo
+                // Guardar géneros primero (para evitar duplicados)
+                Set<Genre> savedGenres = new HashSet<>();
+                for (Genre genre : game.getGenres()) {
+                    Optional<Genre> existingGenre = genreRepository.findByName(genre.getName());
+                    savedGenres.add(existingGenre.orElseGet(() -> genreRepository.save(genre)));
+                }
+
+                // Guardar desarrolladores primero (para evitar duplicados)
+                Set<Developer> savedDevelopers = new HashSet<>();
+                for (Developer developer : game.getDevelopers()) {
+                    Optional<Developer> existingDeveloper = developerRepository.findByName(developer.getName());
+                    savedDevelopers.add(existingDeveloper.orElseGet(() -> developerRepository.save(developer)));
+                }
+
+                // Asociar las plataformas, géneros y desarrolladores al juego
                 game.setPlatforms(new HashSet<>(savedPlatforms));
+                game.setGenres(new HashSet<>(savedGenres));
+                game.setDevelopers(new HashSet<>(savedDevelopers));
+
+                // Guardar el juego
                 gameRepository.save(game);
 
                 System.out.println("✅ Juego insertado: " + game.getName());
@@ -86,8 +112,26 @@ public class GameDatabaseLoader {
                     savedPlatforms.add(existingPlatform.orElseGet(() -> platformRepository.save(platform)));
                 }
 
-                // Asociar las plataformas al juego y guardarlo
+                // Guardar géneros primero (para evitar duplicados)
+                Set<Genre> savedGenres = new HashSet<>();
+                for (Genre genre : game.getGenres()) {
+                    Optional<Genre> existingGenre = genreRepository.findByName(genre.getName());
+                    savedGenres.add(existingGenre.orElseGet(() -> genreRepository.save(genre)));
+                }
+
+                // Guardar desarrolladores primero (para evitar duplicados)
+                Set<Developer> savedDevelopers = new HashSet<>();
+                for (Developer developer : game.getDevelopers()) {
+                    Optional<Developer> existingDeveloper = developerRepository.findByName(developer.getName());
+                    savedDevelopers.add(existingDeveloper.orElseGet(() -> developerRepository.save(developer)));
+                }
+
+                // Asociar las plataformas, géneros y desarrolladores al juego
                 game.setPlatforms(new HashSet<>(savedPlatforms));
+                game.setGenres(new HashSet<>(savedGenres));
+                game.setDevelopers(new HashSet<>(savedDevelopers));
+
+                // Guardar el juego
                 gameRepository.save(game);
 
                 System.out.println("✅ Juego insertado: " + game.getName());

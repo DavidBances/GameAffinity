@@ -13,7 +13,6 @@ import java.util.Optional;
 @Repository
 public interface LibraryRepository extends JpaRepository<Library, Integer> {
 
-
     Optional<Library> findByUser(UserBase user);
 
     // 📌 Obtener los juegos de la biblioteca de un usuario (corrigiendo la consulta)
@@ -26,14 +25,14 @@ public interface LibraryRepository extends JpaRepository<Library, Integer> {
     List<Game> findGamesByUserAndName(int userId, String name);
 
     // 📌 Buscar juegos en la biblioteca del usuario por género
-    @Query("SELECT lg.game FROM LibraryGames lg WHERE lg.library.user.id = :userId " +
-            "AND LOWER(lg.game.genre) LIKE LOWER(CONCAT('%', :genre, '%'))")
+    @Query("SELECT lg.game FROM LibraryGames lg JOIN lg.game.genres g WHERE lg.library.user.id = :userId " +
+            "AND LOWER(g.name) LIKE LOWER(CONCAT('%', :genre, '%'))")
     List<Game> findGamesByUserAndGenre(int userId, String genre);
 
     // 📌 Buscar juegos en la biblioteca del usuario por nombre y género
-    @Query("SELECT lg.game FROM LibraryGames lg WHERE lg.library.user.id = :userId " +
+    @Query("SELECT lg.game FROM LibraryGames lg JOIN lg.game.genres g WHERE lg.library.user.id = :userId " +
             "AND LOWER(lg.game.name) LIKE LOWER(CONCAT('%', :name, '%')) " +
-            "AND LOWER(lg.game.genre) LIKE LOWER(CONCAT('%', :genre, '%'))")
+            "AND LOWER(g.name) LIKE LOWER(CONCAT('%', :genre, '%'))")
     List<Game> findGamesByUserAndGenreAndName(int userId, String genre, String name);
 
     // 📌 Verificar si un juego está en la biblioteca del usuario
@@ -45,6 +44,6 @@ public interface LibraryRepository extends JpaRepository<Library, Integer> {
     Optional<Double> getAvgGameScore(int gameId);
 
     // 📌 Obtener todos los géneros de juegos en la biblioteca del usuario
-    @Query("SELECT DISTINCT lg.game.genre FROM LibraryGames lg WHERE lg.library.user.id = :userId")
+    @Query("SELECT DISTINCT g.name FROM LibraryGames lg JOIN lg.game.genres g WHERE lg.library.user.id = :userId")
     List<String> getAllGenres(int userId);
 }

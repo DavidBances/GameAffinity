@@ -2,7 +2,9 @@ package com.gameaffinity.util;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.gameaffinity.model.Developer;
 import com.gameaffinity.model.Game;
+import com.gameaffinity.model.Genre;
 import com.gameaffinity.model.Platform;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -39,10 +41,10 @@ public class IgdbService {
 
         boolean morePages = true;
         int offset = 0;
-        int limit = 500; // IGDB permite hasta 500, pero 50 es más seguro
+        int limit = 500;
 
         while (morePages) {
-            String query = "fields id, name, genres.name, platforms.name, summary, cover.url, first_release_date, involved_companies; " +
+            String query = "fields id, name, genres.name, platforms.name, summary, cover.url, first_release_date, involved_companies.company.name; " +
                     "sort first_release_date desc; limit " + limit + "; offset " + offset + ";";
 
             System.out.println("🔹 Obteniendo juegos desde offset " + offset);
@@ -78,23 +80,17 @@ public class IgdbService {
                             "https:" + game.get("cover").get("url").asText().replace("t_thumb", "t_cover_big") : "Sin imagen";
                     String description = game.has("summary") ? game.get("summary").asText() : "Sin descripción";
 
-                    // Extraer el primer género de la lista
-                    String genre = game.has("genres") && game.get("genres").size() > 0 ?
-                            game.get("genres").get(0).get("name").asText() : "Desconocido";
+                    // Extraer los géneros
+                    Set<Genre> genres = extractGenres(game);
 
                     // Extraer las plataformas
                     Set<Platform> platforms = extractPlatforms(game);
 
-                    // Extraer el primer desarrollador de la lista
-                    String developer = "Desconocido"; // Valor predeterminado
-                    if (game.has("involved_companies") && !game.get("involved_companies").isNull() && game.get("involved_companies").size() > 0) {
-                        JsonNode involvedCompanies = game.get("involved_companies").get(0);
-                        if (involvedCompanies.has("company") && involvedCompanies.get("company") != null && involvedCompanies.get("company").has("name")) {
-                            developer = involvedCompanies.get("company").get("name").asText();
-                        }
-                    }
+                    // Extraer los desarrolladores
+                    Set<Developer> developers = extractDevelopers(game);
+
                     // Crear el objeto Game
-                    Game extractedGame = new Game(id, name, genre, 0.0, description, imageUrl, releaseYear, developer, platforms);
+                    Game extractedGame = new Game(id, name, genres, 0.0, description, imageUrl, releaseYear, developers, platforms);
                     gameList.add(extractedGame);
                 }
 
@@ -134,6 +130,16 @@ public class IgdbService {
         }
     }
 
+    private Set<Genre> extractGenres(JsonNode gameNode) {
+        Set<Genre> genres = new HashSet<>();
+        if (gameNode.has("genres")) {
+            for (JsonNode genreNode : gameNode.get("genres")) {
+                genres.add(new Genre(genreNode.get("name").asText())); // Cambiado para usar Genre en lugar de String
+            }
+        }
+        return genres;
+    }
+
     private Set<Platform> extractPlatforms(JsonNode gameNode) {
         Set<Platform> platforms = new HashSet<>();
         if (gameNode.has("platforms")) {
@@ -143,5 +149,17 @@ public class IgdbService {
             }
         }
         return platforms;
+    }
+
+    private Set<Developer> extractDevelopers(JsonNode gameNode) {
+        Set<Developer> developers = new HashSet<>();
+        if (gameNode.has("involved_companies") && !gameNode.get("involved_companies").isNull()) {
+            for (JsonNode involvedCompany : gameNode.get("involved_companies")) {
+                if (involvedCompany.has("company") && involvedCompany.get("company").has("name")) {
+                    developers.add(new Developer(involvedCompany.get("company").get("name").asText())); // Cambiado para usar Developer en lugar de String
+                }
+            }
+        }
+        return developers;
     }
 }
