@@ -45,7 +45,8 @@ public class IgdbService {
 
         while (morePages) {
             String query = "fields id, name, genres.name, platforms.name, summary, cover.url, first_release_date, involved_companies.company.name; " +
-                    "sort first_release_date desc; limit " + limit + "; offset " + offset + ";";
+                    "sort id asc; limit " + limit + "; offset " + offset + ";";
+
 
             System.out.println("🔹 Obteniendo juegos desde offset " + offset);
 
@@ -97,6 +98,8 @@ public class IgdbService {
                 guardarJsonEnArchivo(gameList, offset);
 
                 if (rootNode.size() < limit) {
+                    System.out.println("⚠️ IGDB devolvió menos de " + limit + " juegos en offset " + offset + ". Posible fin de datos.");
+                    System.out.println(rootNode.size());
                     morePages = false;
                 } else {
                     offset += limit;
